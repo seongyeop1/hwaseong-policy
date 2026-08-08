@@ -1,0 +1,26 @@
+name: 정책 스키마 검증
+
+on:
+  pull_request:
+    paths:
+      - "data/policies/**"
+      - "packages/schema/**"
+      - "scripts/validate_policies.py"
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 의존성 설치
+        run: pip install jsonschema
+
+      - name: 정책 JSON 검증
+        run: python scripts/validate_policies.py

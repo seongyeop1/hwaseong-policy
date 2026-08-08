@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/OWNER/hwaseong-policy/packages/schema/profile.schema.json",
+  "title": "프로필 표준 스키마",
+  "description": "규칙 엔진 evaluate(profile, policy) 의 입력. What-if 시뮬레이터는 이 객체를 복제·변형해 재호출한다.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["birth_date", "region", "move_in_date", "lifecycle", "household_type"],
+  "properties": {
+    "birth_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "region": {
+      "type": "string",
+      "description": "화성시 행정동. 예: 동탄5동"
+    },
+    "move_in_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "전입일. residence_months 판정 + D-day 계산의 필수 입력."
+    },
+    "lifecycle": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["전입", "청년", "결혼·신혼", "출산·육아", "노후"]
+      },
+      "description": "복수 선택 가능 (전입 + 청년 동시 해당)"
+    },
+    "household_type": {
+      "type": "string",
+      "enum": ["1인가구", "신혼부부", "유자녀가구", "한부모", "다자녀", "다문화"]
+    },
+    "members": {
+      "type": "array",
+      "description": "가구 단위 판정용. 가구원별로 evaluate() 반복 호출.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relation", "birth_date"],
+        "properties": {
+          "relation": {
+            "type": "string",
+            "enum": ["본인", "배우자", "자녀", "부", "모", "기타"]
+          },
+          "birth_date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "is_householder": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
