@@ -69,7 +69,7 @@ python scripts/validate_policies.py --allow-unreviewed
 | 8/9 | 전제 검증 5종 완료 → Plan B 발동 여부 확정 |
 | 8/12 밤 | **관통 기준** — 수동 5건으로 입력→판정→결과 E2E 1회 |
 | 8/16 밤 | **기능 동결 + Vercel 배포.** 이후 수정만 |
-| 8/19 | 발표 |
+| 8/20 | 발표 |
 
 ## 대외 프레이밍 (팀 합의)
 
