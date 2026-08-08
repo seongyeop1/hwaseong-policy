@@ -75,7 +75,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
   }
 
   return (
-    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6">
       <div className="mb-5">
         <h2 className="text-lg font-bold text-gray-900">내 정보 입력</h2>
         <p className="text-sm text-gray-500 mt-0.5">

@@ -11,6 +11,7 @@ type Policy = {
   policy_id: string;
   title: string;
   benefit: string;
+  is_new?: boolean;
   conditions?: { age?: { min: number; max: number } };
 };
 
@@ -74,6 +75,23 @@ function computeResults(overrides: Overrides) {
   return { eligible, docs_needed, upcoming };
 }
 
+/* ─── Badge helpers ──────────────────────────────────────── */
+function MemberBadge({ member }: { member: string }) {
+  return (
+    <span className="text-xs text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5 whitespace-nowrap">
+      {member} 기준
+    </span>
+  );
+}
+
+function NewBadge() {
+  return (
+    <span className="text-xs font-black text-white bg-red-500 rounded-full px-2 py-0.5 tracking-wide">
+      NEW
+    </span>
+  );
+}
+
 /* ─── Dashboard sub-components ──────────────────────────── */
 function SectionHeader({ label, color, count }: { label: string; color: string; count: number }) {
   return (
@@ -89,12 +107,16 @@ function SectionHeader({ label, color, count }: { label: string; color: string; 
 
 function EligibleCard({ item, onClick }: { item: EligibleItem; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="bg-white border border-green-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+    <div onClick={onClick} className="bg-white border border-green-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
       <div className="flex items-start justify-between gap-2 mb-3">
-        <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-0.5">
-          확정 대상
-        </span>
-        <span className="text-xs text-gray-400">{item.policy.policy_id}</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-0.5">
+            확정 대상
+          </span>
+          <MemberBadge member={item.for_member} />
+          {item.policy.is_new && <NewBadge />}
+        </div>
+        <span className="text-xs text-gray-400 flex-shrink-0">{item.policy.policy_id}</span>
       </div>
       <h3 className="text-base font-bold text-gray-900 mb-1">{item.policy.title}</h3>
       <p className="text-sm text-green-600 font-medium mb-3">{item.policy.benefit}</p>
@@ -111,12 +133,16 @@ function EligibleCard({ item, onClick }: { item: EligibleItem; onClick: () => vo
 
 function DocsNeededCard({ item, onClick }: { item: DocsNeededItem; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="bg-white border border-amber-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+    <div onClick={onClick} className="bg-white border border-amber-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
       <div className="flex items-start justify-between gap-2 mb-3">
-        <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
-          서류 확인 필요
-        </span>
-        <span className="text-xs text-gray-400">{item.policy.policy_id}</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
+            서류 확인 필요
+          </span>
+          <MemberBadge member={item.for_member} />
+          {item.policy.is_new && <NewBadge />}
+        </div>
+        <span className="text-xs text-gray-400 flex-shrink-0">{item.policy.policy_id}</span>
       </div>
       <h3 className="text-base font-bold text-gray-900 mb-1">{item.policy.title}</h3>
       <p className="text-sm text-amber-600 font-medium mb-3">{item.policy.benefit}</p>
@@ -137,12 +163,16 @@ function DocsNeededCard({ item, onClick }: { item: DocsNeededItem; onClick: () =
 
 function UpcomingCard({ item, onClick }: { item: UpcomingItem; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="bg-white border border-blue-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+    <div onClick={onClick} className="bg-white border border-blue-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
       <div className="flex items-start justify-between gap-2 mb-3">
-        <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2.5 py-0.5">
-          예정 대상
-        </span>
-        <span className="text-sm font-bold text-blue-600 bg-blue-50 rounded-full px-3 py-0.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full px-2.5 py-0.5">
+            예정 대상
+          </span>
+          <MemberBadge member={item.for_member} />
+          {item.policy.is_new && <NewBadge />}
+        </div>
+        <span className="text-sm font-bold text-blue-600 bg-blue-50 rounded-full px-3 py-0.5 flex-shrink-0">
           D-{item.d_day}
         </span>
       </div>
@@ -150,8 +180,8 @@ function UpcomingCard({ item, onClick }: { item: UpcomingItem; onClick: () => vo
       <p className="text-sm text-blue-600 font-medium mb-3">{item.policy.benefit}</p>
       <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 rounded-xl px-3 py-2">
         <span>⏳</span>
-        <span>{item.waiting_for}</span>
-        <span className="ml-auto font-medium text-gray-700">{item.expected_date}</span>
+        <span className="flex-1 min-w-0">{item.waiting_for}</span>
+        <span className="font-medium text-gray-700 flex-shrink-0">{item.expected_date}</span>
       </div>
     </div>
   );
@@ -194,9 +224,9 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       {/* ── Header ── */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl font-extrabold text-gray-900 tracking-tight">
+            <h1 className="text-base sm:text-xl font-extrabold text-gray-900 tracking-tight leading-tight">
               개인별 맞춤형 정책 지원 분석
             </h1>
             <p className="text-xs text-gray-400 mt-0.5">
@@ -223,7 +253,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-10">
 
         {/* ── View 1: 프로필 입력 폼 ── */}
         <div>
@@ -278,15 +308,15 @@ export default function Home() {
           </div>
 
           {/* 요약 숫자 바 */}
-          <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6 sm:mb-8">
             {[
               { label: '확정 대상', count: eligible.length, color: 'text-green-600', bg: 'bg-green-50 border-green-200' },
-              { label: '서류 확인 필요', count: docs_needed.length, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
+              { label: '서류 확인', count: docs_needed.length, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200' },
               { label: '예정 대상', count: upcoming.length, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
             ].map((s) => (
-              <div key={s.label} className={`rounded-2xl border px-4 py-3 text-center ${s.bg}`}>
-                <p className={`text-2xl font-extrabold ${s.color}`}>{s.count}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+              <div key={s.label} className={`rounded-2xl border px-2 py-2.5 sm:px-4 sm:py-3 text-center ${s.bg}`}>
+                <p className={`text-xl sm:text-2xl font-extrabold ${s.color}`}>{s.count}</p>
+                <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
