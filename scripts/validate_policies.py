@@ -35,6 +35,7 @@ REQUIRED_CHECKS = [
     "required_docs",
     "apply_channel",
     "source_url",
+    "conditions_complete",  # ⑦ 원문 자격요건 전수 대조 (조건 이원화의 필수 짝)
 ]
 
 errors: list[str] = []
