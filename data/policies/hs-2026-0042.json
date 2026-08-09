@@ -29,6 +29,7 @@
       "required_docs": true,
       "apply_channel": true,
       "source_url": true,
+      "conditions_complete": true,
       "exclusions": true
     }
   }
