@@ -1,0 +1,29 @@
+{
+  "policy_id": "hs-2026-0087",
+  "title": "화성시 청년 이사비 지원",
+  "category": "주거",
+  "lifecycle": ["전입", "청년"],
+  "beneficiary": "본인",
+  "benefit": "이사비 최대 30만 원",
+  "conditions": {
+    "age": { "min": 19, "max": 39 },
+    "income_percentile": { "max": 150 }
+  },
+  "verify_required": [
+    {
+      "key": "income_percentile",
+      "label": "소득 기준 (중위소득 150% 이하)",
+      "hint": "소득증명원으로 확인이 필요합니다"
+    },
+    {
+      "key": null,
+      "label": "무주택자에 한함",
+      "hint": "공고 원문 기준 — 무주택 여부 증빙 서류로 확인이 필요합니다"
+    }
+  ],
+  "exclusions": [],
+  "deadline": "2026-10-15",
+  "apply_channel": "온라인·시청 방문",
+  "required_docs": ["주민등록등본", "소득증명원", "임대차계약서"],
+  "source_url": "https://example.hscity.go.kr/notice/0087"
+}
