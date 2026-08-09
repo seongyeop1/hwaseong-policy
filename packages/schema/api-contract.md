@@ -1,6 +1,6 @@
 # 판정 API 계약서 (B ↔ C)
 
-> 확정일: 2026-08-07 · 작성: B(백엔드) · **v1.1** (같은 날 기획 검토 반영 개정)
+> 확정일: 2026-08-07 · 작성: B(백엔드) · **v1.1.1** (2026-08-09 문구 명확화 — 필드 변경 없음)
 > **이 문서의 필드는 v1.1 이후 "추가만" 허용된다. 이름·타입·구조 변경 및 삭제 금지.**
 > (v1.0 → v1.1의 구조 변경은 동결 발효 전인 8/7 당일에 완료된 것으로, 이것이 마지막 구조 변경이다)
 >
@@ -8,6 +8,12 @@
 > B의 실제 API가 나오면(8/12 목표) 호출부만 갈아끼운다.
 
 ---
+
+## 변경 이력 (v1.1 → v1.1.1, 2026-08-09 — 문구 명확화, 필드 변경 없음)
+
+| # | 변경 | 사유 |
+| --- | --- | --- |
+| 1 | 저장 스키마의 `manual_conditions`(서술형 조건) ↔ 응답 `verify`의 `key: null` 항목 **대응 관계를 명시** (verify·verify_required·conditions 설명 3곳) | 변환 규칙이 스키마 파일에만 적혀 있어 계약서만 보는 사람이 추적 불가 + "서술형은 verify_required로"라는 옛 문장이 스키마와 모순되게 읽힘 (팀 검토 지적 반영) |
 
 ## 변경 이력 (v1.0 → v1.1, 2026-08-07)
 
@@ -258,11 +264,11 @@
 - **`for_member`** — 지금은 전부 `"본인"`. 8/14 이후 가구 단위 판정이 붙으면 같은 구조로 `"자녀"` 등의 항목이 늘어날 뿐, 응답 구조는 바뀌지 않는다
 - **`reasons`** — 세 분류 공통. **통과한 조건**을 사람이 읽는 문장 배열로. 그대로 화면에 출력하면 된다
 - **`waiting_for`** — `upcoming` 전용. 충족을 기다리는 조건의 설명 문장 (v1.0의 `reason`에서 개명 — `reasons`와의 혼동 방지)
-- **`verify`** — 서류로 확인해야 할 항목의 **객체 배열** `{key, label, hint}`. `key`는 기계 판정 필드 참조(예: `"income_percentile"`) 또는 **서술형 조건이면 `null`**. `docs_needed`와 `upcoming` 양쪽에 나타날 수 있다. MVP에서는 `policy.verify_required` 전체가 그대로 온다 (구조를 나눠둔 이유: 향후 일부 항목이 기계 확인되면 남은 것만 온다)
+- **`verify`** — 서류로 확인해야 할 항목의 **객체 배열** `{key, label, hint}`. `key`는 기계 판정 필드 참조(예: `"income_percentile"`) 또는 **서술형 조건이면 `null`**. `docs_needed`와 `upcoming` 양쪽에 나타날 수 있다. MVP에서는 `policy.verify_required` 전체가 그대로 온다 (구조를 나눠둔 이유: 향후 일부 항목이 기계 확인되면 남은 것만 온다). **만드는 방법**: 저장 스키마(policy.schema.json)의 `verify_required`(필드 키 목록) + **`manual_conditions`(서술형 조건)**를 합쳐 API가 이 배열로 정규화한다 — `manual_conditions`의 항목이 곧 `key: null` 항목이다
 - **`d_day` / `expected_date`** — 숫자(일수) / 충족 예정일 (`upcoming` 전용). 규칙 2에 의해 `expected_date ≤ deadline`이 항상 보장된다
 - **`policy.*`** — **어디에 등장하든 `GET /policies/{policy_id}`와 동일한 전체 스키마다.** C는 정책 객체 타입을 하나만 다룬다
-- **`policy.verify_required`** — 확인 항목의 객체 배열(위 `verify`와 같은 형태). 저장 형식과 무관하게 API에서는 항상 이 형태로 온다. 없으면 빈 배열
-- **`policy.conditions`** — 기계 판정 가능한 값(숫자·보기 선택)만 들어온다. 서술형 조건은 `verify_required`로 분리된다 (8/7 스키마 세션 결정)
+- **`policy.verify_required`** — 확인 항목의 객체 배열(위 `verify`와 같은 형태). **저장 형식(문자열 키 배열 + `manual_conditions`)과 무관하게 API에서는 항상 이 객체 형태로 정규화되어 온다.** 없으면 빈 배열
+- **`policy.conditions`** — 기계 판정 가능한 값(숫자·보기 선택)만 들어온다. 서술형 조건은 **저장 시 `manual_conditions`로 분리**되고(policy.schema.json — 8/7 조건 이원화 결정), **응답에서는 `verify`/`verify_required`의 `key: null` 항목**으로 나타난다
 - **`policy.exclusions`** — 중복수급 제한 안내 배지용 **표시 전용** 데이터 (판정에 사용 안 함). 없으면 빈 배열
 - **예정 추가 필드** — 모르는 필드는 무시하면 되므로 C 코드는 안 깨진다:
   - `ai_summary` (각 판정 항목에, 8/14 이후) — **nullable.** `null`이면 C는 "요약 준비 중"을 표시한다. 요약 생성이 `/evaluate` 응답을 지연시키지 않게 하기 위함 (재조회·폴링 등 전달 방식 상세는 8/13 확정)
