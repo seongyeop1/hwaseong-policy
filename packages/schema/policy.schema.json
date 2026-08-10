@@ -98,6 +98,11 @@
       "description": "YYYY-MM-DD. 상시 접수는 null."
     },
     "apply_channel": { "type": "string", "minLength": 2 },
+    "selection": {
+      "type": "string",
+      "enum": ["요건충족", "심사선발"],
+      "description": "선발 방식 (v1.2). 생략 시 요건충족(자격 충족=지원). 심사선발 = 정원·배점 등 경쟁 선발 — 자격을 충족해도 선정되지 않을 수 있다. 표시 전용, 판정 로직 사용 금지. CLAUDE.md 'eligible 문구 규칙'의 정책별 배지 근거. 사례: 공고 제2026-2594호(정원 30명·배점 60점), hs-2026-2673(건강보험료 낮은 순 선정)."
+    },
     "required_docs": {
       "type": "array",
       "minItems": 1,
