@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import mockData from '@/data/mockData.json';
 import ProfileForm, { type Profile } from '@/app/components/ProfileForm';
 import SimulatorPanel from '@/app/components/SimulatorPanel';
@@ -191,7 +191,6 @@ function UpcomingCard({ item, onClick }: { item: UpcomingItem; onClick: () => vo
 export default function Home() {
   const [analyzed, setAnalyzed] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [largeText, setLargeText] = useState(false);
   const [modalItem, setModalItem] = useState<ModalPolicy | null>(null);
   const [overrides, setOverrides] = useState<Overrides>({ timeShift: false, addChild: false });
   const [isSimulating, setIsSimulating] = useState(false);
@@ -199,11 +198,6 @@ export default function Home() {
   const { eligible, docs_needed, upcoming } = computeResults(overrides);
   const simActive  = overrides.timeShift || overrides.addChild;
   const displayAsOf = overrides.timeShift ? '2027-02-08' : mockData.as_of;
-
-  /* 큰 글씨 모드 — html 클래스 토글 */
-  useEffect(() => {
-    document.documentElement.classList.toggle('large-text', largeText);
-  }, [largeText]);
 
   function runSimulation(next: Overrides) {
     setIsSimulating(true);
@@ -221,39 +215,16 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ── Header ── */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-base sm:text-xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              개인별 맞춤형 정책 지원 분석
-            </h1>
-            <p className="text-xs text-gray-400 mt-0.5">
-              화성시 · 기준일 {displayAsOf}
-              {simActive && <span className="ml-1 text-orange-500">(시뮬레이션)</span>}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setLargeText((v) => !v)}
-              className={`text-xs font-medium rounded-full px-3 py-1 border transition-colors ${
-                largeText
-                  ? 'bg-primary-600 text-white border-primary-600'
-                  : 'text-gray-500 border-gray-300 hover:border-primary-400 hover:text-primary-700'
-              }`}
-              aria-pressed={largeText}
-            >
-              큰 글씨 {largeText ? 'ON' : 'OFF'}
-            </button>
-            <span className="hidden sm:inline text-xs font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-full px-3 py-1">
-              화성시
-            </span>
-          </div>
-        </div>
-      </header>
+    <div className="bg-gray-50 min-h-full">
+      {/* 기준일 서브헤더 */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-0">
+        <p className="text-xs text-gray-400">
+          화성시 · 기준일 {displayAsOf}
+          {simActive && <span className="ml-1 text-orange-500">(시뮬레이션)</span>}
+        </p>
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-10">
 
         {/* ── View 1: 프로필 입력 폼 ── */}
         <div>
