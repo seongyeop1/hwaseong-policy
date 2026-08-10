@@ -1,0 +1,61 @@
+{
+  "policy_id": "hs-2026-1370",
+  "title": "2026년 청년층 자살시도자 치료비 지원사업",
+  "category": "복지",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "자살 시도로 발생한 신체 손상 관련 치료비 지원",
+  "deadline": null,
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "거주지 내 시군 자살예방(정신건강복지)센터",
+  "exclusions": [],
+  "apply_channel": "거주지 내 시군 자살예방(정신건강복지)센터",
+  "conditions": {
+    "age": {
+      "min": 15,
+      "max": 34
+    },
+    "residence_months": {
+      "min": null
+    },
+    "household": [
+      "제한없음"
+    ],
+    "income_percentile": {
+      "max": null
+    }
+  },
+  "manual_conditions": [
+    {
+      "label": "자살예방(정신건강복지)센터 등록 및 사례관리서비스 동의 필수",
+      "hint": "자살예방 센터에 등록 및 사례관리 서비스 동의 여부 확인"
+    },
+    {
+      "label": "응급의료기관에 자살시도로 내원한 경우",
+      "hint": "응급실 내원 기록 또는 119 출동 기록지로 확인"
+    },
+    {
+      "label": "생명사랑위기대응센터에 내원하고 생명사랑위기대응센터 서비스 동의 및 등록하지 않은 대상자",
+      "hint": "생명사랑위기대응센터 내원 기록 및 서비스 동의 여부 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1370&menuLevel=2&menuNo=95",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "",
+    "reviewed_at": "2026-08-10",
+    "checklist": {
+      "conditions": false,
+      "deadline": false,
+      "benefit": false,
+      "required_docs": false,
+      "apply_channel": false,
+      "source_url": false,
+      "conditions_complete": false
+    }
+  }
+}

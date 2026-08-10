@@ -1,0 +1,50 @@
+{
+  "policy_id": "hs-2025-XXXX",
+  "title": "2025년 경기도 장애인 누림통장 및 화성형 장애인 누림통장 모집안내",
+  "category": "복지",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "장애인 누림통장 지원",
+  "deadline": null,
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "남양읍",
+  "exclusions": [],
+  "apply_channel": "공고 확인 필요",
+  "conditions": {
+    "age": {
+      "min": 19,
+      "max": 23
+    },
+    "residence_months": {
+      "min": 24
+    },
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "등록장애인 중 종합 장애정도가 심한 장애인",
+      "hint": "장애 정도 증빙 서류로 확인"
+    }
+  ],
+  "source_url": "https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250404160306677&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "",
+    "reviewed_at": "2026-08-10",
+    "checklist": {
+      "conditions": false,
+      "deadline": false,
+      "benefit": false,
+      "required_docs": false,
+      "apply_channel": false,
+      "source_url": false,
+      "conditions_complete": false
+    }
+  }
+}
