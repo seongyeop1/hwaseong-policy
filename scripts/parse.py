@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-data/raw/ 원문 텍스트 → data/draft/ 정책 JSON 초안 생성 (Claude API 사용)
+data/raw/ 원문 텍스트 → data/draft/ 정책 JSON 초안 생성 (Groq API 사용)
 
 사용법:
   python scripts/parse.py                 # data/raw/ 전체 미처리 파일
@@ -10,10 +10,10 @@ data/raw/ 원문 텍스트 → data/draft/ 정책 JSON 초안 생성 (Claude API
   python scripts/parse.py --dry-run      # API 호출 없이 대상 파일 목록만 확인
 
 필요 패키지:
-  pip install anthropic jsonschema
+  pip install openai jsonschema
 
 환경변수:
-  ANTHROPIC_API_KEY  (.env 파일 또는 export ANTHROPIC_API_KEY=sk-ant-...)
+  GROQ_API_KEY  (.env 파일 또는 export GROQ_API_KEY=gsk_...)
 """
 import argparse
 import json
@@ -32,9 +32,9 @@ except ImportError:
     pass
 
 try:
-    import anthropic
+    from openai import OpenAI
 except ImportError:
-    sys.exit("anthropic SDK가 필요합니다: pip install anthropic")
+    sys.exit("openai가 필요합니다: pip install openai")
 
 try:
     from jsonschema import Draft202012Validator
@@ -45,8 +45,7 @@ RAW_DIR   = ROOT / "data" / "raw"
 DRAFT_DIR = ROOT / "data" / "draft"
 SCHEMA_PATH = ROOT / "packages" / "schema" / "policy.schema.json"
 
-# 배치 파싱에는 haiku로 비용 절감. 품질이 부족하면 claude-opus-5로 변경.
-MODEL = "claude-haiku-4-5"
+MODEL = "llama-3.3-70b-versatile"  # Groq 무료 티어: 하루 14,400건.
 TODAY = date.today().isoformat()
 
 # ─────────────────────────── 프롬프트 ───────────────────────────
@@ -78,6 +77,7 @@ SYSTEM_PROMPT = """\
 - policy_id:
     URL에 hscity.go.kr 포함 → "hs-2026-XXXX"
     중앙정부 사업 → "kr-2026-XXXX"
+- title: 공고 제목 그대로 (필수, 절대 빠뜨리지 마세요)
 - category: "복지","주거","일자리","교육","보육","건강","문화","기타" 중 하나
 - lifecycle: ["전입","청년","결혼·신혼","출산·육아","노후"] 중 해당하는 것들 (배열)
   주의: "1인가구"는 lifecycle이 아닌 conditions.household에 해당
@@ -180,15 +180,18 @@ def parse_file(
         print(f"  [dry-run] {raw_path.name} → {out_path.name}")
         return "ok"
 
-    # ── Claude API 호출 ──
+    # ── Groq API 호출 ──
     try:
-        resp = client.messages.create(
+        resp = client.chat.completions.create(
             model=MODEL,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": build_user_prompt(meta)},
+            ],
             max_tokens=4096,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": build_user_prompt(meta)}],
+            temperature=0,
         )
-        raw_text = resp.content[0].text.strip()
+        raw_text = resp.choices[0].message.content.strip()
     except Exception as exc:
         print(f"  ❌ API 오류: {raw_path.name} — {exc}")
         return "fail"
@@ -258,14 +261,17 @@ def main() -> None:
 
     client = None
     if not args.dry_run:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
+        api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             sys.exit(
-                "ANTHROPIC_API_KEY가 설정되지 않았습니다.\n"
+                "GROQ_API_KEY가 설정되지 않았습니다.\n"
                 ".env 파일에 다음을 추가하거나 export로 설정하세요:\n"
-                "  ANTHROPIC_API_KEY=sk-ant-..."
+                "  GROQ_API_KEY=gsk_..."
             )
-        client = anthropic.Anthropic(api_key=api_key)
+        client = OpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=api_key,
+        )
 
     if not SCHEMA_PATH.exists():
         sys.exit(f"스키마 파일 없음: {SCHEMA_PATH}")
