@@ -62,6 +62,32 @@ python scripts/validate_policies.py --allow-unreviewed
 
 검수 기록은 PR 히스토리에 남는다 → "누가·언제·무엇을 대조했는지"의 증빙.
 
+## A 파트 현재 상태 (2026-08-11 기준)
+
+### 완료
+- `scripts/crawl.py` — 구청 4개 + HEY + 본청 크롤러 완성
+- `scripts/parse.py` — Groq API(llama-3.3-70b) 파서 완성
+- 원문 수집 — `data/raw/` 58개 파일
+- 정책 파싱 초안 14건 — `feat/a-crawler` 브랜치 `data/draft/`
+- 검수 요청 — GitHub Issue #24
+
+### 다음 할 일
+1. **검수 대기 중** — 팀원이 Issue #24 보고 `data/policy-batch-2` PR 생성
+2. **내일 크롤러 재실행** — 새 공고 수집 후 파싱 (Groq 토큰 매일 리셋)
+   ```bash
+   python scripts/crawl.py --since 2026
+   python scripts/parse.py
+   ```
+3. **목표까지 11건 추가** — 현재 19건 (완료 5 + 검수대기 14), 목표 30건
+
+### 파싱 환경
+- LLM: Groq `llama-3.3-70b-versatile` (무료, 하루 10만 토큰)
+- 하루 신규 공고 2~3건 기준 약 14,000토큰 소모 → 한도 여유 충분
+- API 키: `.env` 파일의 `GROQ_API_KEY` (console.groq.com에서 발급)
+- 구청 4개 게시판은 동일 공고 중복 수집됨 → `gu_byeongjeom`만 파싱
+
+---
+
 ## 주요 일정
 
 | 날짜 | 기준 |
