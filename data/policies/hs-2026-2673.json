@@ -71,5 +71,20 @@
     "residence_months"
   ],
   "contact": "화성시 청년청소년과 청년지원팀 031-5189-6217",
-  "source_url": "https://www.hscity.go.kr/manse/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260415091943924"
+  "source_url": "https://www.hscity.go.kr/manse/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260415091943924",
+  "review": {
+    "parsed_by": "D",
+    "reviewed_by": "A",
+    "reviewed_at": "2026-08-10",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true,
+      "exclusions": true
+    }
+  }
 }
