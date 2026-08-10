@@ -54,6 +54,15 @@ def test_birth_date_mismatch_returns_400_validation():
     assert "일치하지 않습니다" in body["error"]["message"]
 
 
+def test_missing_field_message_names_the_field():
+    req = load("request_example.json")
+    del req["move_in_date"]
+    r = client.post("/evaluate", json=req)
+    assert r.status_code == 400
+    assert r.json()["error"]["code"] == "VALIDATION"
+    assert "move_in_date" in r.json()["error"]["message"]
+
+
 def test_bad_lifecycle_returns_400():
     req = load("request_example.json")
     req["lifecycle"] = ["1인가구"]  # household 축 값 — lifecycle에 오면 거부돼야 함
