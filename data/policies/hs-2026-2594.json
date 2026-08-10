@@ -42,5 +42,20 @@
   ],
   "verify_required": ["income_percentile"],
   "contact": "화성시 청년청소년과 031-5189-6217",
-  "source_url": "https://apply.jobaba.net/bsns/bsnsDetailView.do?bsnsSeq=5814"
+  "source_url": "https://apply.jobaba.net/bsns/bsnsDetailView.do?bsnsSeq=5814",
+  "review": {
+    "parsed_by": "B",
+    "reviewed_by": "A",
+    "reviewed_at": "2026-08-10",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true,
+      "exclusions": true
+    }
+  }
 }
