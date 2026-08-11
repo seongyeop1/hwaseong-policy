@@ -1,0 +1,33 @@
+name: API 테스트
+
+# 판정 경로(규칙 엔진)의 회귀를 막는다.
+# data/policies 도 트리거에 넣는 이유: tests/test_api_integration.py 가 실제 정책 파일을
+# 읽고 policy_id 단위로 분류 결과를 검증한다 — 정책을 추가·삭제하면 이 테스트가 깨진다.
+
+on:
+  pull_request:
+    paths:
+      - "apps/api/**"
+      - "data/policies/**"
+      - ".github/workflows/api-tests.yml"
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: apps/api/requirements.txt
+
+      - name: 의존성 설치
+        run: pip install -r apps/api/requirements.txt
+
+      - name: pytest
+        working-directory: apps/api
+        run: python -m pytest tests/ -q
