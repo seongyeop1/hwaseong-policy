@@ -1,0 +1,35 @@
+# Render 배포 Blueprint — 백엔드(apps/api)
+#
+# 사용법: Render 대시보드 → New + → Blueprint → 이 레포 연결
+#   (수동 생성 시 New + → Web Service 에 아래 값을 그대로 입력해도 동일)
+#
+# 개인 레포(Ai-Hwaseong/backend)에서 8/10 에 끝낸 리허설 구성을 팀 레포로 옮긴 것.
+# 바뀐 곳 2개:
+#   - rootDir: backend → apps/api
+#   - PYTHON_VERSION: 3.12.10 → 3.11 (CI 워크플로·로컬 venv 와 통일)
+#
+# ⚠️ 브랜치 주의: 엔진(PR #23)이 main 에 머지되기 전에는 main 의 evaluate.py 가 스텁이라
+#   /evaluate 가 빈 3배열만 반환한다. 머지 전에 띄워서 C 가 실 API 를 붙이려면
+#   Render 서비스의 Branch 를 feat/b-engine-evaluate 로 임시 지정하고, 머지 후 main 으로 되돌릴 것.
+#
+# 기동 후 확인 — GET /health (로컬 실측 기준):
+#   현재 main:     {"status":"ok","db":"not_configured"}       ← 빌드·포트 바인딩까지 정상
+#   PR #23 머지 후: 위에 "policies":5 가 추가됨                  ← 정책 파일 로딩까지 정상
+#   머지 후에도 policies 가 0 이면 아래 POLICIES_DIR 주석을 해제한다.
+services:
+  - type: web
+    name: hwaseong-api
+    runtime: python
+    plan: free
+    rootDir: apps/api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      # store.py 는 정책을 <레포루트>/data/policies 에서 찾는다(app/store.py 기준 상대경로).
+      # rootDir 는 빌드·기동의 작업 디렉터리만 바꾸고 체크아웃은 레포 전체라 기본값으로 동작한다.
+      # 만약 /health 의 policies 가 0 이면 아래를 주석 해제해 절대경로로 덮어쓴다.
+      # - key: POLICIES_DIR
+      #   value: /opt/render/project/src/data/policies
