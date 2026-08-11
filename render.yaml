@@ -8,14 +8,19 @@
 #   - rootDir: backend → apps/api
 #   - PYTHON_VERSION: 3.12.10 → 3.11 (CI 워크플로·로컬 venv 와 통일)
 #
-# ⚠️ 브랜치 주의: 엔진(PR #23)이 main 에 머지되기 전에는 main 의 evaluate.py 가 스텁이라
-#   /evaluate 가 빈 3배열만 반환한다. 머지 전에 띄워서 C 가 실 API 를 붙이려면
-#   Render 서비스의 Branch 를 feat/b-engine-evaluate 로 임시 지정하고, 머지 후 main 으로 되돌릴 것.
+# ⚠️ 배포해도 프론트는 아직 붙지 못한다 — CORS 미설정 (#27).
+#   프론트가 전부 클라이언트 컴포넌트라 브라우저에서 직접 호출하는데,
+#   응답에 Access-Control-Allow-Origin 이 없어 차단된다. #27 이 선행 조건.
 #
-# 기동 후 확인 — GET /health (로컬 실측 기준):
-#   현재 main:     {"status":"ok","db":"not_configured"}       ← 빌드·포트 바인딩까지 정상
-#   PR #23 머지 후: 위에 "policies":5 가 추가됨                  ← 정책 파일 로딩까지 정상
-#   머지 후에도 policies 가 0 이면 아래 POLICIES_DIR 주석을 해제한다.
+# ⚠️ 무료 플랜은 유휴 시 인스턴스가 내려간다 — 콜드 스타트 수십 초 (#28).
+#   발표 전 워밍업 필요.
+#
+# 기동 후 확인 — GET /health:
+#   {"status":"ok","db":"not_configured","policies":5}
+#     - db: not_configured 는 정상 (SUPABASE_URL 미설정 시의 설계된 응답)
+#     - policies 가 0 이면 정책 파일을 못 읽은 것 → 아래 POLICIES_DIR 주석을 해제한다
+#     - policies 건수는 검수 게이트를 통과한 정책만 센다 (store.py) — data/policies 파일 수와
+#       다르면 게이트 탈락분이 있다는 뜻이므로 서버 로그의 "검수 게이트 탈락" 경고를 확인한다
 services:
   - type: web
     name: hwaseong-api
