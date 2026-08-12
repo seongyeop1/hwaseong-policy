@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1325",
   "title": "경기 고립·은둔 청년지원 사업 ‘나와,(with me) 볼만한 세상’",
   "category": "복지",
   "lifecycle": [
@@ -39,5 +39,6 @@
       "source_url": false,
       "conditions_complete": false
     }
-  }
+  },
+  "first_seen": "2026-08-12"
 }

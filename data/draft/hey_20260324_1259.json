@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1259",
   "title": "[화성시] 2026년 화성시복지재단 H·아카데미 상반기 교육생 모집",
   "category": "교육",
   "lifecycle": [
@@ -43,5 +43,6 @@
       "source_url": false,
       "conditions_complete": false
     }
-  }
+  },
+  "first_seen": "2026-08-12"
 }

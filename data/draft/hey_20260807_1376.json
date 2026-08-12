@@ -1,5 +1,5 @@
 {
-  "policy_id": "kr-2026-XXXX",
+  "policy_id": "kr-2026-1376",
   "title": "2026 사회참여형 미래내일 일경험 사업 3차 참여자 모집",
   "category": "일자리",
   "lifecycle": [
@@ -47,5 +47,6 @@
       "source_url": false,
       "conditions_complete": false
     }
-  }
+  },
+  "first_seen": "2026-08-10"
 }

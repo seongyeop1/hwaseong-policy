@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1242",
   "title": "[화성시] 2026년 화성특례시 사회서비스 종사자 휴식 지원사업 「힐링UP」",
   "category": "복지",
   "lifecycle": [
@@ -62,5 +62,6 @@
       "source_url": false,
       "conditions_complete": false
     }
-  }
+  },
+  "first_seen": "2026-08-12"
 }

@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-0004",
   "title": "2026년 지역사회서비스투자사업 대상자 및 재판정 모집 알림",
   "category": "복지",
   "lifecycle": [
@@ -63,5 +63,6 @@
       "source_url": false,
       "conditions_complete": false
     }
-  }
+  },
+  "first_seen": "2026-08-11"
 }
