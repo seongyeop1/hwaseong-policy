@@ -17,7 +17,7 @@
     "건강보험증 또는 건강보험자격확인서",
     "신분증"
   ],
-  "contact": "남양읍 행정복지센터 방문 신청(☎ 031-5189-6796)",
+  "contact": "남양읍 행정복지센터 (☎ 031-5189-6796)",
   "exclusions": [
     "장애아동발달재활서비스",
     "보완대체의사소통(ACC) 기기활용 중재서비스",
@@ -53,7 +53,7 @@
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-12",
     "checklist": {
       "conditions": false,
       "deadline": false,

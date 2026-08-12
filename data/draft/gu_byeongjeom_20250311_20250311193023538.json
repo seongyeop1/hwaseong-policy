@@ -13,16 +13,6 @@
   ],
   "contact": "남양읍",
   "conditions": {
-    "age": {
-      "min": null,
-      "max": null
-    },
-    "income_percentile": {
-      "max": null
-    },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ]
@@ -30,7 +20,7 @@
   "manual_conditions": [
     {
       "label": "여성청소년",
-      "hint": "주민등록등본 등으로 확인"
+      "hint": "주민등록등본 또는 여권으로 확인"
     }
   ],
   "exclusions": [],
@@ -39,7 +29,7 @@
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-12",
     "checklist": {
       "conditions": false,
       "deadline": false,

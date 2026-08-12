@@ -139,6 +139,26 @@ def draft_output_path(raw_path: Path) -> Path:
     return DRAFT_DIR / f"{raw_path.parent.name}_{raw_path.stem}.json"
 
 
+def strip_null_conditions(policy: dict) -> dict:
+    """conditions 내 null 값 키 제거 — 스키마는 키 자체를 생략하는 형태를 기대함."""
+    cond = policy.get("conditions")
+    if not isinstance(cond, dict):
+        return policy
+    for field in ("age", "income_percentile", "residence_months"):
+        if field not in cond:
+            continue
+        sub = cond[field]
+        if sub is None:
+            del cond[field]
+        elif isinstance(sub, dict):
+            cleaned = {k: v for k, v in sub.items() if v is not None}
+            if cleaned:
+                cond[field] = cleaned
+            else:
+                del cond[field]
+    return policy
+
+
 def add_review_block(policy: dict) -> dict:
     """파싱자 기록 및 검수 체크리스트 초기화."""
     policy["review"] = {
@@ -212,10 +232,11 @@ def parse_file(
         print(f"     → 원문 저장: {err_path.name}")
         return "fail"
 
-    # source_url 보강 (Claude가 누락한 경우)
+    # source_url 보강
     if not policy.get("source_url") and meta.get("url"):
         policy["source_url"] = meta["url"].strip()
 
+    strip_null_conditions(policy)
     add_review_block(policy)
 
     # ── 스키마 검증 (draft이므로 경고만) ──

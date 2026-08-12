@@ -15,16 +15,6 @@
   "exclusions": [],
   "apply_channel": "청년일경험포털 일경험 프로그램 정보 페이지 상세검색",
   "conditions": {
-    "age": {
-      "min": null,
-      "max": null
-    },
-    "income_percentile": {
-      "max": null
-    },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ]

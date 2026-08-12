@@ -18,9 +18,6 @@
       "min": 19,
       "max": 39
     },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ],

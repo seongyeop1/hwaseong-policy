@@ -13,9 +13,6 @@
   ],
   "contact": "031-350-4333",
   "conditions": {
-    "age": null,
-    "income_percentile": null,
-    "residence_months": null,
     "household": [
       "1인가구"
     ]

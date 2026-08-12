@@ -15,9 +15,6 @@
   "exclusions": [],
   "apply_channel": "새일센터 구직 등록",
   "conditions": {
-    "age": null,
-    "income_percentile": null,
-    "residence_months": null,
     "household": [
       "제한없음"
     ]

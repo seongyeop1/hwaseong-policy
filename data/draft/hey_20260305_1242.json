@@ -22,9 +22,6 @@
   ],
   "apply_channel": "화성시복지재단 홈페이지 온라인 접수( www.hcare.kr )",
   "conditions": {
-    "age": null,
-    "income_percentile": null,
-    "residence_months": null,
     "household": [
       "제한없음"
     ]

@@ -5,7 +5,7 @@
   "lifecycle": [
     "청년"
   ],
-  "beneficiary": "종사자",
+  "beneficiary": "본인",
   "benefit": "화성시 사회서비스 기관 및 종사자 대상 전문교육 제공",
   "deadline": null,
   "required_docs": [
@@ -15,16 +15,6 @@
   "exclusions": [],
   "apply_channel": "화성시복지재단 홈페이지 내 선착순 접수 (www.hcare.kr)",
   "conditions": {
-    "age": {
-      "min": null,
-      "max": null
-    },
-    "income_percentile": {
-      "max": null
-    },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ]

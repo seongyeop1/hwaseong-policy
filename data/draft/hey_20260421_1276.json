@@ -19,15 +19,9 @@
       "min": 19,
       "max": 39
     },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
-    ],
-    "income_percentile": {
-      "max": null
-    }
+    ]
   },
   "manual_conditions": [
     {

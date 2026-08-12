@@ -6,7 +6,7 @@
     "출산·육아"
   ],
   "beneficiary": "가구",
-  "benefit": "보육료, 양육수당, 유아학비 변경 및 신규신청",
+  "benefit": "보육료, 양육수당, 유아학비 지원",
   "deadline": "2025-02-28",
   "required_docs": [
     "공고 확인 필요"
@@ -33,7 +33,7 @@
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-12",
     "checklist": {
       "conditions": false,
       "deadline": false,

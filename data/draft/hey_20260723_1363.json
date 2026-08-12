@@ -21,10 +21,7 @@
     },
     "household": [
       "제한없음"
-    ],
-    "residence_months": {
-      "min": null
-    }
+    ]
   },
   "manual_conditions": [
     {

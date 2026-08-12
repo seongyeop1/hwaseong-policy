@@ -14,16 +14,6 @@
   "contact": "공고문에 안내된 문의처",
   "apply_channel": "온라인 신청 (bit.ly/any1_withme, bit.ly/남부2, bit.ly/북부가족모임)",
   "conditions": {
-    "age": {
-      "min": null,
-      "max": null
-    },
-    "income_percentile": {
-      "max": null
-    },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ]

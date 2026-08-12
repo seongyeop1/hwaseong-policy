@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2025-XXXX",
+  "policy_id": "hs-2025-1048",
   "title": "2025년 화성시 저소득층 아동 치과주치의 사업 안내",
   "category": "복지",
   "lifecycle": [
@@ -19,12 +19,6 @@
       "min": 0,
       "max": 18
     },
-    "income_percentile": {
-      "max": null
-    },
-    "residence_months": {
-      "min": null
-    },
     "household": [
       "제한없음"
     ]
@@ -43,7 +37,7 @@
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-12",
     "checklist": {
       "conditions": false,
       "deadline": false,
