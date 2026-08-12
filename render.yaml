@@ -15,15 +15,23 @@
 # ⚠️ 무료 플랜은 유휴 시 인스턴스가 내려간다 — 콜드 스타트 수십 초 (#28).
 #   발표 전 워밍업 필요.
 #
+# ⛔ 서비스 이름은 onrender.com 전체에서 유일해야 한다.
+#   `hwaseong-api` 는 **이미 남이 쓰고 있다** — hwaseong-api.onrender.com 에 접속하면
+#   우리와 무관한 앱(/api/notices, /api/teams …)이 응답한다 (2026-08-12 확인).
+#   그 주소를 우리 API 로 착각해 C 에게 넘기면 남의 서비스를 호출하게 된다.
+#   그래서 이름을 hwaseong-policy-api 로 바꿨다 (같은 날 미사용 확인).
+#   ⚠️ 배포 후 Render 가 발급한 실제 URL 을 확인하고, 그 URL 을 팀에 공유한다 —
+#      이름이 또 선점돼 있으면 Render 가 임의 접미사를 붙인 다른 URL 을 준다.
+#
 # 기동 후 확인 — GET /health:
-#   {"status":"ok","db":"not_configured","policies":5}
+#   {"status":"ok","db":"not_configured","policies":8}
 #     - db: not_configured 는 정상 (SUPABASE_URL 미설정 시의 설계된 응답)
 #     - policies 가 0 이면 정책 파일을 못 읽은 것 → 아래 POLICIES_DIR 주석을 해제한다
 #     - policies 건수는 검수 게이트를 통과한 정책만 센다 (store.py) — data/policies 파일 수와
 #       다르면 게이트 탈락분이 있다는 뜻이므로 서버 로그의 "검수 게이트 탈락" 경고를 확인한다
 services:
   - type: web
-    name: hwaseong-api
+    name: hwaseong-policy-api
     runtime: python
     plan: free
     rootDir: apps/api
