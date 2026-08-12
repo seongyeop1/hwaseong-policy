@@ -1,0 +1,35 @@
+{
+  "policy_id": "hs-2026-0003",
+  "title": "화성시 임신·출산 부모교육",
+  "category": "교육",
+  "lifecycle": ["결혼·신혼", "출산·육아"],
+  "beneficiary": "본인",
+  "benefit": "임신·출산 이해 및 건강한 부모 역할 준비 지원 프로그램, 건강한 임신·출산 준비를 위한 체험 프로그램 (2026년 4월 2회기, 8월 2회기 운영)",
+  "conditions": {
+    "household": ["제한없음"]
+  },
+  "manual_conditions": [],
+  "exclusions": [],
+  "deadline": null,
+  "apply_channel": "온라인 신청 — 화성시가족센터 홈페이지(hsfc.familynet.or.kr)",
+  "required_docs": [
+    "신분증 등"
+  ],
+  "verify_required": [],
+  "contact": "화성시가족센터 031-352-1214",
+  "source_url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare1/Welfare1_2.jsp",
+  "review": {
+    "parsed_by": "D",
+    "reviewed_by": "B",
+    "reviewed_at": "2026-08-12",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  }
+}
