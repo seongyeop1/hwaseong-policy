@@ -119,6 +119,8 @@ class EligibleItem(BaseModel):
     for_member: str
     policy: Policy
     reasons: list[str]
+    # 계약: nullable. null이면 C가 "요약 준비 중"을 표시한다 (배치 생성 — app/summary.py)
+    ai_summary: str | None = None
 
 
 class DocsNeededItem(BaseModel):
@@ -126,6 +128,7 @@ class DocsNeededItem(BaseModel):
     policy: Policy
     reasons: list[str]
     verify: list[VerifyItem]
+    ai_summary: str | None = None
 
 
 class UpcomingItem(BaseModel):
@@ -136,6 +139,7 @@ class UpcomingItem(BaseModel):
     d_day: int
     expected_date: date  # 규칙 2에 의해 expected_date <= deadline 보장
     verify: list[VerifyItem] = []
+    ai_summary: str | None = None
 
 
 class Results(BaseModel):
