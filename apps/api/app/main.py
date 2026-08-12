@@ -12,7 +12,7 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from .engine.evaluate import evaluate_all, to_api_policy
+from .engine.evaluate import OverrideError, apply_overrides, evaluate_all, to_api_policy
 from .schemas import EvaluateResponse, Policy, Profile
 from .store import load_policies
 
@@ -59,10 +59,17 @@ def health() -> dict:
 
 
 @app.post("/evaluate", response_model=EvaluateResponse)
-def evaluate_profile(profile: Profile) -> EvaluateResponse:
+def evaluate_profile(profile: Profile):
     # 계약: as_of 생략 시 서버의 오늘. 엔진 내부는 항상 as_of 인자만 사용한다 (now() 금지)
     as_of = profile.as_of or date.today()
-    results = evaluate_all(profile, POLICIES.values(), as_of)
+    try:
+        # What-if도 같은 경로를 탄다 — 가상 프로필로 바꾼 뒤 평소와 똑같이 판정한다
+        effective = apply_overrides(profile)
+    except OverrideError as exc:
+        return JSONResponse(
+            status_code=400, content={"error": {"code": "VALIDATION", "message": str(exc)}}
+        )
+    results = evaluate_all(effective, POLICIES.values(), as_of)
     return EvaluateResponse(as_of=as_of, results=results)
 
 

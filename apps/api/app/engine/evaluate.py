@@ -23,6 +23,8 @@ verify로 보낸다. 서술형(`manual_conditions`)은 `key: null`인 verify 항
 from datetime import date
 from typing import Any, Iterable
 
+from pydantic import ValidationError
+
 from ..schemas import Profile
 from .dates import (
     age_on,
@@ -114,6 +116,39 @@ def to_api_policy(policy: dict) -> dict:
         "source_url": policy["source_url"],
         "contact": policy.get("contact"),
     }
+
+
+# ── What-if (overrides 병합) ────────────────────────────────────────────
+
+
+class OverrideError(ValueError):
+    """overrides를 얹은 결과가 유효한 프로필이 아닐 때 (main.py가 400으로 변환)."""
+
+
+def apply_overrides(profile: Profile) -> Profile:
+    """가상 프로필을 만든다 — 계약 v1.1의 **통째 교체(얕은 병합)**.
+
+    `overrides`에 넣은 필드는 스칼라든 배열이든 원본을 통째로 대체한다. 부분 병합 규칙을
+    두지 않는 이유는 "자녀를 한 명 추가"를 서버가 해석하게 두면 규칙 논쟁이 끝나지 않기
+    때문이다 — C가 바뀐 **전체** 값을 보낸다.
+
+    병합 결과는 평범한 프로필이라 판정 경로가 일반 요청과 완전히 같다. 그래서 응답 구조도
+    같고 C는 렌더링 컴포넌트를 재사용한다. 시간 이동은 여기가 아니라 as_of가 담당한다.
+    """
+    if not profile.overrides:
+        return profile
+
+    data = profile.model_dump()
+    data.update(profile.overrides)
+    data["overrides"] = None  # 가상 프로필에는 남기지 않는다 (중첩 What-if 방지)
+    try:
+        return Profile.model_validate(data)
+    except ValidationError as exc:
+        reason = str(exc.errors()[0].get("msg", "")).removeprefix("Value error, ")
+        raise OverrideError(
+            f"overrides를 적용한 결과가 올바른 프로필이 아닙니다: {reason}. "
+            "overrides는 항목을 통째로 바꾸므로, 서로 맞물린 값(birth_date ↔ members[본인])은 함께 보내야 합니다"
+        ) from exc
 
 
 # ── 판정 (규칙 0~4) ─────────────────────────────────────────────────────
