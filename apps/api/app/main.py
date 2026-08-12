@@ -5,6 +5,7 @@
 - 정책 소스는 store.load_policies — 검수 게이트 통과분만 (Supabase 전환 시 store만 교체)
 - /health 는 Phase 7 keep-warm 핑 대상 (DB 전환 시 가벼운 DB 조회 포함 — Render 슬립·Supabase 휴면 동시 방지)
 """
+import logging
 import os
 from datetime import date
 
@@ -17,9 +18,35 @@ from .engine.evaluate import OverrideError, apply_overrides, evaluate_all, to_ap
 from .schemas import EvaluateResponse, Policy, Profile
 from .store import load_policies
 
+log = logging.getLogger("app")
+
 app = FastAPI(title="화성 정책 내비게이션 API", version="0.2.0")
 
 POLICIES = load_policies()
+
+
+# ── 미처리 예외 → 계약 형식 500 (#34) ───────────────────────────────────
+#
+# 예외 핸들러가 아니라 **미들웨어**로 처리한다. `@app.exception_handler(Exception)` 은
+# Starlette의 ServerErrorMiddleware에 등록되는데 그게 CORSMiddleware보다 바깥이라,
+# 거기서 만든 500 응답에는 CORS 헤더가 붙지 않는다 → 브라우저가 응답을 차단해 C는
+# 계약서의 500 처리("잠시 후 다시 시도해 주세요") 대신 불투명한 CORS 에러만 본다.
+# CORS보다 **안쪽**에서 잡아야 응답이 CORS 미들웨어를 거쳐 나간다.
+#
+# ⚠️ 아래 두 등록의 순서를 바꾸지 말 것 — 먼저 등록된 것이 안쪽이다.
+
+
+@app.middleware("http")
+async def unhandled_error_to_contract_500(request: Request, call_next):
+    try:
+        return await call_next(request)
+    except Exception:
+        # 스택트레이스를 안 남기면 배포 환경에서 원인 추적이 불가능하다 (#34 문제 2)
+        log.exception("미처리 예외 — %s %s", request.method, request.url.path)
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"code": "INTERNAL", "message": "잠시 후 다시 시도해 주세요"}},
+        )
 
 
 # ── CORS — 프론트가 전부 클라이언트 컴포넌트라 브라우저에서 직접 호출한다 ──
@@ -60,12 +87,7 @@ async def validation_handler(request: Request, exc: RequestValidationError) -> J
     return JSONResponse(status_code=400, content={"error": {"code": "VALIDATION", "message": msg}})
 
 
-@app.exception_handler(Exception)
-async def internal_handler(request: Request, exc: Exception) -> JSONResponse:
-    return JSONResponse(
-        status_code=500,
-        content={"error": {"code": "INTERNAL", "message": "잠시 후 다시 시도해 주세요"}},
-    )
+# 500 은 위 unhandled_error_to_contract_500 미들웨어가 만든다 (CORS 헤더가 붙어야 하므로).
 
 
 # ── 엔드포인트 ──────────────────────────────────────────────────────────
