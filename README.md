@@ -62,29 +62,37 @@ python scripts/validate_policies.py --allow-unreviewed
 
 검수 기록은 PR 히스토리에 남는다 → "누가·언제·무엇을 대조했는지"의 증빙.
 
-## A 파트 현재 상태 (2026-08-11 기준)
+## A 파트 현재 상태 (2026-08-12 기준)
 
 ### 완료
-- `scripts/crawl.py` — 구청 4개 + HEY + 본청 크롤러 완성
-- `scripts/parse.py` — Groq API(llama-3.3-70b) 파서 완성
-- 원문 수집 — `data/raw/` 58개 파일
-- 정책 파싱 초안 14건 — `feat/a-crawler` 브랜치 `data/draft/`
-- 검수 요청 — GitHub Issue #24
+- `scripts/crawl.py` — 구청 4개 + HEY + 본청 크롤러 완성, `FIRST_SEEN` 헤더 추가
+- `scripts/parse.py` — Groq API(llama-3.3-70b) 파서 완성, null 조건 자동 제거, `first_seen` 필드 기록
+- `packages/schema/policy.schema.json` — `first_seen` 필드 추가
+- 정책 파싱 초안 **31건** — `feat/a-crawler` 브랜치 `data/draft/` (스키마 검증 ❌ 0건)
+- 검수 완료 — `data/policies/` 7건 (PR #36 머지)
+- **목표 30건 달성 가능**: 완료 7 + 검수대기 31 = 38건
 
 ### 다음 할 일
-1. **검수 대기 중** — 팀원이 Issue #24 보고 `data/policy-batch-2` PR 생성
-2. **내일 크롤러 재실행** — 새 공고 수집 후 파싱 (Groq 토큰 매일 리셋)
+1. **팀원 검수 대기** — Issue #41 수정 확인 후 `data/policy-batch-N` PR 머지
+2. **매일 크롤러 재실행** — 새 공고 수집 후 파싱 (Groq 토큰 매일 자정 UTC 리셋)
    ```bash
-   python scripts/crawl.py --since 2026
-   python scripts/parse.py
+   python scripts/crawl.py --source gu --since 2026
+   python scripts/crawl.py --source hey --since 2026
+   python scripts/parse.py   # 새 파일만 자동 파싱
    ```
-3. **목표까지 11건 추가** — 현재 19건 (완료 5 + 검수대기 14), 목표 30건
+3. **8/16 기능 동결 전** — validate_policies.py 전체 통과, 30건 이상 DB 반영
 
 ### 파싱 환경
-- LLM: Groq `llama-3.3-70b-versatile` (무료, 하루 10만 토큰)
+- LLM: Groq `llama-3.3-70b-versatile` (무료, 하루 10만 토큰 / 자정 UTC 리셋)
 - 하루 신규 공고 2~3건 기준 약 14,000토큰 소모 → 한도 여유 충분
+- `--force` 전체 재파싱 시 토큰 소진 주의 (오늘 31건 재파싱으로 한도 초과 경험)
 - API 키: `.env` 파일의 `GROQ_API_KEY` (console.groq.com에서 발급)
 - 구청 4개 게시판은 동일 공고 중복 수집됨 → `gu_byeongjeom`만 파싱
+
+### first_seen / is_new 구현 방식
+- `crawl.py` — 새 원문 저장 시 `FIRST_SEEN: YYYY-MM-DD` 헤더 자동 기록
+- `parse.py` — 헤더 읽어서 draft JSON `first_seen` 필드에 저장
+- `is_new` — JSON에 저장하지 않음. B파트 API가 `first_seen` 기준으로 동적 계산
 
 ---
 
