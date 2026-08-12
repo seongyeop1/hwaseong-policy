@@ -1,0 +1,11 @@
+{
+  "birth_date": "1999-03-02",
+  "region": "화성시 동탄5동",
+  "move_in_date": "2026-03-15",
+  "lifecycle": ["전입", "청년"],
+  "household_type": "1인가구",
+  "members": [
+    { "relation": "본인", "birth_date": "1999-03-02" }
+  ],
+  "as_of": "2026-08-07"
+}

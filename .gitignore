@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.*.local
+env.local.txt
 *.pem
 *.key
 
@@ -37,4 +38,3 @@ Thumbs.db
 # ── 자동 생성 파일 ────────────────────────────
 AGENTS.md
 CLAUDE.md
-.vercel
