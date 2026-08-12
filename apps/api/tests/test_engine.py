@@ -11,7 +11,11 @@ from app.engine.dates import (
     date_residence_reaches,
     residence_months,
 )
-from app.engine.evaluate import evaluate
+from app.engine.evaluate import (
+    NO_AUTO_CHECKED_CONDITIONS_REASON,
+    NO_MACHINE_CONDITIONS_REASON,
+    evaluate,
+)
 from app.schemas import Profile
 
 AS_OF = date(2026, 8, 10)
@@ -193,7 +197,9 @@ def test_income_only_policy_is_docs_needed():
     )
     v = evaluate(make_profile(), p, AS_OF)
     assert v["status"] == "docs_needed"
-    assert v["reasons"] == []  # 소득은 판정하지 않으므로 통과 사유가 아니다
+    # 소득은 판정하지 않으므로 통과 사유가 아니다 → 사유가 비어 대체 문장이 들어간다 (#45).
+    # 이 정책에는 소득 요건이 실제로 있으므로 "요건이 없다"고 말하면 안 된다
+    assert v["reasons"] == [NO_AUTO_CHECKED_CONDITIONS_REASON]
     assert v["verify"] == [
         {"key": "income_percentile", "label": "소득 기준 (중위소득 150% 이하)", "hint": "소득증명원으로 확인이 필요합니다"}
     ]
@@ -251,12 +257,42 @@ def test_real_reasons_are_not_replaced_by_fallback():
     assert v["reasons"] == ["나이 요건 충족 (만 27세 / 기준 19~39세)"]
 
 
-def test_docs_needed_keeps_empty_reasons():
-    """소득만 있는 정책은 verify 가 설명을 대신하므로 '요건이 없다'고 말하면 거짓이 된다."""
+# ── #45: docs_needed 도 사유가 빌 수 있다 (#37 의 잔여 경로) ──────────────
+
+
+def test_docs_needed_with_only_manual_conditions_has_reason():
+    """서술형 조건만 있는 정책 — A 의 draft 에 다수 존재하는 형태다.
+
+    기계가 통과시킨 조건이 하나도 없어 카드가 이유 없이 뜨던 경로.
+    """
+    p = make_policy(
+        conditions={"household": ["제한없음"]},
+        manual_conditions=[{"label": "무주택자에 한함", "hint": "증빙 서류로 확인"}],
+    )
+    v = evaluate(make_profile(), p, AS_OF)
+    assert v["status"] == "docs_needed"
+    assert v["reasons"] == [NO_AUTO_CHECKED_CONDITIONS_REASON]
+    assert v["verify"][0]["label"] == "무주택자에 한함"
+
+
+def test_docs_needed_fallback_does_not_claim_there_are_no_requirements():
+    """docs_needed 는 확인 항목이 남아 있다 — eligible 문구를 재사용하면 거짓이 된다.
+
+    소득만 있는 정책이 대표 사례: 소득 요건이 실제로 있는데 '요건이 없습니다'라고 하면
+    안 된다. 그래서 '자동으로 확인되는 요건이 없다'까지만 말한다.
+    """
     p = make_policy(
         conditions={"income_percentile": {"max": 150}}, verify_required=["income_percentile"]
     )
     v = evaluate(make_profile(), p, AS_OF)
-    assert v["status"] == "docs_needed"
+    assert v["reasons"] == [NO_AUTO_CHECKED_CONDITIONS_REASON]
+    assert v["reasons"] != [NO_MACHINE_CONDITIONS_REASON]  # eligible 문구 재사용 금지
+
+
+def test_upcoming_keeps_empty_reasons_by_design():
+    """upcoming 은 waiting_for 가 항상 있어 카드가 비어 보이지 않는다 — 대체 문장 불필요."""
+    p = make_policy(conditions={"residence_months": {"min": 6}})
+    v = evaluate(make_profile(move_in_date="2026-03-15"), p, AS_OF)
+    assert v["status"] == "upcoming"
     assert v["reasons"] == []
-    assert v["verify"][0]["key"] == "income_percentile"
+    assert v["waiting_for"]  # 이 문장이 카드의 설명 역할을 한다
