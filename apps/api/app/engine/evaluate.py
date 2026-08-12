@@ -37,10 +37,18 @@ from .dates import (
 # 규칙 1·2의 "가까운 미래" 창 — 이 안에 충족되는 조건만 upcoming 이 된다
 UPCOMING_WINDOW_DAYS = 90
 
-# 기계 판정할 조건이 하나도 없는 정책의 통과 사유 (#37).
-# eligible 은 확인 항목(verify)까지 비어 있다는 뜻이라 이 문장이 사실과 어긋나지 않는다 —
-# 소득 조건이 있으면 verify 가 생겨 docs_needed 로 가므로 여기 걸리지 않는다.
+# 통과 사유가 하나도 안 나오는 정책의 대체 문장 — 분류마다 사실이 다르므로 문구도 다르다.
+#
+# eligible (#37): 확인 항목(verify)까지 비어 있다는 뜻이라 "요건이 없다"가 사실이다.
+#   소득 조건이 있으면 verify 가 생겨 docs_needed 로 가므로 여기 걸리지 않는다.
 NO_MACHINE_CONDITIONS_REASON = "별도의 나이·소득·거주 요건이 없습니다"
+
+# docs_needed (#45): 확인할 항목이 **남아 있다**. 위 문장을 그대로 쓰면 "요건이 없다"가
+#   거짓이 된다 — 소득만 있는 정책(소득은 판정하지 않고 verify 로 보낸다)이 대표적이다.
+#   그래서 "자동 확인되는 요건이 없다"까지만 말하고, 무엇이 남았는지는 verify 목록이 보여준다.
+NO_AUTO_CHECKED_CONDITIONS_REASON = (
+    "나이·거주 기간처럼 자동으로 확인되는 요건은 없습니다 — 아래 항목을 서류로 확인해 주세요"
+)
 
 
 # ── verify 정규화 (저장 스키마 → 계약 v1.1 객체 배열) ────────────────────
@@ -234,10 +242,16 @@ def evaluate(profile: Profile, policy: dict, as_of: date) -> dict:
         }
 
     # 규칙 3·4 — 기계 판정 전부 통과
+    #
+    # 조건이 '제한없음'뿐이거나 아예 없으면 통과 사유 문장이 하나도 안 나온다. 계약상
+    # reasons는 그대로 화면에 출력되므로, 빈 배열이면 카드에 설명이 사라진다 (#37·#45).
+    # upcoming은 waiting_for가 항상 있어 카드가 비어 보이지 않으므로 대체 문장을 넣지 않는다.
     if verify:
-        return {"status": "docs_needed", "reasons": reasons, "verify": verify}
-    # 조건이 '제한없음'뿐이거나 아예 없는 정책은 통과 사유 문장이 하나도 안 나온다 —
-    # 계약상 reasons는 그대로 화면에 출력되므로, 빈 배열이면 카드에 설명이 사라진다 (#37)
+        return {
+            "status": "docs_needed",
+            "reasons": reasons or [NO_AUTO_CHECKED_CONDITIONS_REASON],
+            "verify": verify,
+        }
     return {"status": "eligible", "reasons": reasons or [NO_MACHINE_CONDITIONS_REASON]}
 
 
