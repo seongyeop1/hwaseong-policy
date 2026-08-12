@@ -174,11 +174,13 @@ def test_household_mismatch_excluded():
     assert v["why"] == "household_mismatch"
 
 
-def test_household_unrestricted_passes_without_reason():
+def test_household_unrestricted_accepts_any_household():
     p = make_policy(conditions={"household": ["제한없음"]})
     v = evaluate(make_profile(household_type="다자녀"), p, AS_OF)
     assert v["status"] == "eligible"
-    assert v["reasons"] == []  # '제한없음'은 조건이 아니므로 통과 사유에 넣지 않는다
+    # '제한없음'은 조건이 아니므로 "가구 유형 충족" 문장은 만들지 않는다.
+    # 사유가 하나도 없을 때 무엇이 들어가는지는 아래 #37 전용 테스트가 고정한다
+    assert "가구 유형" not in " ".join(v["reasons"])
 
 
 # ── 규칙 3: 소득 조건·서술형 조건은 기계 판정 없이 '서류 확인 필요' ───────
@@ -221,4 +223,40 @@ def test_upcoming_carries_verify_for_prepare_ahead():
     )
     v = evaluate(make_profile(move_in_date="2026-03-15"), p, AS_OF)
     assert v["status"] == "upcoming"
+    assert v["verify"][0]["key"] == "income_percentile"
+
+
+# ── #37: 조건 없는 정책도 통과 사유가 있어야 한다 ────────────────────────
+
+
+def test_eligible_without_conditions_still_has_reason():
+    """조건이 '제한없음'뿐이면 통과 사유 문장이 안 나온다 — 카드가 설명 없이 뜨는 것을 막는다."""
+    p = make_policy(conditions={"household": ["제한없음"]})
+    v = evaluate(make_profile(), p, AS_OF)
+    assert v["status"] == "eligible"
+    assert v["reasons"] == ["별도의 나이·소득·거주 요건이 없습니다"]
+
+
+def test_eligible_with_no_conditions_at_all_has_reason():
+    p = make_policy(conditions={})
+    v = evaluate(make_profile(), p, AS_OF)
+    assert v["status"] == "eligible"
+    assert v["reasons"] == ["별도의 나이·소득·거주 요건이 없습니다"]
+
+
+def test_real_reasons_are_not_replaced_by_fallback():
+    """실제 통과 사유가 있으면 대체 문장을 넣지 않는다."""
+    p = make_policy(conditions={"age": {"min": 19, "max": 39}, "household": ["제한없음"]})
+    v = evaluate(make_profile(), p, AS_OF)
+    assert v["reasons"] == ["나이 요건 충족 (만 27세 / 기준 19~39세)"]
+
+
+def test_docs_needed_keeps_empty_reasons():
+    """소득만 있는 정책은 verify 가 설명을 대신하므로 '요건이 없다'고 말하면 거짓이 된다."""
+    p = make_policy(
+        conditions={"income_percentile": {"max": 150}}, verify_required=["income_percentile"]
+    )
+    v = evaluate(make_profile(), p, AS_OF)
+    assert v["status"] == "docs_needed"
+    assert v["reasons"] == []
     assert v["verify"][0]["key"] == "income_percentile"
