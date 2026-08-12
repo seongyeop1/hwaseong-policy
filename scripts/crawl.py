@@ -31,6 +31,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -404,6 +405,7 @@ def build_text(post: dict, body: str) -> str:
         f"DATE:  {post['date']}\n"
         f"DEPT:  {post['dept']}\n"
         f"URL:   {post['url']}\n"
+        f"FIRST_SEEN: {date.today().isoformat()}\n"
         f"{'─' * 60}\n"
         f"{body}\n"
     )

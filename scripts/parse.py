@@ -127,6 +127,8 @@ def load_raw_file(path: Path) -> dict:
             meta["dept"] = line[5:].strip()
         elif line.startswith("URL:"):
             meta["url"] = line[4:].strip()
+        elif line.startswith("FIRST_SEEN:"):
+            meta["first_seen"] = line[11:].strip()
         elif "────" in line:
             in_body = True
     meta["body"] = "\n".join(body_lines).strip()
@@ -235,6 +237,10 @@ def parse_file(
     # source_url 보강
     if not policy.get("source_url") and meta.get("url"):
         policy["source_url"] = meta["url"].strip()
+
+    # first_seen: 원문 최초 수집일 (crawl.py 가 헤더에 기록, 없으면 오늘)
+    if "first_seen" not in policy:
+        policy["first_seen"] = meta.get("first_seen") or TODAY
 
     strip_null_conditions(policy)
     add_review_block(policy)

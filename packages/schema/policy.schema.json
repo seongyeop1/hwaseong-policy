@@ -142,6 +142,11 @@
       "format": "uri",
       "pattern": "^https?://"
     },
+    "first_seen": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "크롤러가 이 공고를 최초로 수집한 날짜(YYYY-MM-DD). is_new 계산의 재료 — is_new 자체는 API가 동적으로 계산한다."
+    },
     "review": {
       "type": "object",
       "description": "2인 교차 검수 기록. 검수 완료분만 main 에 머지한다.",
