@@ -17,12 +17,16 @@ from fastapi.responses import JSONResponse
 from .engine.evaluate import OverrideError, apply_overrides, evaluate_all, to_api_policy
 from .schemas import EvaluateResponse, Policy, Profile
 from .store import load_policies
+from .summary import attach as attach_summaries
+from .summary import load_summaries
 
 log = logging.getLogger("app")
 
 app = FastAPI(title="화성 정책 내비게이션 API", version="0.2.0")
 
 POLICIES = load_policies()
+# 미리 만들어 둔 판정 요약 (배치 산출물). 요청 경로에서 LLM을 호출하지 않는다
+SUMMARIES = load_summaries()
 
 
 # ── 미처리 예외 → 계약 형식 500 (#34) ───────────────────────────────────
@@ -97,7 +101,7 @@ async def validation_handler(request: Request, exc: RequestValidationError) -> J
 def health() -> dict:
     # DB 전환 후에는 가벼운 DB 조회 추가 (keep-warm 핑이 Supabase 휴면까지 막도록)
     db = "configured" if os.getenv("SUPABASE_URL") else "not_configured"
-    return {"status": "ok", "db": db, "policies": len(POLICIES)}
+    return {"status": "ok", "db": db, "policies": len(POLICIES), "summaries": len(SUMMARIES)}
 
 
 @app.post("/evaluate", response_model=EvaluateResponse)
@@ -112,6 +116,7 @@ def evaluate_profile(profile: Profile):
             status_code=400, content={"error": {"code": "VALIDATION", "message": str(exc)}}
         )
     results = evaluate_all(effective, POLICIES.values(), as_of)
+    attach_summaries(results, SUMMARIES, POLICIES)
     return EvaluateResponse(as_of=as_of, results=results)
 
 
