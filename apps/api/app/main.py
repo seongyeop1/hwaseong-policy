@@ -10,6 +10,7 @@ from datetime import date
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .engine.evaluate import evaluate_all, to_api_policy
@@ -19,6 +20,25 @@ from .store import load_policies
 app = FastAPI(title="화성 정책 내비게이션 API", version="0.2.0")
 
 POLICIES = load_policies()
+
+
+# ── CORS — 프론트가 전부 클라이언트 컴포넌트라 브라우저에서 직접 호출한다 ──
+#
+# 허용 출처는 CORS_ORIGINS 환경변수(쉼표 구분)로 배포마다 지정하고, 없으면 로컬 개발용만
+# 허용한다. Vercel은 배포마다 프리뷰 도메인이 새로 생기므로 *.vercel.app을 정규식으로 함께
+# 연다 (프리뷰 URL을 배포할 때마다 환경변수에 추가하는 운영 부담 제거).
+# 쿠키·인증을 쓰지 않으므로 allow_credentials는 켜지 않는다.
+DEFAULT_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+_configured = os.getenv("CORS_ORIGINS", "")
+CORS_ORIGINS = [o.strip() for o in _configured.split(",") if o.strip()] or DEFAULT_ORIGINS
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
 
 
 # ── 에러 응답: 계약서 v1.1 공통 형식 {"error": {"code", "message"}} ──────
