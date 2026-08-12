@@ -37,6 +37,11 @@ from .dates import (
 # 규칙 1·2의 "가까운 미래" 창 — 이 안에 충족되는 조건만 upcoming 이 된다
 UPCOMING_WINDOW_DAYS = 90
 
+# 기계 판정할 조건이 하나도 없는 정책의 통과 사유 (#37).
+# eligible 은 확인 항목(verify)까지 비어 있다는 뜻이라 이 문장이 사실과 어긋나지 않는다 —
+# 소득 조건이 있으면 verify 가 생겨 docs_needed 로 가므로 여기 걸리지 않는다.
+NO_MACHINE_CONDITIONS_REASON = "별도의 나이·소득·거주 요건이 없습니다"
+
 
 # ── verify 정규화 (저장 스키마 → 계약 v1.1 객체 배열) ────────────────────
 
@@ -231,7 +236,9 @@ def evaluate(profile: Profile, policy: dict, as_of: date) -> dict:
     # 규칙 3·4 — 기계 판정 전부 통과
     if verify:
         return {"status": "docs_needed", "reasons": reasons, "verify": verify}
-    return {"status": "eligible", "reasons": reasons}
+    # 조건이 '제한없음'뿐이거나 아예 없는 정책은 통과 사유 문장이 하나도 안 나온다 —
+    # 계약상 reasons는 그대로 화면에 출력되므로, 빈 배열이면 카드에 설명이 사라진다 (#37)
+    return {"status": "eligible", "reasons": reasons or [NO_MACHINE_CONDITIONS_REASON]}
 
 
 def evaluate_all(profile: Profile, policies: Iterable[dict], as_of: date) -> dict:
