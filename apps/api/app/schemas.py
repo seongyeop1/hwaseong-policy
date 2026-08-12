@@ -11,6 +11,10 @@ from pydantic import BaseModel, field_validator, model_validator
 
 from .enums import HOUSEHOLD, LIFECYCLE, RELATION
 
+# What-if overrides로 바꿀 수 있는 항목 = "가상의 나는 누구인가"를 이루는 필드.
+# as_of(시간 이동)와 overrides(중첩)는 여기 없다 — 계약 v1.1의 역할 분담.
+OVERRIDABLE_FIELDS = ("birth_date", "region", "move_in_date", "lifecycle", "household_type", "members")
+
 
 # ── 요청 (POST /evaluate) ──────────────────────────────────────────────
 
@@ -37,7 +41,7 @@ class Profile(BaseModel):
     # profile.schema.json 기준 members는 선택 — 없으면 본인 단독 판정 (가구 판정은 8/14~)
     members: list[Member] = []
     as_of: date | None = None  # 생략 시 서버의 오늘 (계약서: 시연 재현·What-if 시간 이동용)
-    overrides: dict[str, Any] | None = None  # 최종 스펙 8/13 확정 (기본안: 통째 교체 병합)
+    overrides: dict[str, Any] | None = None  # What-if 가상 프로필 (계약: 통째 교체 얕은 병합)
 
     @field_validator("lifecycle")
     @classmethod
@@ -59,6 +63,21 @@ class Profile(BaseModel):
         selfs = [m for m in self.members if m.relation == "본인"]
         if selfs and selfs[0].birth_date != self.birth_date:
             raise ValueError("birth_date와 members[본인].birth_date가 일치하지 않습니다")
+        return self
+
+    @model_validator(mode="after")
+    def overrides_keys_allowed(self) -> "Profile":
+        """모르는 키를 조용히 무시하면 C가 '시뮬레이터가 안 먹는다'로 늦게 발견한다 — 즉시 거부."""
+        if not self.overrides:
+            return self
+        bad = [k for k in self.overrides if k not in OVERRIDABLE_FIELDS]
+        if bad:
+            allowed = ", ".join(OVERRIDABLE_FIELDS)
+            hint = ""
+            if "as_of" in bad:
+                # 계약: 시간 이동은 최상위 as_of 담당 (overrides는 '누구인가'만 바꾼다)
+                hint = " — 시간 이동은 overrides가 아니라 최상위 as_of로 보내세요"
+            raise ValueError(f"overrides에 넣을 수 없는 항목입니다: {', '.join(bad)} (허용: {allowed}){hint}")
         return self
 
 
