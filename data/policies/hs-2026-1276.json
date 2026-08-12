@@ -1,0 +1,42 @@
+{
+  "policy_id": "hs-2026-1276",
+  "title": "2026년 경기 고립·은둔 청년 지원사업",
+  "category": "복지",
+  "lifecycle": ["청년"],
+  "beneficiary": "본인",
+  "benefit": "1:1 전문상담, 맞춤형 프로그램(자아 회복·관계 연습·거점별 특화 활동 등), 쉼터 제공, 일경험 등 — 300명 (신청 시 남부1·남부2·북부 권역 선택 가능)",
+  "conditions": {
+    "age": { "min": 19, "max": 39 },
+    "household": ["제한없음"]
+  },
+  "manual_conditions": [
+    {
+      "label": "경기도 거주 청년",
+      "hint": "주민등록초본으로 확인"
+    },
+    {
+      "label": "고립·은둔 상태의 청년",
+      "hint": "공고 원문 기준 — 상태 확인이 필요하며 자가 판단으로 확정할 수 없음"
+    }
+  ],
+  "exclusions": [],
+  "deadline": null,
+  "apply_channel": "경기민원24 온라인 접수",
+  "required_docs": ["공고 확인 필요"],
+  "contact": "남부 1권역(안양) 오픈놀 031-465-5279 / 남부 2권역(성남) 파이나다운청년들 031-703-0104 / 북부권역(의정부) 사회적협동조합 내비두 031-821-8117",
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1276&menuLevel=2&menuNo=95",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-12",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  }
+}
