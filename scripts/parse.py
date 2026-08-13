@@ -289,16 +289,31 @@ def parse_file(
 
 # ─────────────────────────── CLI ───────────────────────────
 
-def collect_files(source: str | None) -> list[Path]:
+def git_tracked_drafts() -> set[str]:
+    """git ls-files로 현재 추적 중인 draft 파일명 집합 반환."""
+    import subprocess
+    result = subprocess.run(
+        ["git", "ls-files", "data/draft/"],
+        capture_output=True, text=True, cwd=ROOT
+    )
+    return {Path(p).name for p in result.stdout.splitlines()}
+
+
+def collect_files(source: str | None, tracked_only: bool = False) -> list[Path]:
     if not RAW_DIR.exists():
         return []
+    tracked = git_tracked_drafts() if tracked_only else None
     files: list[Path] = []
     for src_dir in sorted(RAW_DIR.iterdir()):
         if not src_dir.is_dir():
             continue
         if source and src_dir.name != source:
             continue
-        files.extend(sorted(src_dir.glob("*.txt")))
+        for txt in sorted(src_dir.glob("*.txt")):
+            draft_name = f"{txt.parent.name}_{txt.stem}.json"
+            if tracked is not None and draft_name not in tracked:
+                continue
+            files.append(txt)
     return files
 
 
@@ -308,6 +323,8 @@ def main() -> None:
                     help="소스 필터 (hey / main / gu_byeongjeom 등)")
     ap.add_argument("--file", type=Path, help="단일 파일 지정")
     ap.add_argument("--force", action="store_true", help="기존 draft 덮어쓰기")
+    ap.add_argument("--tracked-only", action="store_true",
+                    help="git 추적 중인 draft 파일만 재파싱 (--force와 함께 사용, 토큰 절약)")
     ap.add_argument("--dry-run", action="store_true", help="API 호출 없이 대상 확인만")
     ap.add_argument("--provider", choices=["groq", "anthropic"], default="groq",
                     help="LLM 공급자 (기본: groq / 한도 소진 시: anthropic)")
@@ -342,7 +359,7 @@ def main() -> None:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
 
-    files = [args.file] if args.file else collect_files(args.source)
+    files = [args.file] if args.file else collect_files(args.source, tracked_only=args.tracked_only)
     if not files:
         print("처리할 파일이 없습니다.")
         return
