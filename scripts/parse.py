@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-data/raw/ 원문 텍스트 → data/draft/ 정책 JSON 초안 생성 (Groq API 사용)
+data/raw/ 원문 텍스트 → data/draft/ 정책 JSON 초안 생성
 
 사용법:
-  python scripts/parse.py                 # data/raw/ 전체 미처리 파일
-  python scripts/parse.py --source hey   # 특정 소스 (hey / main / gu_manse 등)
-  python scripts/parse.py --file PATH    # 단일 파일 지정
-  python scripts/parse.py --force        # 이미 처리된 파일도 재처리
-  python scripts/parse.py --dry-run      # API 호출 없이 대상 파일 목록만 확인
+  python scripts/parse.py                          # data/raw/ 전체 미처리 파일
+  python scripts/parse.py --source hey            # 특정 소스 (hey / main / gu_manse 등)
+  python scripts/parse.py --file PATH             # 단일 파일 지정
+  python scripts/parse.py --force                 # 이미 처리된 파일도 재처리
+  python scripts/parse.py --dry-run               # API 호출 없이 대상 파일 목록만 확인
+  python scripts/parse.py --provider anthropic    # Claude 사용 (Groq 한도 소진 시)
 
 필요 패키지:
-  pip install openai jsonschema
+  pip install openai anthropic jsonschema
 
 환경변수:
-  GROQ_API_KEY  (.env 파일 또는 export GROQ_API_KEY=gsk_...)
+  GROQ_API_KEY      (.env — Groq 무료 티어, 기본값)
+  ANTHROPIC_API_KEY (.env — Claude, Groq 한도 소진 시 대체)
 """
 import argparse
 import json
@@ -45,7 +47,8 @@ RAW_DIR   = ROOT / "data" / "raw"
 DRAFT_DIR = ROOT / "data" / "draft"
 SCHEMA_PATH = ROOT / "packages" / "schema" / "policy.schema.json"
 
-MODEL = "llama-3.3-70b-versatile"  # Groq 무료 티어: 하루 14,400건.
+GROQ_MODEL      = "llama-3.3-70b-versatile"   # Groq 무료 티어: 하루 100k 토큰
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"  # 속도·비용 최적, 한도 없음
 TODAY = date.today().isoformat()
 
 # ─────────────────────────── 프롬프트 ───────────────────────────
@@ -190,10 +193,34 @@ def add_review_block(policy: dict) -> dict:
     return policy
 
 
+def call_llm(client, provider: str, user_prompt: str) -> str:
+    """provider에 따라 Groq 또는 Anthropic API 호출."""
+    if provider == "anthropic":
+        resp = client.messages.create(
+            model=ANTHROPIC_MODEL,
+            max_tokens=4096,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        return resp.content[0].text.strip()
+    else:
+        resp = client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=4096,
+            temperature=0,
+        )
+        return resp.choices[0].message.content.strip()
+
+
 def parse_file(
-    client,            # anthropic.Anthropic | None (dry-run)
+    client,
     raw_path: Path,
     validator,
+    provider: str = "groq",
     force: bool = False,
     dry_run: bool = False,
 ) -> str:
@@ -212,18 +239,9 @@ def parse_file(
         print(f"  [dry-run] {raw_path.name} → {out_path.name}")
         return "ok"
 
-    # ── Groq API 호출 ──
+    # ── LLM 호출 ──
     try:
-        resp = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": build_user_prompt(meta)},
-            ],
-            max_tokens=4096,
-            temperature=0,
-        )
-        raw_text = resp.choices[0].message.content.strip()
+        raw_text = call_llm(client, provider, build_user_prompt(meta))
     except Exception as exc:
         print(f"  ❌ API 오류: {raw_path.name} — {exc}")
         return "fail"
@@ -287,10 +305,12 @@ def collect_files(source: str | None) -> list[Path]:
 def main() -> None:
     ap = argparse.ArgumentParser(description="정책 공고 원문 → JSON 초안 생성")
     ap.add_argument("--source", default=None,
-                    help="소스 필터 (hey / main / gu_manse / gu_ujeong / gu_dongtan / gu_bongdam)")
+                    help="소스 필터 (hey / main / gu_byeongjeom 등)")
     ap.add_argument("--file", type=Path, help="단일 파일 지정")
     ap.add_argument("--force", action="store_true", help="기존 draft 덮어쓰기")
     ap.add_argument("--dry-run", action="store_true", help="API 호출 없이 대상 확인만")
+    ap.add_argument("--provider", choices=["groq", "anthropic"], default="groq",
+                    help="LLM 공급자 (기본: groq / 한도 소진 시: anthropic)")
     args = ap.parse_args()
 
     if args.file and not args.file.exists():
@@ -298,17 +318,24 @@ def main() -> None:
 
     client = None
     if not args.dry_run:
-        api_key = os.getenv("GROQ_API_KEY")
-        if not api_key:
-            sys.exit(
-                "GROQ_API_KEY가 설정되지 않았습니다.\n"
-                ".env 파일에 다음을 추가하거나 export로 설정하세요:\n"
-                "  GROQ_API_KEY=gsk_..."
-            )
-        client = OpenAI(
-            base_url="https://api.groq.com/openai/v1",
-            api_key=api_key,
-        )
+        if args.provider == "anthropic":
+            try:
+                from anthropic import Anthropic
+            except ImportError:
+                sys.exit("anthropic가 필요합니다: pip install anthropic")
+            api_key = os.getenv("ANTHROPIC_API_KEY")
+            if not api_key:
+                sys.exit("ANTHROPIC_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.")
+            client = Anthropic(api_key=api_key)
+        else:
+            api_key = os.getenv("GROQ_API_KEY")
+            if not api_key:
+                sys.exit(
+                    "GROQ_API_KEY가 설정되지 않았습니다.\n"
+                    ".env 파일에 다음을 추가하거나 export로 설정하세요:\n"
+                    "  GROQ_API_KEY=gsk_..."
+                )
+            client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key)
 
     if not SCHEMA_PATH.exists():
         sys.exit(f"스키마 파일 없음: {SCHEMA_PATH}")
@@ -320,12 +347,14 @@ def main() -> None:
         print("처리할 파일이 없습니다.")
         return
 
-    mode = "dry-run" if args.dry_run else f"model={MODEL}"
+    model_label = ANTHROPIC_MODEL if args.provider == "anthropic" else GROQ_MODEL
+    mode = "dry-run" if args.dry_run else f"provider={args.provider} model={model_label}"
     print(f"파싱 대상: {len(files)}건 | {mode} | → {DRAFT_DIR.relative_to(ROOT)}")
 
     ok = fail = skip = 0
     for f in files:
-        result = parse_file(client, f, validator, force=args.force, dry_run=args.dry_run)
+        result = parse_file(client, f, validator,
+                            provider=args.provider, force=args.force, dry_run=args.dry_run)
         if result == "ok":
             ok += 1
         elif result == "skip":
