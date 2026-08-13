@@ -1,0 +1,70 @@
+{
+  "policy_id": "hs-2026-XXXX",
+  "title": "[수원여성인력개발센터] AI기반 e커머스 마케팅 실무과정 교육생 모집",
+  "category": "교육",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "교육비 전액 국비 지원, 수료 후 취·창업 지원, 참여촉진수당, 취업성공수당",
+  "deadline": "2026-03-17",
+  "required_docs": [
+    "이력서",
+    "참가신청서",
+    "면접지",
+    "구직신청서",
+    "신분증",
+    "증명사진 1매"
+  ],
+  "contact": "031-206-1919 (내선 1)",
+  "exclusions": [
+    "연소득 4,800만원 이상인 고용보험 가입자",
+    "연간매출액 1억 5천만원 이상인 사업자 등록증 소지자",
+    "훈련개시일 현재 타 직업교육 수강자",
+    "대학 및 대학원 재학생"
+  ],
+  "apply_channel": "방문접수만 가능",
+  "conditions": {
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "AI활용 마케팅 관련 사무직 취업을 희망하는 여성(재직여성 포함)",
+      "hint": "직업희망서류로 확인"
+    },
+    {
+      "label": "온라인 창업을 희망하는 여성",
+      "hint": "창업희망서류로 확인"
+    },
+    {
+      "label": "마케팅, 경영, 홍보, 디자인 관련 전공자",
+      "hint": "학력증명서로 확인"
+    },
+    {
+      "label": "컴퓨터활용능력, GTQ 등 관련 자격증 보유자",
+      "hint": "자격증명서로 확인"
+    },
+    {
+      "label": "청년층 및 취업 취약계층 (여성가장, 다자녀가구, 저소득계층 등)",
+      "hint": "관련 증빙서류로 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1248&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "",
+    "reviewed_at": "2026-08-13",
+    "checklist": {
+      "conditions": false,
+      "deadline": false,
+      "benefit": false,
+      "required_docs": false,
+      "apply_channel": false,
+      "source_url": false,
+      "conditions_complete": false
+    }
+  }
+}

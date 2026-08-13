@@ -1,0 +1,48 @@
+{
+  "policy_id": "hs-2026-XXXX",
+  "title": "‘나의 첫 국민연금’ 청년 연금보험료·생활비 지원사업",
+  "category": "복지",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "연금보험료 3개월 전액 지원, 생활지원금 30만원",
+  "deadline": "2026-04-17",
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "(사)함께만드는세상(사회연대은행) 자립성장지원센터, 02-2280-3372",
+  "conditions": {
+    "age": {
+      "min": 19,
+      "max": 34
+    },
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "국민연금(연금보험) 가입 이력이 없는 경기도 및 인천지역 거주청년",
+      "hint": "국민연금 가입 이력 확인"
+    }
+  ],
+  "exclusions": [],
+  "apply_channel": "온라인 신청(https://forms.gle/odHeVTWBwtx5rB1H6)",
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1262&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "",
+    "reviewed_at": "2026-08-13",
+    "checklist": {
+      "conditions": false,
+      "deadline": false,
+      "benefit": false,
+      "required_docs": false,
+      "apply_channel": false,
+      "source_url": false,
+      "conditions_complete": false
+    }
+  }
+}

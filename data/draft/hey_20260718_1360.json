@@ -27,13 +27,14 @@
       "hint": "졸업증명서 또는 재학증명서로 확인"
     }
   ],
-  "exclusions": [],
   "apply_channel": "잡아바 및 잡코리아 온라인 접수",
+  "exclusions": [],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1360&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-13",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -43,6 +44,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-10"
+  }
 }

@@ -6,7 +6,7 @@
     "청년"
   ],
   "beneficiary": "본인",
-  "benefit": "청년 일경험 인턴 지원",
+  "benefit": "주 30시간 8주 일경험, 월 170만 원 참여수당 지급",
   "deadline": null,
   "required_docs": [
     "공고 확인 필요"
@@ -26,14 +26,15 @@
   "manual_conditions": [
     {
       "label": "고용보험 가입, 사업자등록, 타 정부·지자체 일경험사업 중복 참여 등에 따라 참여가 제한될 수 있습니다.",
-      "hint": "첨부된 홍보물을 확인해 주세요."
+      "hint": "공고문에 첨부된 홍보물을 확인해 주세요."
     }
   ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1359&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-13",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -43,6 +44,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-10"
+  }
 }

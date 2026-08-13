@@ -1,19 +1,19 @@
 {
-  "policy_id": "hs-2026-1276",
-  "title": "2026년 경기 고립·은둔 청년 지원사업",
-  "category": "복지",
+  "policy_id": "hs-2026-XXXX",
+  "title": "[서울 구로구] 청년문화공간 오류장",
+  "category": "문화",
   "lifecycle": [
     "청년"
   ],
   "beneficiary": "본인",
-  "benefit": "1:1 전문상담, 맞춤형 프로그램, 쉼터 제공, 일경험 등",
-  "deadline": null,
+  "benefit": "청년문화공간 오류장 무료 대관",
+  "deadline": "2026-03-17",
   "required_docs": [
     "공고 확인 필요"
   ],
-  "contact": "남부 1권역(안양): 031-465-5279, 남부 2권역(성남): 031-703-0104, 북부권역(의정부): 031-821-8117",
+  "contact": "070-4913-4137",
   "exclusions": [],
-  "apply_channel": "경기민원24 (https://gg24.gg.go.kr/) 온라인 접수",
+  "apply_channel": "구글폼을 통한 온라인 접수",
   "conditions": {
     "age": {
       "min": 19,
@@ -25,11 +25,11 @@
   },
   "manual_conditions": [
     {
-      "label": "경기도 고립·은둔 청년",
-      "hint": "공고문에 따름"
+      "label": "문화예술활동 및 소모임 활동 장소가 필요한 청년",
+      "hint": "청년의 다양한 성장과 활동을 지원하는 청년 공간"
     }
   ],
-  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1276&menuLevel=2&menuNo=95",
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1244&menuLevel=2&menuNo=95",
   "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",

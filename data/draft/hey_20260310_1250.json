@@ -6,12 +6,12 @@
     "청년"
   ],
   "beneficiary": "본인",
-  "benefit": "역량강화교육, 해외대학 연수, 사후관리 등",
+  "benefit": "프로그램 운영비용(항공료, 보험료, 연수비, 숙식비 등) 지원",
   "deadline": "2026-03-26",
   "required_docs": [
     "공고 확인 필요"
   ],
-  "contact": "031-247-6050, 6052(경기도미래세대재단 청년교육팀)",
+  "contact": "031-247-6050,6052(경기도미래세대재단 청년교육팀)",
   "apply_channel": "경기청년포털 (https://youth.gg.go.kr) 온라인 접수",
   "conditions": {
     "age": {
@@ -25,25 +25,33 @@
   "manual_conditions": [
     {
       "label": "해외여행 및 비자발급에 결격사유가 없는 대한민국 국적의 사람",
-      "hint": "여권 및 비자 발급 가능 여부 확인"
+      "hint": "여권 및 비자 발급 여부 확인"
     },
     {
       "label": "역량강화교육, 성과공유회, 사후관리 등 프로그램 전 일정에 참여 가능한 사람",
       "hint": "프로그램 일정 확인"
+    },
+    {
+      "label": "주민등록상 1986년~2007년생",
+      "hint": "주민등록증 확인"
+    },
+    {
+      "label": "여권발급 불가 및 출국금지, 건강상의 사유 등 해외연수에 결격 사유가 없는 참여자",
+      "hint": "여권 및 건강 상태 확인"
     }
   ],
   "exclusions": [
-    "여권발급 불가 및 출국금지, 건강상의 사유 등 해외연수에 결격 사유가 있는 참여자",
     "경기청년 사다리 프로그램 기 참여자(중도포기자 포함)",
     "시・군 사다리 프로그램 기 참여자(중도포기자 포함)",
     "해외연수 관련 정부사업(파란사다리, 글로벌 현장학습, WEST프로그램) 기 참여자",
     "2026년 경기청년 갭이어 프로그램 참여자"
   ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1250&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-08-13",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -53,6 +61,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-12"
+  }
 }

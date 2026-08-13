@@ -5,15 +5,13 @@
   "lifecycle": [
     "청년"
   ],
-  "beneficiary": "세대주",
-  "benefit": "고립·은둔 청년과 가족을 위한 온라인 강의",
+  "beneficiary": "본인",
+  "benefit": "고립·은둔 청년과 가족을 위한 온라인 강의 지원",
   "deadline": null,
   "required_docs": [
     "공고 확인 필요"
   ],
-  "contact": "문의사항은 공고문에 안내된 문의처로 문의하시면 더 정확하고 빠른 답변을 받아보실 수 있습니다.",
-  "exclusions": [],
-  "apply_channel": "경기도 평생학습포털 지식 사이트 접속 www.gseek.kr",
+  "contact": "문의처: 공고문에 안내된 문의처",
   "conditions": {
     "household": [
       "제한없음"
@@ -25,11 +23,14 @@
       "hint": "주 학습대상 확인"
     }
   ],
+  "exclusions": [],
+  "apply_channel": "경기도 평생학습포털 지식 사이트 접속 www.gseek.kr, 검색창에 <고립> 또는 <은둔> 입력, 버튼을 눌러 바로 학습",
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1212&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-08-13",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -39,6 +40,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-12"
+  }
 }

@@ -1,0 +1,52 @@
+{
+  "policy_id": "hs-2026-XXXX",
+  "title": "[안양] <ANY LOCAL LAB> : 청년 로컬 연구 프로젝트 참여자 모집",
+  "category": "교육",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "150만 원의 연구 지원금 지원",
+  "deadline": "2026-05-03",
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "070-4131-5285 (평일 10:00~19:00)",
+  "exclusions": [],
+  "apply_channel": "QR 코드 스캔 또는 링크(https://miniintern.com/event/3152) 접속 후 신청",
+  "conditions": {
+    "age": {
+      "min": 19,
+      "max": 39
+    },
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "팀 구성원의 과반수 이상이 청년이어야 참여 가능",
+      "hint": "팀 구성원 확인"
+    },
+    {
+      "label": "일정 전체 참여 가능한 지원자를 우선 선발",
+      "hint": "일정 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1278&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-13",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "",
+    "reviewed_at": "2026-08-13",
+    "checklist": {
+      "conditions": false,
+      "deadline": false,
+      "benefit": false,
+      "required_docs": false,
+      "apply_channel": false,
+      "source_url": false,
+      "conditions_complete": false
+    }
+  }
+}
