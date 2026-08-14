@@ -1,0 +1,39 @@
+name: keep-warm 핑
+
+# Render 무료 플랜은 ~15분 유휴 시 인스턴스가 내려가고 다음 요청이 콜드 스타트(수십 초)가 된다 (#28).
+# 10분 간격으로 /health 를 호출해 인스턴스를 깨워 둔다.
+#
+#   - GitHub 의 schedule 은 부하에 따라 수 분 지연될 수 있어 간헐적 콜드 스타트까지 완전히는
+#     못 막는다 → 시연·발표 직전에는 Actions 탭 → "keep-warm 핑" → Run workflow 로
+#     수동 워밍업을 한 번 돌린다 (리허설 체크리스트 항목).
+#   - Private 레포는 실행당 최소 1분이 계정 무료 한도(월 2,000분)에서 차감된다.
+#     */10 이면 하루 ~144분 — 제출 직전(8/19) Public 전환 후에는 무제한 무료.
+#     한도가 부담되면 파일 삭제 대신 Actions 탭에서 이 워크플로를 Disable 하면 된다.
+#   - 3회 연속 실패 시 job 이 실패로 남아 레포 워치 중인 팀원에게 알림이 간다 — 다운 감지를 겸한다.
+#   - /health 는 정책 로드 수를 반환하므로 응답 본문이 곧 생존 신호다 (DB 전환 후에는 가벼운
+#     DB 조회가 포함될 예정이라 Supabase 휴면 방지도 이 핑 하나로 겸하게 된다).
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: GET /health (콜드 스타트 흡수 3회 재시도)
+        run: |
+          for i in 1 2 3; do
+            code=$(curl -sS -o body.json -w '%{http_code}' --max-time 90 \
+              https://hwaseong-policy-api.onrender.com/health) || code=000
+            if [ "$code" = "200" ]; then
+              cat body.json
+              exit 0
+            fi
+            echo "시도 $i: HTTP $code — 20초 후 재시도"
+            sleep 20
+          done
+          echo "keep-warm 실패: /health 3회 연속 비정상 (마지막 HTTP $code)"
+          exit 1
