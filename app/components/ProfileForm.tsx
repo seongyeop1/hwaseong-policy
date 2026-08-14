@@ -3,10 +3,11 @@
 import { useState } from 'react';
 
 export type Profile = {
-  age: string;
-  residence: string;
-  householdType: string;
-  lifecycles: string[];
+  birth_date: string;
+  move_in_date: string;
+  region: string;
+  household_type: string;
+  lifecycle: string[];
 };
 
 const RESIDENCE_OPTIONS = [
@@ -54,18 +55,19 @@ type Props = {
 
 export default function ProfileForm({ onAnalyze }: Props) {
   const [profile, setProfile] = useState<Profile>({
-    age: '',
-    residence: '',
-    householdType: '',
-    lifecycles: [],
+    birth_date: '',
+    move_in_date: '',
+    region: '',
+    household_type: '',
+    lifecycle: [],
   });
 
   function toggleLifecycle(id: string) {
     setProfile((prev) => ({
       ...prev,
-      lifecycles: prev.lifecycles.includes(id)
-        ? prev.lifecycles.filter((l) => l !== id)
-        : [...prev.lifecycles, id],
+      lifecycle: prev.lifecycle.includes(id)
+        ? prev.lifecycle.filter((l: string) => l !== id)
+        : [...prev.lifecycle, id],
     }));
   }
 
@@ -95,8 +97,8 @@ export default function ProfileForm({ onAnalyze }: Props) {
               min={0}
               max={120}
               placeholder="예: 28"
-              value={profile.age}
-              onChange={(e) => setProfile({ ...profile, age: e.target.value })}
+              value={profile.birth_date}
+              onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
               className="w-28 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
             <span className="text-sm text-gray-500">세</span>
@@ -109,8 +111,8 @@ export default function ProfileForm({ onAnalyze }: Props) {
             거주지
           </label>
           <select
-            value={profile.residence}
-            onChange={(e) => setProfile({ ...profile, residence: e.target.value })}
+            value={profile.region}
+            onChange={(e) => setProfile({ ...profile, region: e.target.value })}
             className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
           >
             <option value="">읍면동을 선택하세요</option>
@@ -131,10 +133,10 @@ export default function ProfileForm({ onAnalyze }: Props) {
                 key={opt.id}
                 type="button"
                 onClick={() =>
-                  setProfile({ ...profile, householdType: opt.id })
+                  setProfile({ ...profile, household_type: opt.id })
                 }
                 className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  profile.householdType === opt.id
+                  profile.household_type === opt.id
                     ? 'bg-primary-600 text-white border-primary-600'
                     : 'bg-white text-gray-600 border-gray-300 hover:border-primary-400 hover:text-primary-700'
                 }`}
@@ -153,7 +155,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
           <p className="text-xs text-gray-400 mb-2">해당하는 항목을 모두 선택하세요</p>
           <div className="flex flex-wrap gap-2">
             {LIFECYCLE_OPTIONS.map((opt) => {
-              const selected = profile.lifecycles.includes(opt.id);
+              const selected = profile.lifecycle.includes(opt.id);
               return (
                 <button
                   key={opt.id}

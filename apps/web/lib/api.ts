@@ -1,0 +1,76 @@
+/**
+ * POST /evaluate 클라이언트.
+ * 폼 값 → API 요청 변환 + fetch 래핑.
+ * API URL은 NEXT_PUBLIC_API_BASE_URL 환경변수에서 읽는다 (.env.example 참조).
+ */
+
+import type { Profile as FormProfile } from '@/app/components/ProfileForm';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
+
+/* ── 응답 타입 (api-contract.md v1.1 기준) ──────────────────────────── */
+
+export type VerifyItem = { key: string | null; label: string; hint: string };
+
+export type ApiPolicy = {
+  policy_id: string;
+  title: string;
+  category: string;
+  lifecycle: string[];
+  beneficiary: string;
+  benefit: string;
+  conditions: Record<string, unknown>;
+  verify_required: VerifyItem[];
+  exclusions: string[];
+  deadline: string | null;
+  apply_channel: string;
+  required_docs: string[];
+  source_url: string;
+  contact: string | null;
+};
+
+export type EligibleItem   = { for_member: string; policy: ApiPolicy; reasons: string[]; ai_summary: string | null };
+export type DocsNeededItem = { for_member: string; policy: ApiPolicy; reasons: string[]; verify: VerifyItem[]; ai_summary: string | null };
+export type UpcomingItem   = { for_member: string; policy: ApiPolicy; reasons: string[]; waiting_for: string; d_day: number; expected_date: string; verify: VerifyItem[]; ai_summary: string | null };
+
+export type EvaluateResponse = {
+  as_of: string;
+  results: {
+    eligible: EligibleItem[];
+    docs_needed: DocsNeededItem[];
+    upcoming: UpcomingItem[];
+  };
+};
+
+/* ── 공개 API ─────────────────────────────────────────────────────── */
+
+/** API URL이 설정되지 않은 경우 (로컬 개발 등) true */
+export function isApiUnavailable() {
+  return !API_BASE;
+}
+
+export async function evaluate(form: FormProfile): Promise<EvaluateResponse> {
+  if (!API_BASE) throw new Error('NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다');
+
+  // 폼 필드가 API 스키마와 직접 대응하므로 변환 없이 그대로 전송
+  const body = {
+    birth_date:     form.birth_date,
+    move_in_date:   form.move_in_date,
+    region:         form.region || '화성시',
+    household_type: form.household_type,
+    lifecycle:      form.lifecycle.length > 0 ? form.lifecycle : ['청년'],
+  };
+
+  const res = await fetch(`${API_BASE}/evaluate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const payload = await res.json().catch(() => ({})) as { error?: { message?: string } };
+    throw new Error(payload?.error?.message ?? `서버 오류 (${res.status})`);
+  }
+
+  return res.json() as Promise<EvaluateResponse>;
+}

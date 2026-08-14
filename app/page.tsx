@@ -297,7 +297,7 @@ export default function Home() {
             </span>
             <h2 className="text-base font-bold text-gray-700">
               {analyzed && profile
-                ? `${profile.age ? profile.age + '세' : ''} ${profile.residence || ''} 맞춤 정책 결과`.trim()
+                ? `${profile.region || ''} 맞춤 정책 결과`.trim()
                 : '맞춤 정책 결과'}
             </h2>
             {simActive && (
