@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 
+// 필드 이름·값은 API 계약(packages/schema/api-contract.md)에 맞춘다.
+// 이 객체를 그대로 POST /evaluate 의 body 로 보낼 수 있다 (as_of 는 선택).
 export type Profile = {
-  age: string;
-  residence: string;
-  householdType: string;
-  lifecycles: string[];
+  birth_date: string;      // YYYY-MM-DD — 만 나이 경계 판정에 쓰이므로 나이(세)가 아니라 생년월일이다
+  region: string;
+  move_in_date: string;    // YYYY-MM-DD — D-day 계산의 필수 입력 (계약서 명시)
+  household_type: string;
+  lifecycle: string[];
 };
 
 const RESIDENCE_OPTIONS = [
@@ -28,24 +31,28 @@ const RESIDENCE_OPTIONS = [
   '기타',
 ];
 
+// ⚠️ id 는 API 로 그대로 나가므로 스키마 enum 과 **정확히** 같아야 한다.
+// 값이 다르면 판정 전에 400 VALIDATION 으로 막힌다. label 은 자유롭게 바꿔도 된다.
+// 정본: packages/schema/profile.schema.json · apps/api/app/enums.py
+
+// household ∈ 1인가구 / 신혼부부 / 유자녀가구 / 한부모 / 다자녀 / 다문화
 const HOUSEHOLD_OPTIONS = [
-  { id: '1인', label: '1인 가구' },
-  { id: '부부', label: '부부' },
+  { id: '1인가구', label: '1인 가구' },
+  { id: '신혼부부', label: '신혼부부' },
+  { id: '유자녀가구', label: '자녀가 있는 가구' },
   { id: '한부모', label: '한부모 가구' },
   { id: '다자녀', label: '다자녀 가구' },
-  { id: '조손', label: '조손 가구' },
-  { id: '기타', label: '기타' },
+  { id: '다문화', label: '다문화 가구' },
 ];
 
+// lifecycle ∈ 전입 / 청년 / 결혼·신혼 / 출산·육아 / 노후  ← 5개 고정
+// household 와 다른 축이다. '신혼부부'·'다자녀'는 household 값이라 여기 오지 않는다.
 const LIFECYCLE_OPTIONS = [
+  { id: '전입', label: '화성시 전입' },
   { id: '청년', label: '청년' },
-  { id: '신혼부부', label: '신혼부부' },
-  { id: '임신출산', label: '임신·출산' },
-  { id: '영유아', label: '영유아' },
-  { id: '다자녀', label: '다자녀' },
-  { id: '중장년', label: '중장년' },
-  { id: '어르신', label: '어르신' },
-  { id: '장애인', label: '장애인' },
+  { id: '결혼·신혼', label: '결혼·신혼' },
+  { id: '출산·육아', label: '임신·출산·육아' },
+  { id: '노후', label: '노후(어르신)' },
 ];
 
 type Props = {
@@ -54,18 +61,19 @@ type Props = {
 
 export default function ProfileForm({ onAnalyze }: Props) {
   const [profile, setProfile] = useState<Profile>({
-    age: '',
-    residence: '',
-    householdType: '',
-    lifecycles: [],
+    birth_date: '',
+    region: '',
+    move_in_date: '',
+    household_type: '',
+    lifecycle: [],
   });
 
   function toggleLifecycle(id: string) {
     setProfile((prev) => ({
       ...prev,
-      lifecycles: prev.lifecycles.includes(id)
-        ? prev.lifecycles.filter((l) => l !== id)
-        : [...prev.lifecycles, id],
+      lifecycle: prev.lifecycle.includes(id)
+        ? prev.lifecycle.filter((l) => l !== id)
+        : [...prev.lifecycle, id],
     }));
   }
 
@@ -84,23 +92,33 @@ export default function ProfileForm({ onAnalyze }: Props) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 나이 */}
+        {/* 생년월일 — 나이(세)가 아니라 생년월일이어야 만 나이 경계가 정확히 판정된다 */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-            나이
+            생년월일
           </label>
-          <div className="flex items-center gap-2">
-            <input
-              type="number"
-              min={0}
-              max={120}
-              placeholder="예: 28"
-              value={profile.age}
-              onChange={(e) => setProfile({ ...profile, age: e.target.value })}
-              className="w-28 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            <span className="text-sm text-gray-500">세</span>
-          </div>
+          <input
+            type="date"
+            value={profile.birth_date}
+            onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
+            className="w-full sm:w-56 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+
+        {/* 화성시 전입일 — D-day(거주기간 요건) 계산의 필수 입력 */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+            화성시 전입일
+          </label>
+          <input
+            type="date"
+            value={profile.move_in_date}
+            onChange={(e) => setProfile({ ...profile, move_in_date: e.target.value })}
+            className="w-full sm:w-56 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            거주 기간 요건이 있는 정책의 신청 가능 시점을 계산하는 데 쓰입니다.
+          </p>
         </div>
 
         {/* 거주지 */}
@@ -109,8 +127,8 @@ export default function ProfileForm({ onAnalyze }: Props) {
             거주지
           </label>
           <select
-            value={profile.residence}
-            onChange={(e) => setProfile({ ...profile, residence: e.target.value })}
+            value={profile.region}
+            onChange={(e) => setProfile({ ...profile, region: e.target.value })}
             className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
           >
             <option value="">읍면동을 선택하세요</option>
@@ -131,10 +149,10 @@ export default function ProfileForm({ onAnalyze }: Props) {
                 key={opt.id}
                 type="button"
                 onClick={() =>
-                  setProfile({ ...profile, householdType: opt.id })
+                  setProfile({ ...profile, household_type: opt.id })
                 }
                 className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  profile.householdType === opt.id
+                  profile.household_type === opt.id
                     ? 'bg-primary-600 text-white border-primary-600'
                     : 'bg-white text-gray-600 border-gray-300 hover:border-primary-400 hover:text-primary-700'
                 }`}
@@ -153,7 +171,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
           <p className="text-xs text-gray-400 mb-2">해당하는 항목을 모두 선택하세요</p>
           <div className="flex flex-wrap gap-2">
             {LIFECYCLE_OPTIONS.map((opt) => {
-              const selected = profile.lifecycles.includes(opt.id);
+              const selected = profile.lifecycle.includes(opt.id);
               return (
                 <button
                   key={opt.id}
