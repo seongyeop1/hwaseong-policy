@@ -6,12 +6,13 @@
     "청년"
   ],
   "beneficiary": "가구",
-  "benefit": "고립·은둔 청년의 가족을 위한 공감 교육 및 자조모임",
-  "deadline": "2026-06-28",
+  "benefit": "지원 내용 공고 확인 필요",
+  "deadline": "2026-06-26",
   "required_docs": [
     "공고 확인 필요"
   ],
   "contact": "공고문에 안내된 문의처",
+  "exclusions": [],
   "apply_channel": "온라인 신청 (bit.ly/any1_withme, bit.ly/남부2, bit.ly/북부가족모임)",
   "conditions": {
     "household": [
@@ -21,15 +22,19 @@
   "manual_conditions": [
     {
       "label": "1986년생 ~ 2007년생 자녀를 둔 부모(가족)",
-      "hint": "출생년도 확인"
+      "hint": "출생년도로 확인"
+    },
+    {
+      "label": "거주 지역과 관계없이 희망하는 거점을 자유롭게 선택하여 신청",
+      "hint": "신청 시 거주 지역 확인 필요"
     }
   ],
-  "exclusions": [],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1325&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -39,6 +44,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-12"
+  }
 }

@@ -16,11 +16,6 @@
     "공고 확인 필요"
   ],
   "contact": "화성시복지재단 복지사업부 김은혜 주임(☎031-296-9844)",
-  "exclusions": [
-    "유사 내용으로 타 기관(정부‧지자체 등)의 지원을 받고 있거나 받을 예정인 자",
-    "특정 정당을 지지하거나 종교 활동을 목적으로 참여하는 자",
-    "2023년~2025년 화성시복지재단 휴식지원 사업 참여자"
-  ],
   "apply_channel": "화성시복지재단 홈페이지 온라인 접수( www.hcare.kr )",
   "conditions": {
     "household": [
@@ -66,15 +61,20 @@
     },
     {
       "label": "(홍보) 개인 SNS 및 재단 누리집에 후기 게시(숏츠 영상, 카드뉴스 등)",
-      "hint": "홍보 자료 제출 확인"
+      "hint": "홍보 확인"
     }
   ],
+  "exclusions": [
+    "유사 내용으로 타 기관(정부·지자체 등)의 지원을 받고 있거나 받을 예정인 자",
+    "특정 정당을 지지하거나 종교 활동을 목적으로 참여하는 자",
+    "2023년~2025년 화성시복지재단 휴식지원 사업 참여자"
+  ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1242&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1222",
   "title": "[CJ나눔재단,CJ취업연계] 2026 상반기 CJ도너스캠프 아카데미(~3.2)",
   "category": "일자리",
   "lifecycle": [
@@ -28,20 +28,24 @@
   },
   "manual_conditions": [
     {
+      "label": "취업을 통해 자립하고자 하는 청년",
+      "hint": "자립 의지 확인"
+    },
+    {
       "label": "요리, 베이커리, F&B 서비스 분야로의 전문 직업인을 꿈꾸는 청년",
-      "hint": "지원서 내용 참조"
+      "hint": "분야 관련 경험 또는 자격증 확인"
     },
     {
       "label": "중위소득 120% 이하 및 사회적 배려 대상자 우대",
-      "hint": "서류 제출 시 확인"
+      "hint": "소득증명서 및 관련 서류로 확인"
     }
   ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1222&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

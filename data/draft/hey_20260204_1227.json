@@ -24,18 +24,22 @@
   },
   "manual_conditions": [
     {
-      "label": "화성시에 주민등록을 둔 19~39세 (예비)초기 창업 청년(1986~2007년 생)",
+      "label": "화성시에 주민등록을 둔",
       "hint": "주민등록증명서로 확인"
+    },
+    {
+      "label": "(예비)초기 창업 청년",
+      "hint": "사업계획서로 확인"
     }
   ],
-  "apply_channel": "온라인 잡아바 어플라이 신청 (https://apply.jobaba.net)",
+  "apply_channel": "온라인 잡아바 어플라이 신청",
   "exclusions": [],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1227&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

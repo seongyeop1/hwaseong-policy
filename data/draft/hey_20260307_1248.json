@@ -1,5 +1,5 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1248",
   "title": "[수원여성인력개발센터] AI기반 e커머스 마케팅 실무과정 교육생 모집",
   "category": "교육",
   "lifecycle": [
@@ -32,31 +32,31 @@
   "manual_conditions": [
     {
       "label": "AI활용 마케팅 관련 사무직 취업을 희망하는 여성(재직여성 포함)",
-      "hint": "직업희망서류로 확인"
+      "hint": "면접 시 확인"
     },
     {
       "label": "온라인 창업을 희망하는 여성",
-      "hint": "창업희망서류로 확인"
+      "hint": "면접 시 확인"
     },
     {
       "label": "마케팅, 경영, 홍보, 디자인 관련 전공자",
-      "hint": "학력증명서로 확인"
+      "hint": "우대사항, 이력서 확인"
     },
     {
       "label": "컴퓨터활용능력, GTQ 등 관련 자격증 보유자",
-      "hint": "자격증명서로 확인"
+      "hint": "우대사항, 자격증 제출"
     },
     {
       "label": "청년층 및 취업 취약계층 (여성가장, 다자녀가구, 저소득계층 등)",
-      "hint": "관련 증빙서류로 확인"
+      "hint": "우대사항, 증빙서류 제출"
     }
   ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1248&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

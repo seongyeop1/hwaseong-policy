@@ -22,19 +22,19 @@
   "manual_conditions": [
     {
       "label": "화성특례시 사회서비스 기관 및 종사자",
-      "hint": "소속 기관 확인"
+      "hint": "기관 소속 여부 확인"
     },
     {
       "label": "기관소속회원 인증 필수",
-      "hint": "홈페이지 회원가입 및 로그인 후 마이페이지에서 기관소속회원으로 전환 신청"
+      "hint": "화성시복지재단 홈페이지 회원가입 및 로그인 후 마이페이지에서 기관소속회원으로 전환 신청"
     }
   ],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1259&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

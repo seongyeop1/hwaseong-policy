@@ -6,14 +6,12 @@
     "청년"
   ],
   "beneficiary": "본인",
-  "benefit": "인턴 근무 후 정규직 전환 지원",
+  "benefit": "1인 총 460만원 지원",
   "deadline": null,
   "required_docs": [
     "공고 확인 필요"
   ],
-  "contact": "031-267-8792~8, https://www.hswf.or.kr/womanjob",
-  "exclusions": [],
-  "apply_channel": "새일센터 구직 등록",
+  "contact": "031-267-8792~8",
   "conditions": {
     "household": [
       "제한없음"
@@ -21,27 +19,26 @@
   },
   "manual_conditions": [
     {
-      "label": "상시근로자 5인 이상~1,000인 미만 사업장(4대보험 가입 기준)",
-      "hint": "사업장 규모 확인"
-    },
-    {
       "label": "새일센터 구직 등록 미취업 여성",
-      "hint": "새일센터 구직 등록 확인"
+      "hint": "새일센터 구직 등록 여부 확인"
     },
     {
       "label": "인턴 종료 후 정규직 전환",
-      "hint": "인턴 종료 후 정규직 전환 확인"
+      "hint": "인턴 종료 후 정규직 전환 여부 확인"
     },
     {
       "label": "최저임금 이상 지급 및 주 35시간 이상 근무(결혼이민여성 인턴은 주 30시간 이상)",
-      "hint": "임금 및 근무 시간 확인"
+      "hint": "근무 조건 확인"
     }
   ],
+  "exclusions": [],
+  "apply_channel": "홈페이지 https://www.hswf.or.kr/womanjob",
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1310&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,
@@ -51,6 +48,5 @@
       "source_url": false,
       "conditions_complete": false
     }
-  },
-  "first_seen": "2026-08-12"
+  }
 }

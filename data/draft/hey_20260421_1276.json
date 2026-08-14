@@ -11,8 +11,7 @@
   "required_docs": [
     "공고 확인 필요"
   ],
-  "contact": "남부 1권역(안양): 031-465-5279, 남부 2권역(성남): 031-703-0104, 북부권역(의정부): 031-821-8117",
-  "exclusions": [],
+  "contact": "남부 1권역(안양) 031-465-5279 / 남부 2권역(성남) 031-703-0104 / 북부권역(의정부) 031-821-8117",
   "apply_channel": "경기민원24 (https://gg24.gg.go.kr/) 온라인 접수",
   "conditions": {
     "age": {
@@ -26,15 +25,16 @@
   "manual_conditions": [
     {
       "label": "경기도 고립·은둔 청년",
-      "hint": "공고문에 따름"
+      "hint": "공고 확인 필요"
     }
   ],
+  "exclusions": [],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1276&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

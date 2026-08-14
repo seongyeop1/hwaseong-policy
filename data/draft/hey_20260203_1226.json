@@ -23,12 +23,20 @@
   },
   "manual_conditions": [
     {
-      "label": "2025. 1. 1. 이후부터 신청일 사이 화성시로 전입 또는 화성시 내에서 이사 후 전입신고 완료한",
-      "hint": "전입신고 확인서류로 확인"
+      "label": "2025. 1. 1. 이후부터 신청일 사이 화성시로 전입 또는 화성시 내에서 이사 후 전입신고 완료한 무주택 청년",
+      "hint": "전입신고 및 무주택 여부 확인"
     },
     {
-      "label": "무주택자",
-      "hint": "주택소유 여부 확인 서류로 확인"
+      "label": "국민기초생할수급권자 중 생계&middot;의료&middot;주거급여 수급자 제외",
+      "hint": "수급자 여부 확인"
+    },
+    {
+      "label": "임대인이 신청인 또는 배우자의 직계존속인 경우 제외",
+      "hint": "임대인 및 가족 관계 확인"
+    },
+    {
+      "label": "신청자 본인 포함 세대원 중 주택소유자(입주권 및 분양권 포함) 제외",
+      "hint": "주택 소유 여부 확인"
     }
   ],
   "exclusions": [
@@ -38,11 +46,11 @@
   ],
   "apply_channel": "잡아바어플라이 통합접수시스템을 통한 온라인 접수",
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1226&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,

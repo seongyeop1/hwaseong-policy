@@ -48,6 +48,8 @@ DRAFT_DIR = ROOT / "data" / "draft"
 SCHEMA_PATH = ROOT / "packages" / "schema" / "policy.schema.json"
 
 GROQ_MODEL      = "llama-3.3-70b-versatile"   # Groq 무료 티어: 하루 100k 토큰
+CEREBRAS_MODEL  = "zai-glm-4.7"               # Cerebras (현재 유료만 지원)
+GEMINI_MODEL    = "models/gemini-2.5-flash"    # Google 무료 티어: 1500 요청/일
 ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"  # 속도·비용 최적, 한도 없음
 TODAY = date.today().isoformat()
 
@@ -193,31 +195,47 @@ def add_review_block(policy: dict) -> dict:
     return policy
 
 
-def call_llm(client, provider: str, user_prompt: str) -> str:
-    """provider에 따라 Groq 또는 Anthropic API 호출."""
+def call_llm(clients, provider: str, user_prompt: str) -> str:
+    """provider에 따라 API 호출. groq는 클라이언트 목록을 순서대로 시도."""
     if provider == "anthropic":
-        resp = client.messages.create(
+        resp = clients[0].messages.create(
             model=ANTHROPIC_MODEL,
             max_tokens=4096,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": user_prompt}],
         )
         return resp.content[0].text.strip()
+
+    if provider == "cerebras":
+        model = CEREBRAS_MODEL
+    elif provider == "gemini":
+        model = GEMINI_MODEL
     else:
-        resp = client.chat.completions.create(
-            model=GROQ_MODEL,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-            max_tokens=4096,
-            temperature=0,
-        )
-        return resp.choices[0].message.content.strip()
+        model = GROQ_MODEL
+
+    last_exc = None
+    for client in clients:
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt},
+                ],
+                max_tokens=4096,
+                temperature=0,
+            )
+            return resp.choices[0].message.content.strip()
+        except Exception as exc:
+            if "429" in str(exc) or "rate_limit" in str(exc).lower():
+                last_exc = exc
+                continue
+            raise
+    raise last_exc
 
 
 def parse_file(
-    client,
+    clients,
     raw_path: Path,
     validator,
     provider: str = "groq",
@@ -241,7 +259,7 @@ def parse_file(
 
     # ── LLM 호출 ──
     try:
-        raw_text = call_llm(client, provider, build_user_prompt(meta))
+        raw_text = call_llm(clients, provider, build_user_prompt(meta))
     except Exception as exc:
         print(f"  ❌ API 오류: {raw_path.name} — {exc}")
         return "fail"
@@ -326,14 +344,14 @@ def main() -> None:
     ap.add_argument("--tracked-only", action="store_true",
                     help="git 추적 중인 draft 파일만 재파싱 (--force와 함께 사용, 토큰 절약)")
     ap.add_argument("--dry-run", action="store_true", help="API 호출 없이 대상 확인만")
-    ap.add_argument("--provider", choices=["groq", "anthropic"], default="groq",
-                    help="LLM 공급자 (기본: groq / 한도 소진 시: anthropic)")
+    ap.add_argument("--provider", choices=["groq", "cerebras", "gemini", "anthropic"], default="groq",
+                    help="LLM 공급자 (기본: groq / 한도 소진 시: gemini 또는 anthropic)")
     args = ap.parse_args()
 
     if args.file and not args.file.exists():
         sys.exit(f"파일 없음: {args.file}")
 
-    client = None
+    clients = []
     if not args.dry_run:
         if args.provider == "anthropic":
             try:
@@ -343,16 +361,33 @@ def main() -> None:
             api_key = os.getenv("ANTHROPIC_API_KEY")
             if not api_key:
                 sys.exit("ANTHROPIC_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.")
-            client = Anthropic(api_key=api_key)
-        else:
-            api_key = os.getenv("GROQ_API_KEY")
+            clients = [Anthropic(api_key=api_key)]
+        elif args.provider == "cerebras":
+            api_key = os.getenv("CEREBRAS_API_KEY")
             if not api_key:
+                sys.exit("CEREBRAS_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.")
+            clients = [OpenAI(base_url="https://api.cerebras.ai/v1", api_key=api_key)]
+        elif args.provider == "gemini":
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                sys.exit("GEMINI_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.")
+            clients = [OpenAI(
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+                api_key=api_key,
+            )]
+        else:
+            key1 = os.getenv("GROQ_API_KEY")
+            if not key1:
                 sys.exit(
                     "GROQ_API_KEY가 설정되지 않았습니다.\n"
                     ".env 파일에 다음을 추가하거나 export로 설정하세요:\n"
                     "  GROQ_API_KEY=gsk_..."
                 )
-            client = OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key)
+            clients = [OpenAI(base_url="https://api.groq.com/openai/v1", api_key=key1)]
+            key2 = os.getenv("GROQ_API_KEY_2")
+            if key2:
+                clients.append(OpenAI(base_url="https://api.groq.com/openai/v1", api_key=key2))
+                print(f"Groq 키 {len(clients)}개 로드됨 (429 시 자동 전환)")
 
     if not SCHEMA_PATH.exists():
         sys.exit(f"스키마 파일 없음: {SCHEMA_PATH}")
@@ -364,13 +399,14 @@ def main() -> None:
         print("처리할 파일이 없습니다.")
         return
 
-    model_label = ANTHROPIC_MODEL if args.provider == "anthropic" else GROQ_MODEL
+    _model_map = {"anthropic": ANTHROPIC_MODEL, "cerebras": CEREBRAS_MODEL, "gemini": GEMINI_MODEL}
+    model_label = _model_map.get(args.provider, GROQ_MODEL)
     mode = "dry-run" if args.dry_run else f"provider={args.provider} model={model_label}"
     print(f"파싱 대상: {len(files)}건 | {mode} | → {DRAFT_DIR.relative_to(ROOT)}")
 
     ok = fail = skip = 0
     for f in files:
-        result = parse_file(client, f, validator,
+        result = parse_file(clients, f, validator,
                             provider=args.provider, force=args.force, dry_run=args.dry_run)
         if result == "ok":
             ok += 1

@@ -1,12 +1,12 @@
 {
-  "policy_id": "hs-2026-XXXX",
+  "policy_id": "hs-2026-1221",
   "title": "[화성시] 청년기자단(V:ON) 모집",
   "category": "기타",
   "lifecycle": [
     "청년"
   ],
   "beneficiary": "본인",
-  "benefit": "월별 활동 지원, 기자단 위촉장 전달, 전문가 교육, 기자증 및 활동물품 지원",
+  "benefit": "월별 활동 및 콘텐츠 제작 지원, 전문가 교육, 기자증 및 활동물품 지원, 우수기자 표창 수여",
   "deadline": "2026-02-22",
   "required_docs": [
     "신청서"
@@ -24,17 +24,17 @@
   },
   "manual_conditions": [
     {
-      "label": "화성시 거주",
+      "label": "화성시 거주 만19~39세 청년",
       "hint": "주민등록증 또는 거주증명서로 확인"
     }
   ],
   "exclusions": [],
   "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1221&menuLevel=2&menuNo=95",
-  "first_seen": "2026-08-13",
+  "first_seen": "2026-08-14",
   "review": {
     "parsed_by": "A",
     "reviewed_by": "",
-    "reviewed_at": "2026-08-13",
+    "reviewed_at": "2026-08-14",
     "checklist": {
       "conditions": false,
       "deadline": false,
