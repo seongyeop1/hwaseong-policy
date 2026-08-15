@@ -34,71 +34,96 @@ function CategoryIcon({ id, className }: { id: string; className?: string }) {
     case '청년':
       return (
         <svg {...base}>
-          <circle cx="12" cy="8" r="3.5" />
-          <path d="M4 21a8 8 0 0116 0" />
+          {/* 졸업모자 + 사람 */}
+          <circle cx="12" cy="14" r="3" />
+          <path d="M6 21a6 6 0 0112 0" />
+          <path d="M7 11l5-2 5 2-5 2-5-2z" />
+          <path d="M17 11v2.5" />
+          <circle cx="17" cy="14" r="0.6" />
         </svg>
       );
     case '신혼부부':
       return (
         <svg {...base}>
-          <circle cx="8" cy="8" r="2.8" />
-          <path d="M2 21a6 6 0 0112 0" />
-          <circle cx="16" cy="8" r="2.8" />
-          <path d="M10 21a6 6 0 0112 0" />
+          {/* 두 사람 + 결혼반지 */}
+          <circle cx="8" cy="7" r="2.5" />
+          <path d="M3 19a5 5 0 0110 0" />
+          <circle cx="16" cy="7" r="2.5" />
+          <path d="M11 19a5 5 0 0110 0" />
+          <circle cx="10.5" cy="21.5" r="1.5" />
+          <circle cx="13.5" cy="21.5" r="1.5" />
         </svg>
       );
     case '임신·출산':
       return (
         <svg {...base}>
-          <circle cx="12" cy="5.5" r="2.5" />
-          <path d="M9 10a3 3 0 016 0c0 3.5-1.5 8-3 8s-3-4.5-3-8z" />
+          {/* 임신부 옆모습 실루엣 */}
+          <circle cx="13" cy="6" r="2.5" />
+          <path d="M10 9 v12" />
+          <path d="M10 9 Q13 9 14 10.5 Q19 14 17 18 Q15 22 10 21" />
         </svg>
       );
     case '어르신':
       return (
         <svg {...base}>
-          <circle cx="9" cy="7.5" r="3" />
-          <path d="M3 21a6 6 0 0110.5-4" />
-          <path d="M17 10v10" />
-          <path d="M15 12l2-2 2 2" />
+          {/* 굽은 자세 + 지팡이 */}
+          <circle cx="9" cy="6.5" r="2.5" />
+          <path d="M9 9 Q8 13 7 17" />
+          <path d="M7 17 L8 21" />
+          <path d="M7 17 L6 21" />
+          <path d="M8.5 12 L14 13" />
+          <path d="M12.5 12 Q14 11 14 13" />
+          <path d="M14 13 L17 21" />
         </svg>
       );
     case '영유아':
       return (
         <svg {...base}>
-          <circle cx="12" cy="11" r="5.5" />
-          <circle cx="10" cy="10.5" r="0.75" />
-          <circle cx="14" cy="10.5" r="0.75" />
-          <path d="M10 13.5a2.5 2.5 0 004 0" />
-          <path d="M9.5 5.5C9.5 4 10.5 3 12 3" />
+          {/* 유모차 */}
+          <path d="M4 14 Q4 7 13 7 L20 7" />
+          <rect x="4" y="14" width="16" height="5" rx="1" />
+          <path d="M20 10 L23 5" />
+          <path d="M7 19 L7 21" />
+          <path d="M17 19 L17 21" />
+          <circle cx="7" cy="22" r="1.5" />
+          <circle cx="17" cy="22" r="1.5" />
         </svg>
       );
     case '다자녀':
       return (
         <svg {...base}>
-          <circle cx="7" cy="7.5" r="3" />
-          <path d="M1.5 20a5.5 5.5 0 0111 0" />
-          <circle cx="17" cy="9" r="2.3" />
-          <path d="M12 20a4.5 4.5 0 019 0" />
+          {/* 어른 1명 + 아이 2명 */}
+          <circle cx="12" cy="5" r="2.5" />
+          <path d="M9 21 Q9 10 12 10 Q15 10 15 21" />
+          <path d="M9 12 L6 13" />
+          <path d="M15 12 L18 13" />
+          <circle cx="5" cy="12" r="1.8" />
+          <path d="M3 21 Q3 17 5 17 Q7 17 7 21" />
+          <circle cx="19" cy="12" r="1.8" />
+          <path d="M17 21 Q17 17 19 17 Q21 17 21 21" />
         </svg>
       );
     case '중장년':
       return (
         <svg {...base}>
-          <circle cx="9.5" cy="7" r="3" />
-          <path d="M3.5 19a6 6 0 019.5-4.5" />
-          <rect x="13" y="13" width="8" height="6" rx="1.5" />
-          <path d="M15.5 13v-1.5a1.5 1.5 0 013 0V13" />
+          {/* 서류가방(브리프케이스) */}
+          <rect x="3" y="10" width="18" height="12" rx="2" />
+          <path d="M9 10 V7 Q9 5 12 5 Q15 5 15 7 V10" />
+          <path d="M3 15 H21" />
+          <path d="M11 17.5 h2" />
         </svg>
       );
     case '장애인':
       return (
         <svg {...base}>
-          <circle cx="13" cy="4" r="2" />
-          <path d="M11 7.5L9.5 13h6l1.5 4.5" />
-          <circle cx="9" cy="20" r="2.5" />
-          <path d="M9.5 10h4" />
-          <path d="M9.5 13l-.5 7" />
+          {/* 휠체어 국제 심볼 */}
+          <circle cx="16" cy="4" r="2" />
+          <path d="M16 6 L13 12" />
+          <path d="M14 9 L10 13" />
+          <path d="M13 12 L18 12" />
+          <path d="M18 12 L19 15" />
+          <circle cx="10" cy="19" r="4.5" />
+          <circle cx="19" cy="20" r="1.5" />
         </svg>
       );
     default:
@@ -326,22 +351,24 @@ export default function PoliciesPage() {
                   <a
                     key={lc.id}
                     href={`#${lc.anchor}`}
-                    className="group bg-white rounded-2xl ring-1 ring-blue-100 p-4 flex flex-col gap-1 hover:ring-blue-300 hover:shadow-[0_4px_16px_rgba(59,130,246,0.1)] transition-all duration-150"
+                    className="group bg-white rounded-2xl ring-1 ring-blue-100 p-3.5 flex items-center gap-3 hover:ring-blue-300 hover:shadow-[0_4px_16px_rgba(59,130,246,0.1)] transition-all duration-150"
                   >
-                    <CategoryIcon id={lc.id} className="w-7 h-7 text-blue-500 mb-1 group-hover:text-blue-600 transition-colors" />
-                    <p className="font-semibold text-sm text-gray-800 group-hover:text-blue-700 transition-colors">{lc.id}</p>
-                    <span className="text-[0.625rem] font-bold text-blue-600 tracking-wide mt-auto pt-2">
-                      {lc.policies.length}개 정책 →
-                    </span>
+                    <CategoryIcon id={lc.id} className="w-7 h-7 text-blue-500 flex-shrink-0 group-hover:text-blue-600 transition-colors" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-gray-800 group-hover:text-blue-700 transition-colors leading-tight">{lc.id}</p>
+                      <span className="text-[0.625rem] font-bold text-blue-600 tracking-wide">{lc.policies.length}개 정책 →</span>
+                    </div>
                   </a>
                 ) : (
                   <div
                     key={lc.id}
-                    className="bg-white rounded-2xl ring-1 ring-gray-100 p-4 flex flex-col gap-1 opacity-50 cursor-not-allowed"
+                    className="bg-white rounded-2xl ring-1 ring-gray-100 p-3.5 flex items-center gap-3 opacity-50 cursor-not-allowed"
                   >
-                    <CategoryIcon id={lc.id} className="w-7 h-7 text-gray-300 mb-1" />
-                    <p className="font-semibold text-sm text-gray-800">{lc.id}</p>
-                    <span className="text-[0.625rem] font-medium text-gray-300 tracking-wide mt-auto pt-2">준비 중</span>
+                    <CategoryIcon id={lc.id} className="w-7 h-7 text-gray-300 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-gray-800 leading-tight">{lc.id}</p>
+                      <span className="text-[0.625rem] font-medium text-gray-300 tracking-wide">준비 중</span>
+                    </div>
                   </div>
                 )
               )}
