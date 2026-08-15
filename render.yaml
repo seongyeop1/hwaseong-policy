@@ -25,7 +25,8 @@
 #
 # 기동 후 확인 — GET /health:
 #   {"status":"ok","db":"not_configured","policies":8,"summaries":0}
-#     - db: not_configured 는 정상 (SUPABASE_URL 미설정 시의 설계된 응답)
+#     - db: not_configured 는 정상 — 정책은 DB 가 아니라 data/policies 파일 스토어에서 서빙한다.
+#       PostgreSQL 전환은 베타 로드맵 항목이라 대회 기간에는 연결하지 않는다
 #     - policies 가 0 이면 정책 파일을 못 읽은 것 → 아래 POLICIES_DIR 주석을 해제한다
 #     - policies 건수는 검수 게이트를 통과한 정책만 센다 (store.py) — data/policies 파일 수와
 #       다르면 게이트 탈락분이 있다는 뜻이므로 서버 로그의 "검수 게이트 탈락" 경고를 확인한다

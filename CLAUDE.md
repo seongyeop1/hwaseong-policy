@@ -83,6 +83,12 @@ UI·발표자료에서 "확정" 이라는 단어를 쓰지 않고 디스클레�
 
 ## 스택
 
-Next.js + Tailwind / FastAPI / PostgreSQL(JSONB) / Claude API / Vercel + Supabase
+Next.js + Tailwind / FastAPI / Claude API / Vercel + Render
+
+**정책 데이터는 DB 가 아니라 `data/policies/*.json` 파일 스토어에서 서빙한다**
+(`apps/api/app/store.py` — 검수 게이트 통과분만 로드). `/health` 의 `db: not_configured` 가 정상 상태다.
+
+PostgreSQL(Supabase) 전환은 **베타 로드맵 항목이지 대회 산출물이 아니다.**
+발표·Q&A 에서 현재 구성으로 말하지 않는다 — "지금은 파일 스토어, 베타에서 PostgreSQL 전환" 이 정확한 표현이다.
 
 상세는 @README.md 참조.
