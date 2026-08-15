@@ -1,4 +1,4 @@
-"""규칙 엔진 — 분류 규칙 0~4 구현. 정본은 packages/schema/api-contract.md v1.1.1.
+"""규칙 엔진 — 분류 규칙 0~4 구현. 정본은 packages/schema/api-contract.md v1.1.3.
 
 절대 원칙 (CLAUDE.md):
 - **순수 함수.** 전역 상태·LLM·네트워크 금지, 기준일은 as_of 인자로만 (`datetime.now()` 금지).
@@ -36,6 +36,10 @@ from .dates import (
 
 # 규칙 1·2의 "가까운 미래" 창 — 이 안에 충족되는 조건만 upcoming 이 된다
 UPCOMING_WINDOW_DAYS = 90
+
+# 세대주 미지정 프로필의 폴백 기준 — 민법상 성년(만 19세). 성인 본인은 본인을 세대주로,
+# 미성년 본인(조력자 모드 — 자녀가 부모 대신 입력)은 부/모를 세대주로 본다.
+ADULT_AGE = 19
 
 # 통과 사유가 하나도 안 나오는 정책의 대체 문장 — 분류마다 사실이 다르므로 문구도 다르다.
 #
@@ -255,31 +259,64 @@ def evaluate(profile: Profile, policy: dict, as_of: date) -> dict:
     return {"status": "eligible", "reasons": reasons or [NO_MACHINE_CONDITIONS_REASON]}
 
 
-def evaluate_all(profile: Profile, policies: Iterable[dict], as_of: date) -> dict:
-    """전체 정책 × 프로필(본인)을 판정해 계약 v1.1 results를 만든다.
+def basis_members(policy: dict, profile: Profile, as_of: date) -> list[tuple[str, date]]:
+    """정책의 beneficiary가 가리키는 판정 기준 가구원 — (for_member, birth_date) 목록.
 
-    지금은 본인 단독 판정 — 가구 판정(8/14~)은 members를 순회하며 이 함수 구조 그대로
-    for_member만 바꿔 항목을 늘린다 (응답 구조 불변, 계약서 약속).
+    빈 목록 = 기준 가구원이 이 가구에 없음 → 비대상 (자녀 대상 정책 + 자녀 없는 가구 등).
+    자녀가 여럿이면 각각 담는다 — 응답 항목도 각각 나간다 ((정책, 가구원) 쌍당 한 분류).
+    나이만 가구원별 값을 쓰고, 거주개월·가구 유형은 가구 공통값으로 판정한다
+    (profile.schema.json의 members에는 개인별 전입일이 없다).
+    """
+    beneficiary = policy.get("beneficiary", "본인")
+    if beneficiary in ("배우자", "자녀"):
+        return [(m.relation, m.birth_date) for m in profile.members if m.relation == beneficiary]
+    if beneficiary == "세대주":
+        flagged = [m for m in profile.members if m.is_householder]
+        if flagged:
+            return [(flagged[0].relation, flagged[0].birth_date)]
+        if age_on(profile.birth_date, as_of) >= ADULT_AGE:
+            return [("본인", profile.birth_date)]
+        parents = [m for m in profile.members if m.relation in ("부", "모")]
+        if parents:
+            return [(parents[0].relation, parents[0].birth_date)]
+        return []
+    # "본인"과 "가구"(대표자 기준 판정 — hs-2026-0002 확정 동작) — 종전과 동일
+    return [("본인", profile.birth_date)]
+
+
+def evaluate_all(profile: Profile, policies: Iterable[dict], as_of: date) -> dict:
+    """전체 정책 × 판정 기준 가구원을 판정해 계약 v1.1 results를 만든다.
+
+    가구 판정: 정책마다 basis_members가 고른 가구원 각각의 나이로 판정하고, 그 가구원을
+    for_member에 적는다. members가 없거나 본인뿐이면 종전 본인 단독 판정과 동일하다(하위 호환).
+    자녀가 여럿이면 같은 정책이 여러 항목으로 나온다 — (정책, 가구원) 쌍당 한 분류가
+    불변식이므로 정책 ID 기준 중복 제거를 하지 않는다 (절대 원칙).
     """
     results: dict[str, list[dict]] = {"eligible": [], "docs_needed": [], "upcoming": []}
     for policy in policies:
-        verdict = evaluate(profile, policy, as_of)
-        status = verdict["status"]
-        if status == "excluded":
-            continue
-        item: dict[str, Any] = {
-            "for_member": "본인",
-            "policy": to_api_policy(policy),
-            "reasons": verdict["reasons"],
-        }
-        if status == "upcoming":
-            item.update(
-                waiting_for=verdict["waiting_for"],
-                d_day=verdict["d_day"],
-                expected_date=verdict["expected_date"],
-                verify=verdict["verify"],
+        for for_member, birth_date in basis_members(policy, profile, as_of):
+            basis = (
+                profile
+                if birth_date == profile.birth_date
+                else profile.model_copy(update={"birth_date": birth_date})
             )
-        elif status == "docs_needed":
-            item["verify"] = verdict["verify"]
-        results[status].append(item)
+            verdict = evaluate(basis, policy, as_of)
+            status = verdict["status"]
+            if status == "excluded":
+                continue
+            item: dict[str, Any] = {
+                "for_member": for_member,
+                "policy": to_api_policy(policy),
+                "reasons": verdict["reasons"],
+            }
+            if status == "upcoming":
+                item.update(
+                    waiting_for=verdict["waiting_for"],
+                    d_day=verdict["d_day"],
+                    expected_date=verdict["expected_date"],
+                    verify=verdict["verify"],
+                )
+            elif status == "docs_needed":
+                item["verify"] = verdict["verify"]
+            results[status].append(item)
     return results
