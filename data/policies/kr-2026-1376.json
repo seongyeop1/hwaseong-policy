@@ -1,0 +1,52 @@
+{
+  "policy_id": "kr-2026-1376",
+  "title": "2026 사회참여형 미래내일 일경험 사업 3차 참여자 모집",
+  "category": "일자리",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "최대 300만 원의 활동비 지원",
+  "deadline": null,
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "02-2274-7761, 26futureyouth@gmail.com",
+  "exclusions": [],
+  "apply_channel": "청년일경험포털 일경험 프로그램 정보 페이지 상세검색",
+  "conditions": {
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "구직 자신감이 저하된 청년",
+      "hint": "자격 요건 확인"
+    },
+    {
+      "label": "직장경험 불만족 및 상향이직 어려움 등으로 재구직을 포기한 청년",
+      "hint": "자격 요건 확인"
+    },
+    {
+      "label": "最近 3개월 간 취업 교육 훈련 이력없는 청년",
+      "hint": "자격 요건 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1376&menuLevel=2&menuNo=95",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  },
+  "first_seen": "2026-08-10"
+}

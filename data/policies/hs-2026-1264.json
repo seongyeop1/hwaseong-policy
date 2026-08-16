@@ -1,0 +1,52 @@
+{
+  "policy_id": "hs-2026-1264",
+  "title": "2026 청년 새로:온(溫) 창업동아리 모집",
+  "category": "일자리",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "최소 1,280천원~최대 2,000천원 프로젝트 지원금 지급",
+  "deadline": "2026-04-13",
+  "required_docs": [
+    "신청서",
+    "경기도에 활동지를 두고 있음을 증명할 수 있는 서류"
+  ],
+  "contact": "유선문의: 경기도사회적경제원 성장지원팀(☎031-258-3252, 3258, 3260), 메일문의: gsic_impact@gsic.or.kr",
+  "exclusions": [],
+  "apply_channel": "경기도사회적경제원 누리집(www.gsic.or.kr) 온라인 신청·접수",
+  "conditions": {
+    "age": {
+      "max": 24
+    },
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "경기도에 활동지를 두고 있는 청년 동아리",
+      "hint": "주민등록등본, 재학(재직)증명서 등으로 확인"
+    },
+    {
+      "label": "동아리 구성원 중 만 24세 이하 청년이 1인 이상 포함되어야 함",
+      "hint": "주민등록등본 등으로 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1264&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  }
+}

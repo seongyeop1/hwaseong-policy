@@ -1,0 +1,64 @@
+{
+  "policy_id": "hs-2026-1225",
+  "title": "[화성시] 2026년 화성시 청년 전월세 보증금 대출이자 지원사업",
+  "category": "주거",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "최대 200만원(대출이율 최대2%까지) 지원",
+  "deadline": "2026-02-27",
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "화성시 청년청소년과 (031-5189-6217)",
+  "conditions": {
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "화성시에 주민등록을 둔 무주택 청년",
+      "hint": "주민등록증명서로 확인"
+    },
+    {
+      "label": "제1·2금융기관에서 전세 또는 월세 보증금 대출 후 2024.1.1.~신청일 사이에 1년 이상 이자를 상환한 무주택 청년",
+      "hint": "대출증명서 및 이자상환내역서로 확인"
+    },
+    {
+      "label": "정부 공공주거사업(행복주택, 공공임대주택 등) 수혜자 아님",
+      "hint": "공공주거사업 수혜자 증명서로 확인"
+    },
+    {
+      "label": "국민기초생활수급권자(생계·주거·의료) 아님",
+      "hint": "기초생활수급자 증명서로 확인"
+    },
+    {
+      "label": "교육급여수급권자는 지원 가능",
+      "hint": "교육급여수급자 증명서로 확인"
+    }
+  ],
+  "exclusions": [
+    "정부 공공주거사업(행복주택, 공공임대주택 등) 수혜자",
+    "국민기초생활수급권자(생계·주거·의료)"
+  ],
+  "apply_channel": "잡아바어플라이 통합접수시스템을 통한 온라인 접수",
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1225&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true,
+      "exclusions": true
+    }
+  }
+}

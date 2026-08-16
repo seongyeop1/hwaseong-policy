@@ -1,0 +1,53 @@
+{
+  "policy_id": "hs-2026-1227",
+  "title": "[화성시] 2026년 화성시 청년 창업 스타트",
+  "category": "일자리",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "창업 실무 역량 강화 교육 지원",
+  "deadline": "2026-02-27",
+  "required_docs": [
+    "주민등록초본",
+    "사업계획서"
+  ],
+  "contact": "화성시 청년청소년과 청년일자리팀 ☎031-5189-6420",
+  "conditions": {
+    "age": {
+      "min": 19,
+      "max": 39
+    },
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "화성시에 주민등록을 둔",
+      "hint": "주민등록증명서로 확인"
+    },
+    {
+      "label": "(예비)초기 창업 청년",
+      "hint": "사업계획서로 확인"
+    }
+  ],
+  "apply_channel": "온라인 잡아바 어플라이 신청",
+  "exclusions": [],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1227&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  }
+}
