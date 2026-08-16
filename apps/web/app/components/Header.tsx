@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLargeText } from '@/app/providers';
+import SearchModal from '@/app/components/SearchModal';
 
 const NAV_ITEMS = [
   { href: '/', label: '서비스 소개' },
@@ -41,6 +42,18 @@ export default function Header() {
   const pathname = usePathname();
   const { largeText, toggle } = useLargeText();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
 
   return (
     <header className="bg-white/75 backdrop-blur-2xl backdrop-saturate-180 shadow-[0_1px_0_rgba(0,0,0,0.07)] fixed top-0 left-0 right-0 z-[9999]">
@@ -73,10 +86,11 @@ export default function Header() {
         <div className="flex items-center gap-1.5">
           {/* 검색 아이콘 */}
           <motion.button
+            onClick={() => setSearchOpen(true)}
             whileTap={{ scale: 0.88 }}
             transition={tapSpring}
             className="hidden sm:flex w-8 h-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-[background-color,color] duration-150"
-            aria-label="검색"
+            aria-label="정책 검색"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -167,16 +181,21 @@ export default function Header() {
             })}
             {/* 모바일 검색 */}
             <div className="px-3 py-2 mt-1 border-t border-gray-100">
-              <div className="w-full flex items-center gap-2 text-sm text-gray-300 bg-gray-50 rounded-xl px-3 py-2.5 cursor-not-allowed opacity-60">
+              <button
+                onClick={() => { setMenuOpen(false); setSearchOpen(true); }}
+                className="w-full flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-xl px-3 py-2.5 hover:bg-blue-50 hover:text-blue-700 transition-[background-color,color] duration-150 active:scale-[0.98]"
+              >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                정책 검색 (준비 중)
-              </div>
+                정책 검색
+              </button>
             </div>
           </motion.nav>
         )}
       </AnimatePresence>
+
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

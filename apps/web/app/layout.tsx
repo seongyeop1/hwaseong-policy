@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main className="flex-1 pt-16">{children}</main>
           <footer className="border-t border-gray-100 bg-white py-5 mt-10">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
-              <span className="font-semibold text-primary-600">화성맞춤</span>
+              <span className="font-semibold text-sky-600">화성맞춤</span>
               <span>화성시 개인별 맞춤형 정책 지원 서비스 · © 2026</span>
               <span>실제 수급 자격은 담당 부서에 문의하세요.</span>
             </div>

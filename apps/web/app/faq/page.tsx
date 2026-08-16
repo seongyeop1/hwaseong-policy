@@ -126,7 +126,7 @@ export default function FAQPage() {
             <motion.div whileTap={{ scale: 0.96 }} transition={tapSpring} className="inline-block">
               <Link
                 href="/analysis"
-                className="inline-block bg-primary-600 hover:bg-primary-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors text-sm"
+                className="inline-block bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-xl transition-[background-color,box-shadow] duration-150 text-sm shadow-md shadow-sky-200"
               >
                 맞춤 정책 분석하기 →
               </Link>

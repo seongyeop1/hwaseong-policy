@@ -240,19 +240,9 @@ export default function AnalysisPage() {
   return (
     <div className="bg-[#E1EEF6] min-h-screen">
 
-      {/* ── 다크존: 폼 또는 프로필 칩 ── */}
-      <div className="max-w-[480px] mx-auto px-5">
+      {/* ── 폼 또는 프로필 칩 ── */}
+      <div className="max-w-6xl mx-auto px-5 sm:px-8">
 
-        <div className="pt-6">
-          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase">
-            화성시 · 기준일 {displayAsOf}
-            {simActive && <span className="ml-2 text-amber-300">(시뮬레이션)</span>}
-          </p>
-        </div>
-
-        {/* ────────────────────────────────────────────────────
-            BLOCK 1: 폼 위저드 ↔ 프로필 요약 칩
-        ──────────────────────────────────────────────────── */}
         <AnimatePresence mode="wait">
           {!analyzed ? (
             <motion.div
@@ -260,15 +250,42 @@ export default function AnalysisPage() {
               initial={false}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.22 }}
-              className="py-8"
+              className="py-10 grid grid-cols-1 lg:grid-cols-[2fr_2.4fr] gap-10 lg:gap-20 items-start"
             >
-              <h1 className="text-[2.625rem] sm:text-5xl font-bold text-slate-800 [letter-spacing:-0.04em] leading-[1.04] mb-3">
-                내 정보를<br />입력해 주세요
-              </h1>
-              <p className="text-slate-600 text-sm leading-relaxed mb-8">
-                4가지 정보만 입력하면<br />맞춤 정책을 바로 찾아드립니다.
-              </p>
-              <ProfileForm onAnalyze={handleAnalyze} />
+              {/* 왼쪽: 제목·설명 */}
+              <div className="lg:pt-16 lg:pl-16">
+                <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase mb-4">
+                  화성시 · 기준일 {displayAsOf}
+                  {simActive && <span className="ml-2 text-amber-400">(시뮬레이션)</span>}
+                </p>
+                <h1 className="text-4xl sm:text-5xl font-bold text-slate-800 leading-tight mb-4" style={{ letterSpacing: '-0.04em' }}>
+                  내 정보를<br />입력해 주세요
+                </h1>
+                <p className="text-slate-500 text-base leading-relaxed mb-8">
+                  4가지 정보만 입력하면<br />맞춤 정책을 바로 찾아드립니다.
+                </p>
+                <ul className="space-y-2.5">
+                  {[
+                    '화성시 정책 전수 분석',
+                    '마감·자격 요건 자동 판정',
+                    'D-day 예고로 놓치지 않게',
+                  ].map((txt) => (
+                    <li key={txt} className="flex items-center gap-2.5 text-sm text-slate-600">
+                      <span className="w-4 h-4 rounded-full bg-sky-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-2.5 h-2.5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                      {txt}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* 오른쪽: 폼 카드 */}
+              <div className="lg:mt-16">
+                <ProfileForm onAnalyze={handleAnalyze} />
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -429,7 +446,7 @@ export default function AnalysisPage() {
                     onClick={handleReset}
                     whileTap={{ scale: 0.97 }}
                     transition={tapSpring}
-                    className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition-colors shadow-[0_4px_20px_rgba(15,131,75,0.25)]"
+                    className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition-colors shadow-[0_4px_20px_rgba(14,165,233,0.25)]"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

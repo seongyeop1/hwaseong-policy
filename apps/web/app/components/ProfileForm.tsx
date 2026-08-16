@@ -90,7 +90,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
       {/* ── 상단 진행 바 ── */}
       <div className="h-[2px] bg-zinc-100 relative overflow-hidden">
         <motion.div
-          className="absolute inset-y-0 left-0 bg-primary-500"
+          className="absolute inset-y-0 left-0 bg-sky-500"
           initial={false}
           animate={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
           transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
@@ -105,7 +105,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
               <motion.div
                 animate={{
                   backgroundColor:
-                    i < step  ? '#0f834b' :
+                    i < step  ? '#0ea5e9' :
                     i === step ? '#09090b' :
                                  '#f4f4f5',
                   color: i <= step ? '#ffffff' : '#a1a1aa',
@@ -158,7 +158,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
                       type="date"
                       value={profile.birth_date}
                       onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-primary-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
+                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
                     />
                   </div>
                   <div>
@@ -167,7 +167,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
                       type="date"
                       value={profile.move_in_date}
                       onChange={(e) => setProfile({ ...profile, move_in_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-primary-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
+                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
                     />
                     <p className="text-[0.6rem] text-zinc-300 mt-1.5">거주 기간 요건이 있는 정책의 신청 가능 시점을 계산합니다</p>
                   </div>
@@ -180,7 +180,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
               <div>
                 <h3 className="text-[1.625rem] font-bold text-gray-900 [letter-spacing:-0.03em] mb-1">{STEPS[1].title}</h3>
                 <p className="text-sm text-zinc-400 mb-7">{STEPS[1].sub}</p>
-                <div className="relative border-b-2 border-zinc-100 pb-1 focus-within:border-primary-500 transition-colors">
+                <div className="relative border-b-2 border-zinc-100 pb-1 focus-within:border-sky-500 transition-colors">
                   <select
                     value={profile.region}
                     onChange={(e) => setProfile({ ...profile, region: e.target.value })}
@@ -217,7 +217,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
                       transition={tapSpring}
                       className={`py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
                         profile.household_type === opt.id
-                          ? 'bg-primary-600 text-white shadow-[0_4px_16px_rgba(15,131,75,0.25)]'
+                          ? 'bg-sky-600 text-white shadow-[0_4px_16px_rgba(14,165,233,0.3)]'
                           : 'bg-zinc-50 text-zinc-600 hover:bg-zinc-100'
                       }`}
                     >
@@ -245,7 +245,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
                         transition={tapSpring}
                         className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                           selected
-                            ? 'bg-primary-600 text-white shadow-[0_4px_12px_rgba(15,131,75,0.25)]'
+                            ? 'bg-sky-600 text-white shadow-[0_4px_12px_rgba(14,165,233,0.3)]'
                             : 'bg-zinc-50 text-zinc-600 hover:bg-zinc-100'
                         }`}
                       >
@@ -284,7 +284,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
               transition={tapSpring}
               className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
                 canNext
-                  ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-[0_4px_20px_rgba(15,131,75,0.3)]'
+                  ? 'bg-sky-600 text-white hover:bg-sky-700 shadow-[0_4px_20px_rgba(14,165,233,0.3)]'
                   : 'bg-zinc-100 text-zinc-300 cursor-not-allowed'
               }`}
             >
@@ -296,7 +296,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
               onClick={() => onAnalyze?.(profile)}
               whileTap={{ scale: 0.97 }}
               transition={tapSpring}
-              className="flex-1 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-bold py-3 rounded-xl transition-colors shadow-[0_4px_20px_rgba(15,131,75,0.35)] text-sm"
+              className="flex-1 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold py-3 rounded-xl transition-colors shadow-[0_4px_20px_rgba(14,165,233,0.35)] text-sm"
             >
               맞춤 정책 분석하기 →
             </motion.button>

@@ -42,7 +42,7 @@ function CheckItem({ label }: { label: string }) {
 }
 
 const BADGE = {
-  eligible:    { label: '자격 충족',     style: 'text-green-700 bg-green-50 border-green-200' },
+  eligible:    { label: '자격 충족',     style: 'text-sky-700 bg-sky-50 border-sky-200' },
   docs_needed: { label: '서류 확인 필요', style: 'text-amber-700 bg-amber-50 border-amber-200' },
   upcoming:    { label: '예정 대상',     style: 'text-blue-700  bg-blue-50  border-blue-200'  },
 };
@@ -173,7 +173,7 @@ export default function PolicyModal({ item, onClose }: Props) {
                     href={item.policy.source_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-bold py-3.5 rounded-xl transition-colors text-sm"
+                    className="flex items-center justify-center gap-2 w-full bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-bold py-3.5 rounded-xl transition-colors text-sm shadow-[0_4px_16px_rgba(14,165,233,0.3)]"
                   >
                     신청하러 가기
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

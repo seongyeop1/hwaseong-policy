@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 
 type Policy = {
@@ -320,18 +323,64 @@ function PolicyListItem({ policy }: { policy: Policy }) {
 }
 
 export default function PoliciesPage() {
-  const activeLifecycles = LIFECYCLES.filter((lc) => lc.policies.length > 0);
-  const totalPolicies = activeLifecycles.reduce((sum, lc) => sum + lc.policies.length, 0);
+  const [query, setQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const allActive = LIFECYCLES.filter((lc) => lc.policies.length > 0);
+  const totalPolicies = allActive.reduce((sum, lc) => sum + lc.policies.length, 0);
+
+  const q = query.trim().toLowerCase();
+
+  // 검색어가 있을 때: 정책 단위로 평탄화해서 필터
+  const flatResults = q
+    ? allActive.flatMap((lc) =>
+        lc.policies
+          .filter(
+            (p) =>
+              p.title.toLowerCase().includes(q) ||
+              p.benefit.toLowerCase().includes(q) ||
+              p.category.toLowerCase().includes(q) ||
+              lc.id.toLowerCase().includes(q),
+          )
+          .map((p) => ({ ...p, lifecycle: lc.id, anchor: lc.anchor })),
+      )
+    : null;
 
   return (
     <div className="bg-[#E1EEF6] min-h-screen">
 
-      {/* ── 네이비 헤더 ── */}
+      {/* ── 헤더 ── */}
       <section className="py-10 sm:py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase mb-3">화성시 복지 정책</p>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2 [letter-spacing:-0.03em]">전체 정책</h1>
-          <p className="text-sm text-slate-600 font-normal">화성시에서 운영 중인 복지·지원 정책을 생애주기별로 확인하세요.</p>
+          <p className="text-sm text-slate-600 font-normal mb-6">화성시에서 운영 중인 복지·지원 정책을 생애주기별로 확인하세요.</p>
+
+          {/* 검색창 */}
+          <div className="flex items-center gap-2.5 bg-white rounded-2xl px-4 py-3 shadow-[0_4px_24px_rgba(14,116,144,0.12)] ring-1 ring-sky-100 focus-within:ring-sky-400 transition-all duration-150">
+            <svg className="w-4 h-4 text-sky-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="정책명, 분야, 혜택으로 검색… (예: 청년, 주거, 보청기)"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="flex-1 text-sm text-gray-900 placeholder-gray-400 outline-none bg-transparent"
+            />
+            {query && (
+              <button
+                onClick={() => { setQuery(''); inputRef.current?.focus(); }}
+                className="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0"
+                aria-label="검색어 지우기"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
@@ -339,68 +388,122 @@ export default function PoliciesPage() {
       <div className="bg-white rounded-t-[2.5rem] shadow-[0_-16px_60px_rgba(14,116,144,0.08)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
 
-          {/* 생애주기별 카테고리 타일 */}
-          <section>
-            <div className="flex items-end justify-between mb-4">
-              <h2 className="text-base font-semibold text-gray-800">생애주기별 정책</h2>
-              <span className="text-xs text-gray-400 font-normal">검수 완료 {totalPolicies}건</span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {LIFECYCLES.map((lc) =>
-                lc.policies.length > 0 ? (
-                  <a
-                    key={lc.id}
-                    href={`#${lc.anchor}`}
-                    className="group bg-white rounded-2xl ring-1 ring-blue-100 p-3.5 flex items-center gap-3 hover:ring-blue-300 hover:shadow-[0_4px_16px_rgba(59,130,246,0.1)] transition-all duration-150"
-                  >
-                    <CategoryIcon id={lc.id} className="w-7 h-7 text-blue-500 flex-shrink-0 group-hover:text-blue-600 transition-colors" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-gray-800 group-hover:text-blue-700 transition-colors leading-tight">{lc.id}</p>
-                      <span className="text-[0.625rem] font-bold text-blue-600 tracking-wide">{lc.policies.length}개 정책 →</span>
+          {/* ── 검색 결과 모드 ── */}
+          {flatResults !== null ? (
+            <section>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-sm font-semibold text-gray-800">
+                  '{query}' 검색 결과
+                </span>
+                <span className="text-xs text-sky-600 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full font-bold">
+                  {flatResults.length}건
+                </span>
+              </div>
+
+              {flatResults.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <svg className="w-12 h-12 text-gray-200 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <p className="text-sm text-gray-400 font-medium">일치하는 정책이 없습니다</p>
+                  <p className="text-xs text-gray-300 mt-1">다른 키워드로 검색해보세요</p>
+                </div>
+              ) : (
+                <div className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
+                  {flatResults.map((p, i) => {
+                    const isExpired = p.deadline !== null && p.deadline < TODAY;
+                    return (
+                      <div key={`${p.anchor}-${p.id}-${i}`} className={`flex items-center gap-4 px-5 py-4 border-b border-gray-100 last:border-b-0 ${isExpired ? 'opacity-50' : ''}`}>
+                        <div className="w-0.5 h-10 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                            <span className="text-[0.6rem] font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full">{p.lifecycle}</span>
+                            <span className="text-[0.6rem] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{p.category}</span>
+                            {p.deadline && !isExpired && <span className="text-[0.6rem] text-gray-400">{p.deadline} 마감</span>}
+                            {isExpired && <span className="text-[0.6rem] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">마감 종료</span>}
+                          </div>
+                          <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-0.5 line-clamp-2">{p.title}</h3>
+                          <p className="text-xs text-gray-500 truncate">{p.benefit}</p>
+                        </div>
+                        <div className="flex-shrink-0">
+                          {p.applyUrl ? (
+                            <a href={p.applyUrl} target="_blank" rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg hover:bg-blue-100 active:scale-95 transition-all duration-150">
+                              신청하기
+                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          ) : (
+                            <span className="text-[0.6875rem] text-gray-400 font-medium">오프라인 방문</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          ) : (
+            <>
+              {/* ── 기본 모드: 생애주기별 카테고리 타일 ── */}
+              <section>
+                <div className="flex items-end justify-between mb-4">
+                  <h2 className="text-base font-semibold text-gray-800">생애주기별 정책</h2>
+                  <span className="text-xs text-gray-400 font-normal">검수 완료 {totalPolicies}건</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {LIFECYCLES.map((lc) =>
+                    lc.policies.length > 0 ? (
+                      <a key={lc.id} href={`#${lc.anchor}`}
+                        className="group bg-white rounded-2xl ring-1 ring-blue-100 p-3.5 flex items-center gap-3 hover:ring-blue-300 hover:shadow-[0_4px_16px_rgba(59,130,246,0.1)] transition-all duration-150">
+                        <CategoryIcon id={lc.id} className="w-7 h-7 text-blue-500 flex-shrink-0 group-hover:text-blue-600 transition-colors" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm text-gray-800 group-hover:text-blue-700 transition-colors leading-tight">{lc.id}</p>
+                          <span className="text-[0.625rem] font-bold text-blue-600 tracking-wide">{lc.policies.length}개 정책 →</span>
+                        </div>
+                      </a>
+                    ) : (
+                      <div key={lc.id} className="bg-white rounded-2xl ring-1 ring-gray-100 p-3.5 flex items-center gap-3 opacity-50 cursor-not-allowed">
+                        <CategoryIcon id={lc.id} className="w-7 h-7 text-gray-300 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm text-gray-800 leading-tight">{lc.id}</p>
+                          <span className="text-[0.625rem] font-medium text-gray-300 tracking-wide">준비 중</span>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </section>
+
+              {/* ── 생애주기별 정책 리스트 ── */}
+              {allActive.map((lc) => (
+                <section key={lc.id} id={lc.anchor}>
+                  <div className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
+                    <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 border-b border-blue-100">
+                      <CategoryIcon id={lc.id} className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm font-bold text-gray-800">{lc.id}</span>
+                      <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">
+                        {lc.policies.length}건
+                      </span>
                     </div>
-                  </a>
-                ) : (
-                  <div
-                    key={lc.id}
-                    className="bg-white rounded-2xl ring-1 ring-gray-100 p-3.5 flex items-center gap-3 opacity-50 cursor-not-allowed"
-                  >
-                    <CategoryIcon id={lc.id} className="w-7 h-7 text-gray-300 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-gray-800 leading-tight">{lc.id}</p>
-                      <span className="text-[0.625rem] font-medium text-gray-300 tracking-wide">준비 중</span>
+                    <div>
+                      {lc.policies.map((p) => (
+                        <PolicyListItem key={`${lc.anchor}-${p.id}`} policy={p} />
+                      ))}
                     </div>
                   </div>
-                )
-              )}
-            </div>
-          </section>
-
-          {/* 생애주기별 정책 리스트 */}
-          {activeLifecycles.map((lc) => (
-            <section key={lc.id} id={lc.anchor}>
-              <div className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
-                <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 border-b border-blue-100">
-                  <CategoryIcon id={lc.id} className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm font-bold text-gray-800">{lc.id}</span>
-                  <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">
-                    {lc.policies.length}건
-                  </span>
-                </div>
-                <div>
-                  {lc.policies.map((p) => (
-                    <PolicyListItem key={`${lc.anchor}-${p.id}`} policy={p} />
-                  ))}
-                </div>
-              </div>
-            </section>
-          ))}
+                </section>
+              ))}
+            </>
+          )}
 
           {/* 맞춤 분석 CTA */}
           <section className="text-center py-4 border-t border-gray-100">
             <p className="text-sm text-gray-500 mb-4 font-normal">어떤 정책이 나에게 해당하는지 바로 확인하고 싶다면?</p>
             <Link
               href="/analysis"
-              className="inline-block bg-primary-600 hover:bg-primary-700 active:bg-primary-800 active:scale-95 text-white font-semibold px-7 py-3 rounded-xl transition-[transform,background-color] duration-150 text-sm shadow-sm"
+              className="inline-block bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-semibold px-7 py-3 rounded-xl transition-[transform,background-color,box-shadow] duration-150 text-sm shadow-lg shadow-sky-200 hover:shadow-xl"
             >
               맞춤 정책 분석하기 →
             </Link>

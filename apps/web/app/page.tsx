@@ -30,7 +30,7 @@ const HERO_SLIDES = [
     title: '화성 AI 캠퍼스\n프로그램',
     desc: '화성시 AI 교육 프로그램에\n지금 바로 참여하세요',
     gradient: 'from-[#065f46] via-[#059669] to-[#34d399]',
-    accent: 'bg-emerald-400/25 text-emerald-100',
+    accent: 'bg-sky-400/25 text-sky-100',
     icon: '🤖',
     imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/8/5/ef76c610-6471-4198-9f78-cef94a0e06e8.png',
     link: 'https://yeyak.hscity.go.kr/1002/3001/lectureAllList.do?currentPageNo=1&recordCountPerPage=10&searchCondition=title&searchKeyword=%ED%99%94%EC%84%B1+AI+%EC%BA%A0%ED%8D%BC%EC%8A%A4&gbn=&serviceTypeCd=lecture&statusCd=',
@@ -229,7 +229,7 @@ const STEPS = [
   {
     num: '02', title: '맞춤 정책 분석',
     desc: '화성시 전체 지원 정책 데이터베이스와 내 조건을 자동으로 매칭합니다.',
-    iconBg: 'bg-emerald-500/[0.14]', iconColor: 'text-emerald-400', numColor: 'text-emerald-400/[0.18]',
+    iconBg: 'bg-blue-500/[0.14]', iconColor: 'text-blue-400', numColor: 'text-blue-400/[0.18]',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -239,7 +239,7 @@ const STEPS = [
   {
     num: '03', title: '결과 확인 및 신청',
     desc: '확정·서류 확인·예정 대상으로 구분해 드리며, 필요 서류 체크리스트까지 안내합니다.',
-    iconBg: 'bg-amber-500/[0.14]', iconColor: 'text-amber-400', numColor: 'text-amber-400/[0.18]',
+    iconBg: 'bg-blue-500/[0.14]', iconColor: 'text-blue-400', numColor: 'text-blue-400/[0.18]',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -250,7 +250,7 @@ const STEPS = [
 
 const FEATURES = [
   {
-    iconBg: 'bg-violet-100', iconColor: 'text-violet-600',
+    iconBg: 'bg-blue-500/[0.12]', iconColor: 'text-blue-500',
     title: '개인 맞춤 분석',
     desc: '내 상황에 해당하지 않는 정책은 걸러내고, 실제로 받을 수 있는 혜택만 보여드립니다.',
     icon: (
@@ -260,7 +260,7 @@ const FEATURES = [
     ),
   },
   {
-    iconBg: 'bg-blue-100', iconColor: 'text-blue-600',
+    iconBg: 'bg-blue-500/[0.12]', iconColor: 'text-blue-500',
     title: 'What-if 시뮬레이터',
     desc: "'6개월 뒤', '자녀가 한 명 더 생기면' 같은 가상 상황에서 달라지는 혜택을 미리 확인하세요.",
     icon: (
@@ -270,7 +270,7 @@ const FEATURES = [
     ),
   },
   {
-    iconBg: 'bg-teal-100', iconColor: 'text-teal-600',
+    iconBg: 'bg-blue-500/[0.12]', iconColor: 'text-blue-500',
     title: '서류 체크리스트',
     desc: '신청에 필요한 서류를 자동으로 정리해 드립니다. 한 번에 빠짐없이 준비하세요.',
     icon: (
@@ -280,7 +280,7 @@ const FEATURES = [
     ),
   },
   {
-    iconBg: 'bg-amber-100', iconColor: 'text-amber-600',
+    iconBg: 'bg-blue-500/[0.12]', iconColor: 'text-blue-500',
     title: '큰 글씨 모드',
     desc: "상단 '큰 글씨' 버튼을 누르면 전체 글씨 크기가 커져 누구나 편리하게 이용할 수 있습니다.",
     icon: (
@@ -354,26 +354,6 @@ export default function IntroPage() {
         </div>
       </section>
 
-      {/* ── 통합 검색창 ─── */}
-      <section className="bg-white/80 backdrop-blur-xl py-7 shadow-[0_1px_0_rgba(0,0,0,0.06)]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <p className="text-[0.6875rem] font-medium tracking-[0.14em] text-gray-400 uppercase text-center mb-3">통합 정책 검색</p>
-          <div className="flex items-center gap-3 bg-gray-100/80 rounded-2xl px-4 py-3 cursor-not-allowed opacity-50 select-none">
-            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <span className="flex-1 text-sm text-gray-400">청년 월세 지원, 출산 지원금, 다자녀 혜택 등 검색...</span>
-            <span className="flex-shrink-0 bg-gray-200 text-gray-400 text-xs font-medium px-4 py-2 rounded-xl">
-              준비 중
-            </span>
-          </div>
-          <p className="text-xs text-gray-400 mt-2.5 text-center font-normal">
-            전체 정책 검색 기능 준비 중 ·{' '}
-            <Link href="/analysis" className="text-sky-600 font-medium hover:underline">내 맞춤 분석</Link>으로 바로 확인하세요
-          </p>
-        </div>
-      </section>
-
       {/* ── 이용 방법 ─── */}
       <section className="py-20 sm:py-24 bg-white relative overflow-hidden">
         {/* Dot grid overlay */}
@@ -403,23 +383,23 @@ export default function IntroPage() {
               간단한 정보 입력만으로 내 맞춤 정책을 확인하세요
             </p>
           </div>
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-3 gap-6">
             {STEPS.map((step) => (
               <motion.div
                 key={step.num}
-                whileHover={{ boxShadow: '0 0 0 1.5px rgba(14,116,144,0.2), 0 12px 32px rgba(14,116,144,0.10)', y: -2 }}
+                whileHover={{ boxShadow: '0 0 0 2px rgba(59,130,246,0.25), 0 16px_40px rgba(59,130,246,0.12)', y: -3 }}
                 transition={cardSpring}
-                className="bg-white border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.05)] rounded-2xl p-6 cursor-default"
+                className="bg-white border border-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.08)] rounded-2xl p-7 cursor-default"
               >
-                <div className="flex items-start justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl ${step.iconBg} ring-1 ring-black/[0.06] flex items-center justify-center flex-shrink-0`}>
-                    <span className={step.iconColor}>{step.icon}</span>
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/[0.12] border border-blue-200/60 flex items-center justify-center flex-shrink-0">
+                    <span className="text-blue-500">{step.icon}</span>
                   </div>
-                  <span className={`text-5xl font-bold leading-none select-none ${step.numColor}`}>{step.num}</span>
+                  <span className="text-6xl font-bold leading-none select-none text-blue-300/60">{step.num}</span>
                 </div>
-                <p className="text-[0.625rem] font-semibold tracking-[0.15em] text-slate-400 uppercase mb-2">Step {step.num}</p>
-                <h3 className="text-base font-semibold text-slate-800 mb-1.5 [letter-spacing:-0.01em]">{step.title}</h3>
-                <p className="text-[0.8125rem] text-slate-500 leading-relaxed font-normal">{step.desc}</p>
+                <p className="text-[0.625rem] font-bold tracking-[0.18em] text-blue-400 uppercase mb-2">Step {step.num}</p>
+                <h3 className="text-base font-bold text-slate-800 mb-2 [letter-spacing:-0.01em]">{step.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -438,21 +418,19 @@ export default function IntroPage() {
             </span>
             <h2 className="text-2xl font-bold text-gray-900 mt-3 [letter-spacing:-0.02em]">주요 기능</h2>
           </div>
-          <div className="grid sm:grid-cols-2 gap-3">
+          <div className="grid sm:grid-cols-2 gap-6">
             {FEATURES.map((f) => (
               <motion.div
                 key={f.title}
-                whileHover={{ boxShadow: '0 0 0 1.5px rgba(22,32,101,0.2), 0 12px 36px rgba(22,32,101,0.09)', y: -2 }}
+                whileHover={{ boxShadow: '0 0 0 2px rgba(59,130,246,0.25), 0 16px 40px rgba(59,130,246,0.12)', y: -3 }}
                 transition={cardSpring}
-                className="flex gap-4 bg-white border border-gray-100 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-5"
+                className="bg-white border border-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.08)] rounded-2xl p-5"
               >
-                <div className={`w-11 h-11 rounded-2xl ${f.iconBg} ring-1 ring-black/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                  <span className={f.iconColor}>{f.icon}</span>
+                <div className="w-11 h-11 rounded-xl bg-blue-500/[0.12] border border-blue-200/60 flex items-center justify-center mb-4">
+                  <span className="text-blue-500">{f.icon}</span>
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1 [letter-spacing:-0.01em]">{f.title}</h3>
-                  <p className="text-[0.8125rem] text-gray-500 leading-relaxed font-normal">{f.desc}</p>
-                </div>
+                <h3 className="text-base font-bold text-slate-800 mb-1.5 [letter-spacing:-0.01em]">{f.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
