@@ -1,0 +1,89 @@
+{
+  "policy_id": "hs-2026-1242",
+  "title": "[화성시] 2026년 화성특례시 사회서비스 종사자 휴식 지원사업 「힐링UP」",
+  "category": "복지",
+  "lifecycle": [
+    "전입",
+    "청년",
+    "결혼·신혼",
+    "출산·육아",
+    "노후"
+  ],
+  "beneficiary": "본인",
+  "benefit": "문화활동비 및 국내여행비 1인 최대 250,000원 지원",
+  "deadline": "2026-03-25",
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "화성시복지재단 복지사업부 김은혜 주임(☎031-296-9844)",
+  "apply_channel": "화성시복지재단 홈페이지 온라인 접수( www.hcare.kr )",
+  "conditions": {
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "「사회복지사업법」 제2조에 근거한 사업을 수행하고 있는 법인·기관·단체 소속의 종사자",
+      "hint": "소속 기관 확인"
+    },
+    {
+      "label": "「건강가정기본법」에 따른 가족센터 종사자",
+      "hint": "소속 기관 확인"
+    },
+    {
+      "label": "경기도, 화성시 조례에 근거한 사회복지 및 사회서비스 관련 법인·기관·단체 종사자",
+      "hint": "소속 기관 확인"
+    },
+    {
+      "label": "「협동조합기본법」에 근거하여 설립된 협동조합에서 복지 및 사회서비스 관련 사업을 수행하고 있는 조합원 또는 종사자",
+      "hint": "소속 기관 확인"
+    },
+    {
+      "label": "화성특례시 사회서비스 분야에 1년 이상 재직하였으며 중간관리자 이하 인 실무자",
+      "hint": "재직 기간 확인"
+    },
+    {
+      "label": "(교육) 사전 힐링교육 참여 필수(3회 중 1회 날짜 선택)",
+      "hint": "교육 일정 확인"
+    },
+    {
+      "label": "(활동) 선정 후 4개월 이내 힐링 활동 실시",
+      "hint": "활동 기간 확인"
+    },
+    {
+      "label": "(ESG) 활동내용에 ESG 반영(제로웨이스트 실천, 플로깅, 대중교통 이용 등)",
+      "hint": "활동 내용 확인"
+    },
+    {
+      "label": "(보고) 활동 종료 후 7일 이내 활동보고서 및 만족도조사 제출",
+      "hint": "보고서 제출 확인"
+    },
+    {
+      "label": "(홍보) 개인 SNS 및 재단 누리집에 후기 게시(숏츠 영상, 카드뉴스 등)",
+      "hint": "홍보 확인"
+    }
+  ],
+  "exclusions": [
+    "유사 내용으로 타 기관(정부·지자체 등)의 지원을 받고 있거나 받을 예정인 자",
+    "특정 정당을 지지하거나 종교 활동을 목적으로 참여하는 자",
+    "2023년~2025년 화성시복지재단 휴식지원 사업 참여자"
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1242&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true,
+      "exclusions": true
+    }
+  }
+}
