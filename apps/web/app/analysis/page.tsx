@@ -82,7 +82,12 @@ function EligibleCard({ item, onClick }: { item: EligibleItem; onClick: () => vo
     >
       <div className="w-0.5 h-10 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 flex-shrink-0" />
       <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-0.5 truncate">{item.policy.title}</h3>
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <h3 className="text-sm font-semibold text-gray-900 leading-snug truncate">{item.policy.title}</h3>
+          {item.policy.is_new && (
+            <span className="flex-shrink-0 text-[0.6rem] font-bold text-white bg-blue-500 rounded-full px-1.5 py-0.5 leading-none">NEW</span>
+          )}
+        </div>
         <p className="text-xs text-gray-500 mb-2 truncate">{item.policy.benefit}</p>
         <div className="flex flex-wrap gap-1.5">
           {item.reasons.map((r, i) => (
@@ -111,7 +116,12 @@ function DocsNeededCard({ item, onClick }: { item: DocsNeededItem; onClick: () =
       >
         <div className="w-0.5 h-10 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 flex-shrink-0" />
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-0.5 truncate">{item.policy.title}</h3>
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <h3 className="text-sm font-semibold text-gray-900 leading-snug truncate">{item.policy.title}</h3>
+            {item.policy.is_new && (
+              <span className="flex-shrink-0 text-[0.6rem] font-bold text-white bg-blue-500 rounded-full px-1.5 py-0.5 leading-none">NEW</span>
+            )}
+          </div>
           <p className="text-xs text-gray-500 mb-2 truncate">{item.policy.benefit}</p>
           <button
             onClick={(e) => { e.stopPropagation(); setDocsOpen((v) => !v); }}
@@ -158,6 +168,9 @@ function UpcomingCard({ item, onClick }: { item: UpcomingItem; onClick: () => vo
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
           <h3 className="text-sm font-semibold text-gray-900 leading-snug truncate">{item.policy.title}</h3>
+          {item.policy.is_new && (
+            <span className="flex-shrink-0 text-[0.6rem] font-bold text-white bg-blue-500 rounded-full px-1.5 py-0.5 leading-none">NEW</span>
+          )}
           <span className="flex-shrink-0 text-[0.6rem] font-bold text-blue-600 bg-blue-100 rounded-full px-2 py-0.5">D-{item.d_day}</span>
         </div>
         <p className="text-xs text-gray-500 mb-1.5 truncate">{item.policy.benefit}</p>
@@ -375,7 +388,7 @@ export default function AnalysisPage() {
               {/* 요약 숫자 바 */}
               <div className="flex rounded-2xl overflow-hidden ring-1 ring-gray-100 bg-white">
                 {[
-                  { label: '확정 대상', count: eligible.length,    bar: 'bg-gradient-to-r from-blue-600 to-blue-500'   },
+                  { label: '자격 충족', count: eligible.length,    bar: 'bg-gradient-to-r from-blue-600 to-blue-500'   },
                   { label: '서류 확인', count: docs_needed.length, bar: 'bg-gradient-to-r from-blue-500 to-indigo-500' },
                   { label: '예정 대상', count: upcoming.length,    bar: 'bg-gradient-to-r from-blue-400 to-blue-600'   },
                 ].map((s, i) => (
@@ -431,7 +444,7 @@ export default function AnalysisPage() {
                     <section className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
                       <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 border-b border-blue-100">
                         <span className="w-2 h-2 rounded-full bg-blue-600" />
-                        <span className="text-sm font-bold text-gray-800">확정 대상</span>
+                        <span className="text-sm font-bold text-gray-800">자격 충족</span>
                         <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">{eligible.length}건</span>
                       </div>
                       <div>

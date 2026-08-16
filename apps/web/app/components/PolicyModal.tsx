@@ -42,7 +42,7 @@ function CheckItem({ label }: { label: string }) {
 }
 
 const BADGE = {
-  eligible:    { label: '확정 대상',     style: 'text-green-700 bg-green-50 border-green-200' },
+  eligible:    { label: '자격 충족',     style: 'text-green-700 bg-green-50 border-green-200' },
   docs_needed: { label: '서류 확인 필요', style: 'text-amber-700 bg-amber-50 border-amber-200' },
   upcoming:    { label: '예정 대상',     style: 'text-blue-700  bg-blue-50  border-blue-200'  },
 };
