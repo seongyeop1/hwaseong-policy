@@ -63,9 +63,9 @@ function SectionHeader({ label, color, count }: { label: string; color: string; 
   return (
     <div className="flex items-center gap-2.5 mb-5">
       <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${color}`} />
-      <h2 className="text-sm font-bold text-white/75 [letter-spacing:-0.01em]">{label}</h2>
-      <div className="flex-1 h-px bg-gradient-to-r from-white/[0.1] to-transparent" />
-      <span className="text-[0.6875rem] font-bold text-white/30 bg-white/[0.06] border border-white/[0.08] px-2.5 py-0.5 rounded-full tracking-wide">
+      <h2 className="text-sm font-bold text-slate-700 [letter-spacing:-0.01em]">{label}</h2>
+      <div className="flex-1 h-px bg-gradient-to-r from-slate-200/50 to-transparent" />
+      <span className="text-[0.6875rem] font-bold text-slate-500 bg-sky-50 border border-sky-100 px-2.5 py-0.5 rounded-full tracking-wide">
         {count}건
       </span>
     </div>
@@ -225,13 +225,13 @@ export default function AnalysisPage() {
   }
 
   return (
-    <div className="bg-navy-950 min-h-screen">
+    <div className="bg-[#E1EEF6] min-h-screen">
 
       {/* ── 다크존: 폼 또는 프로필 칩 ── */}
       <div className="max-w-[480px] mx-auto px-5">
 
         <div className="pt-6">
-          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-navy-400 uppercase">
+          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase">
             화성시 · 기준일 {displayAsOf}
             {simActive && <span className="ml-2 text-amber-300">(시뮬레이션)</span>}
           </p>
@@ -249,10 +249,10 @@ export default function AnalysisPage() {
               transition={{ duration: 0.22 }}
               className="py-8"
             >
-              <h1 className="text-[2.625rem] sm:text-5xl font-bold text-white [letter-spacing:-0.04em] leading-[1.04] mb-3">
+              <h1 className="text-[2.625rem] sm:text-5xl font-bold text-slate-800 [letter-spacing:-0.04em] leading-[1.04] mb-3">
                 내 정보를<br />입력해 주세요
               </h1>
-              <p className="text-navy-300 text-sm leading-relaxed mb-8">
+              <p className="text-slate-600 text-sm leading-relaxed mb-8">
                 4가지 정보만 입력하면<br />맞춤 정책을 바로 찾아드립니다.
               </p>
               <ProfileForm onAnalyze={handleAnalyze} />
@@ -265,28 +265,28 @@ export default function AnalysisPage() {
               transition={{ duration: 0.28, delay: 0.08 }}
               className="py-5 flex items-center gap-3 flex-wrap"
             >
-              <div className="inline-flex items-center gap-2 flex-wrap bg-white/[0.08] border border-white/[0.12] rounded-2xl px-4 py-2.5 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 flex-wrap bg-sky-100/60 border border-sky-200/60 rounded-2xl px-4 py-2.5 backdrop-blur-sm">
                 {profile?.birth_date && (
-                  <span className="text-sm font-semibold text-white">{profile.birth_date}</span>
+                  <span className="text-sm font-semibold text-slate-800">{profile.birth_date}</span>
                 )}
                 {profile?.region && (
-                  <><span className="text-white/20 text-xs">·</span>
-                  <span className="text-sm text-navy-200">{profile.region}</span></>
+                  <><span className="text-slate-300 text-xs">·</span>
+                  <span className="text-sm text-slate-600">{profile.region}</span></>
                 )}
                 {profile?.household_type && (
-                  <><span className="text-white/20 text-xs">·</span>
-                  <span className="text-sm text-navy-200">{profile.household_type}</span></>
+                  <><span className="text-slate-300 text-xs">·</span>
+                  <span className="text-sm text-slate-600">{profile.household_type}</span></>
                 )}
                 {profile && profile.lifecycle.length > 0 && (
-                  <><span className="text-white/20 text-xs">·</span>
-                  <span className="text-xs text-navy-300">{profile.lifecycle.join(', ')}</span></>
+                  <><span className="text-slate-300 text-xs">·</span>
+                  <span className="text-xs text-slate-500">{profile.lifecycle.join(', ')}</span></>
                 )}
               </div>
               <motion.button
                 onClick={handleReset}
                 whileTap={{ scale: 0.96 }}
                 transition={tapSpring}
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-300 hover:text-white border border-white/[0.10] hover:border-white/25 bg-white/[0.05] hover:bg-white/[0.10] rounded-xl px-3 py-2 transition-all"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 border border-sky-200 hover:border-sky-300 bg-sky-100/40 hover:bg-sky-100/80 rounded-xl px-3 py-2 transition-all"
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -308,8 +308,8 @@ export default function AnalysisPage() {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-3 py-10"
           >
-            <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            <p className="text-sm text-navy-300">맞춤 정책을 분석하는 중...</p>
+            <div className="w-8 h-8 border-2 border-sky-300/40 border-t-sky-600 rounded-full animate-spin" />
+            <p className="text-sm text-slate-600">맞춤 정책을 분석하는 중...</p>
           </motion.div>
         )}
         {apiError && !loading && (
@@ -345,7 +345,7 @@ export default function AnalysisPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 32 }}
             transition={fadeSpring}
-            className="bg-white rounded-t-[2.5rem] shadow-[0_-12px_40px_rgba(12,19,64,0.12)] relative overflow-hidden"
+            className="bg-white rounded-t-[2.5rem] shadow-[0_-12px_40px_rgba(14,116,144,0.08)] relative overflow-hidden"
             style={{ minHeight: 'calc(100vh - 180px)' }}
           >
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-20 space-y-8">

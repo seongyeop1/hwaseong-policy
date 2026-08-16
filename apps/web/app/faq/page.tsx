@@ -58,7 +58,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         aria-expanded={open}
       >
         <span className={`text-sm font-semibold transition-colors duration-150 ${
-          open ? 'text-navy-700 font-bold' : 'text-gray-700'
+          open ? 'text-sky-700 font-bold' : 'text-gray-700'
         }`}>
           {q}
         </span>
@@ -66,7 +66,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           animate={{ rotate: open ? 180 : 0 }}
           transition={chevronSpring}
           className={`w-4 h-4 flex-shrink-0 transition-colors duration-150 ${
-            open ? 'text-navy-500' : 'text-gray-400'
+            open ? 'text-sky-600' : 'text-gray-400'
           }`}
           fill="none"
           viewBox="0 0 24 24"
@@ -99,19 +99,19 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQPage() {
   return (
-    <div className="bg-navy-950 min-h-screen">
+    <div className="bg-[#E1EEF6] min-h-screen">
 
       {/* ── 네이비 헤더 ── */}
       <section className="py-10 sm:py-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-navy-400 uppercase mb-3">서비스 안내</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 [letter-spacing:-0.03em]">자주 묻는 질문</h1>
-          <p className="text-sm text-navy-300">화성맞춤 서비스 이용 중 궁금한 점을 확인하세요.</p>
+          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase mb-3">서비스 안내</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2 [letter-spacing:-0.03em]">자주 묻는 질문</h1>
+          <p className="text-sm text-slate-600">화성맞춤 서비스 이용 중 궁금한 점을 확인하세요.</p>
         </div>
       </section>
 
       {/* ── 라이트 콘텐츠 시트 ── */}
-      <div className="bg-slate-50 rounded-t-[2.5rem] shadow-[0_-16px_60px_rgba(0,0,0,0.25)]">
+      <div className="bg-white rounded-t-[2.5rem] shadow-[0_-16px_60px_rgba(14,116,144,0.08)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
           <div className="space-y-2.5">
             {FAQS.map((faq, i) => (
@@ -120,9 +120,9 @@ export default function FAQPage() {
           </div>
 
           {/* 추가 문의 CTA */}
-          <div className="mt-10 bg-navy-50 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.04)] p-6 text-center">
-            <p className="text-sm font-semibold text-navy-800 mb-1">찾는 답변이 없으신가요?</p>
-            <p className="text-sm text-navy-600 mb-4">맞춤 분석 기능을 바로 사용해 보세요.</p>
+          <div className="mt-10 bg-sky-50 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.04)] p-6 text-center">
+            <p className="text-sm font-semibold text-sky-900 mb-1">찾는 답변이 없으신가요?</p>
+            <p className="text-sm text-sky-700 mb-4">맞춤 분석 기능을 바로 사용해 보세요.</p>
             <motion.div whileTap={{ scale: 0.96 }} transition={tapSpring} className="inline-block">
               <Link
                 href="/analysis"

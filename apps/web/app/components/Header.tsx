@@ -20,16 +20,16 @@ const tapSpring    = { type: 'spring', bounce: 0, duration: 0.2 } as const;
 function HwaseongLogo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-      <div className="w-9 h-9 rounded-xl bg-navy-900 group-hover:bg-navy-800 transition-colors flex items-center justify-center flex-shrink-0 shadow-sm">
+      <div className="w-9 h-9 rounded-xl bg-sky-100 group-hover:bg-sky-200 transition-colors flex items-center justify-center flex-shrink-0 shadow-sm border border-sky-200">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-          <path d="M11 19V11" stroke="white" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M11 19V11" stroke="#0ea5e9" strokeWidth="1.6" strokeLinecap="round" />
           <path d="M11 14.5C11 14.5 5.5 13 4.5 7.5C7.5 5.5 12 8.5 11 14.5Z" fill="#6dd8a1" fillOpacity="0.9" />
-          <path d="M11 12C11 12 16.5 10 17.5 4.5C14.5 3.5 11 6.5 11 12Z" fill="white" />
+          <path d="M11 12C11 12 16.5 10 17.5 4.5C14.5 3.5 11 6.5 11 12Z" fill="#38bdf8" fillOpacity="0.85" />
         </svg>
       </div>
       <div className="leading-tight">
-        <p className="text-[0.9375rem] font-extrabold text-navy-950 tracking-tight">화성맞춤</p>
-        <p className="text-[0.625rem] text-navy-400 font-medium hidden sm:block -mt-0.5">
+        <p className="text-[0.9375rem] font-extrabold text-slate-800 tracking-tight">화성맞춤</p>
+        <p className="text-[0.625rem] text-sky-600 font-medium hidden sm:block -mt-0.5">
           화성시 맞춤 정책 지원
         </p>
       </div>
@@ -59,7 +59,7 @@ export default function Header() {
                 href={href}
                 className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-[background-color,color] duration-150 ${
                   active
-                    ? 'bg-navy-50 text-navy-700 font-semibold'
+                    ? 'bg-sky-50 text-sky-700 font-semibold'
                     : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >
@@ -90,8 +90,8 @@ export default function Header() {
             transition={tapSpring}
             className={`text-xs font-medium rounded-full px-3 py-1 border transition-[background-color,border-color,color] duration-150 ${
               largeText
-                ? 'bg-navy-900 text-white border-navy-900'
-                : 'text-gray-500 border-gray-200 hover:border-navy-300 hover:text-navy-700'
+                ? 'bg-sky-500 text-white border-sky-500'
+                : 'text-gray-500 border-gray-200 hover:border-sky-300 hover:text-sky-700'
             }`}
             aria-pressed={largeText}
           >
@@ -157,7 +157,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-[background-color,color] duration-150 ${
                     active
-                      ? 'bg-navy-50 text-navy-700 font-semibold'
+                      ? 'bg-sky-50 text-sky-700 font-semibold'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >

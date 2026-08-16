@@ -324,19 +324,19 @@ export default function PoliciesPage() {
   const totalPolicies = activeLifecycles.reduce((sum, lc) => sum + lc.policies.length, 0);
 
   return (
-    <div className="bg-navy-950 min-h-screen">
+    <div className="bg-[#E1EEF6] min-h-screen">
 
       {/* ── 네이비 헤더 ── */}
       <section className="py-10 sm:py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-navy-400 uppercase mb-3">화성시 복지 정책</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 [letter-spacing:-0.03em]">전체 정책</h1>
-          <p className="text-sm text-navy-300 font-normal">화성시에서 운영 중인 복지·지원 정책을 생애주기별로 확인하세요.</p>
+          <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase mb-3">화성시 복지 정책</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2 [letter-spacing:-0.03em]">전체 정책</h1>
+          <p className="text-sm text-slate-600 font-normal">화성시에서 운영 중인 복지·지원 정책을 생애주기별로 확인하세요.</p>
         </div>
       </section>
 
       {/* ── 콘텐츠 시트 ── */}
-      <div className="bg-[#fafaf9] rounded-t-[2.5rem] shadow-[0_-16px_60px_rgba(0,0,0,0.25)]">
+      <div className="bg-white rounded-t-[2.5rem] shadow-[0_-16px_60px_rgba(14,116,144,0.08)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
 
           {/* 생애주기별 카테고리 타일 */}

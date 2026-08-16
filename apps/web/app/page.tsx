@@ -2,6 +2,184 @@
 
 import Link from 'next/link';
 import { motion } from 'motion/react';
+import { useState, useEffect, useCallback } from 'react';
+
+const HERO_SLIDES = [
+  {
+    tag: '화성시 소식',
+    title: '화성시민의 아이디어로\n더 나은 화성을',
+    desc: '국민신문고를 통해 직접 정책을\n제안하고 참여하세요',
+    gradient: 'from-[#1e3a8a] via-[#1d4ed8] to-[#3b82f6]',
+    accent: 'bg-blue-400/25 text-blue-100',
+    icon: '📢',
+    imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/7/27/2a9486ff-c200-480e-8813-b450922cbb58.png',
+    link: 'https://www.epeople.go.kr/cmmn/idea/redirect.do?ideaRegNo=1AE-2607-0001558',
+  },
+  {
+    tag: '화성시 뉴스',
+    title: '화성시 최신 소식을\n블로그에서 확인하세요',
+    desc: '정책·행사·생활정보 등\n화성시 공식 소식 한눈에',
+    gradient: 'from-[#0f4c75] via-[#1b6ca8] to-[#3498db]',
+    accent: 'bg-sky-400/25 text-sky-100',
+    icon: '📰',
+    imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/7/22/be0729ce-928b-4a0a-8fdc-14f2f4ccbb70.png',
+    link: 'https://blog.naver.com/hsview/224361769071',
+  },
+  {
+    tag: 'AI 캠퍼스',
+    title: '화성 AI 캠퍼스\n프로그램',
+    desc: '화성시 AI 교육 프로그램에\n지금 바로 참여하세요',
+    gradient: 'from-[#065f46] via-[#059669] to-[#34d399]',
+    accent: 'bg-emerald-400/25 text-emerald-100',
+    icon: '🤖',
+    imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/8/5/ef76c610-6471-4198-9f78-cef94a0e06e8.png',
+    link: 'https://yeyak.hscity.go.kr/1002/3001/lectureAllList.do?currentPageNo=1&recordCountPerPage=10&searchCondition=title&searchKeyword=%ED%99%94%EC%84%B1+AI+%EC%BA%A0%ED%8D%BC%EC%8A%A4&gbn=&serviceTypeCd=lecture&statusCd=',
+  },
+  {
+    tag: '경기도 복지',
+    title: '2026년 경기도\n가족돌봄수당',
+    desc: '경기도내 생후 24~36개월 아동\n양육공백 가정 지원',
+    gradient: 'from-[#4c1d95] via-[#6d28d9] to-[#8b5cf6]',
+    accent: 'bg-violet-400/25 text-violet-100',
+    icon: '👨‍👩‍👧',
+    imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/8/10/3ec0bfc5-cc02-48f8-b565-9395131b1500.png',
+    link: 'https://blog.naver.com/sowooju_sc/224340547539',
+  },
+  {
+    tag: '화성시 소식',
+    title: '화성시 새소식을\n지금 확인하세요',
+    desc: '화성시 최신 정책·행사·지원 정보\n한눈에 확인하세요',
+    gradient: 'from-[#0f4c75] via-[#1b6ca8] to-[#3498db]',
+    accent: 'bg-sky-400/25 text-sky-100',
+    icon: '📋',
+    imageUrl: 'https://www.hscity.go.kr/webcontent/banner/2026/8/12/0a8b9bed-8d01-415f-a9f4-a648eeb76e5a.png',
+    link: '#',
+  },
+];
+
+function HeroCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
+  const total = HERO_SLIDES.length;
+
+  const next = useCallback(() => setCurrent(i => (i + 1) % total), [total]);
+  const prev = useCallback(() => setCurrent(i => (i - 1 + total) % total), [total]);
+
+  const handleImgError = useCallback((index: number) => {
+    setImgErrors(prev => new Set(prev).add(index));
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(next, 3000);
+    return () => clearInterval(id);
+  }, [next]);
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 select-none"
+      style={{ aspectRatio: '16/9' }}>
+
+      {/* 슬라이드 트랙 */}
+      <div
+        className="flex h-full"
+        style={{
+          transform: `translateX(-${current * 100}%)`,
+          transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        }}
+      >
+        {HERO_SLIDES.map((slide, i) => {
+          const showImage = !!slide.imageUrl && !imgErrors.has(i);
+          return (
+            <div
+              key={i}
+              className={`min-w-full h-full relative bg-gradient-to-br ${slide.gradient} flex flex-col justify-end ${slide.link ? 'cursor-pointer' : ''}`}
+              onClick={() => slide.link && window.open(slide.link, '_blank', 'noopener,noreferrer')}
+            >
+              {/* 실제 이미지 (imageUrl 있고 로드 성공 시) */}
+              {showImage && (
+                <img
+                  src={slide.imageUrl}
+                  alt={slide.tag}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={() => handleImgError(i)}
+                />
+              )}
+
+              {/* 이미지 위 텍스트 가독성 오버레이 (이미지 모드일 때만) */}
+              {showImage && (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              )}
+
+              {/* 그라데이션 폴백일 때 배경 데코 */}
+              {!showImage && (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/[0.04]" />
+                  <div className="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-white/[0.03]" />
+                </div>
+              )}
+
+              {/* 콘텐츠 */}
+              <div className="relative z-10 p-6 sm:p-8">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-2xl">{slide.icon}</span>
+                  <span className={`text-[0.625rem] font-semibold tracking-[0.14em] uppercase px-2.5 py-1 rounded-full ${slide.accent}`}>
+                    {slide.tag}
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight [letter-spacing:-0.02em] whitespace-pre-line mb-2">
+                  {slide.title}
+                </h3>
+                <p className="text-[0.8125rem] text-white/65 leading-relaxed font-normal whitespace-pre-line">
+                  {slide.desc}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 화살표 버튼 */}
+      <button
+        onClick={(e) => { e.stopPropagation(); prev(); }}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm flex items-center justify-center text-white/80 hover:text-white transition-all duration-150"
+        aria-label="이전 슬라이드"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button
+        onClick={(e) => { e.stopPropagation(); next(); }}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm flex items-center justify-center text-white/80 hover:text-white transition-all duration-150"
+        aria-label="다음 슬라이드"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      {/* 인디케이터 */}
+      <div className="absolute bottom-4 right-5 flex items-center gap-2">
+        <span className="text-[0.625rem] font-medium text-white/50 tabular-nums">
+          {current + 1}/{total}
+        </span>
+        <div className="flex gap-1.5">
+          {HERO_SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`rounded-full transition-all duration-300 ${
+                i === current
+                  ? 'w-5 h-1.5 bg-white'
+                  : 'w-1.5 h-1.5 bg-white/35 hover:bg-white/60'
+              }`}
+              aria-label={`슬라이드 ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const cardSpring = { type: 'spring', bounce: 0, duration: 0.3 } as const;
 const tapSpring  = { type: 'spring', bounce: 0, duration: 0.2 } as const;
@@ -12,10 +190,10 @@ function GeometricBackground() {
   return (
     <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1440 520" fill="none"
       preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <circle cx="1320" cy="-40" r="380" stroke="white" strokeWidth="1.5" opacity="0.06" />
-      <circle cx="1320" cy="-40" r="530" stroke="white" strokeWidth="1"   opacity="0.04" />
-      <circle cx="100"  cy="570" r="300" stroke="white" strokeWidth="1.5" opacity="0.05" />
-      <g stroke="white" strokeWidth="0.8" opacity="0.13">
+      <circle cx="1320" cy="-40" r="380" stroke="#7ab8d9" strokeWidth="1.5" opacity="0.25" />
+      <circle cx="1320" cy="-40" r="530" stroke="#7ab8d9" strokeWidth="1"   opacity="0.15" />
+      <circle cx="100"  cy="570" r="300" stroke="#7ab8d9" strokeWidth="1.5" opacity="0.20" />
+      <g stroke="#5a9fc4" strokeWidth="0.8" opacity="0.30">
         <line x1="80"  y1="115" x2="255" y2="68" /><line x1="255" y1="68"  x2="440" y2="195" />
         <line x1="80"  y1="115" x2="185" y2="365" /><line x1="440" y1="195" x2="590" y2="82" />
         <line x1="590" y1="82"  x2="760" y2="178" /><line x1="440" y1="195" x2="510" y2="395" />
@@ -24,7 +202,7 @@ function GeometricBackground() {
         <line x1="1090" y1="128" x2="1190" y2="368" /><line x1="970" y1="305" x2="1190" y2="368" />
         <line x1="510" y1="395" x2="710" y2="445" /><line x1="710" y1="445" x2="970" y2="305" />
       </g>
-      <g fill="white">
+      <g fill="#4a90b8">
         <circle cx="80"   cy="115" r="3"   opacity="0.45" /><circle cx="255"  cy="68"  r="2.5" opacity="0.35" />
         <circle cx="440"  cy="195" r="4"   opacity="0.55" /><circle cx="185"  cy="365" r="2.5" opacity="0.30" />
         <circle cx="590"  cy="82"  r="5"   opacity="0.65" /><circle cx="760"  cy="178" r="3.5" opacity="0.50" />
@@ -121,47 +299,57 @@ const PREVIEW_POLICIES = [
 
 export default function IntroPage() {
   return (
-    <div className="bg-[#f5f5f7]">
+    <div className="bg-[#E1EEF6]">
 
       {/* ── 히어로 ─── */}
-      <section className="relative bg-navy-950 overflow-hidden">
+      <section className="relative bg-[#E1EEF6] overflow-hidden">
         <GeometricBackground />
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900/90 to-navy-800/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#E1EEF6] via-[#d4e8f5]/80 to-[#c6e0f0]/60" />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-24">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-4 py-1.5 mb-7">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0" />
-              <span className="text-xs font-medium text-white/80 tracking-wide">화성시 공식 맞춤 정책 지원 서비스</span>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-24">
+          <div className="lg:grid lg:grid-cols-[2fr_3fr] lg:gap-10 lg:items-center">
+
+            {/* 좌: 히어로 텍스트 */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-sky-200/60 backdrop-blur-md border border-sky-300/50 rounded-full px-4 py-1.5 mb-7">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
+                <span className="text-xs font-medium text-sky-900/80 tracking-wide">화성시 공식 맞춤 정책 지원 서비스</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800 leading-[1.06] [letter-spacing:-0.04em] mb-5 [font-optical-sizing:auto]">
+                내 상황에 딱 맞는<br />
+                <span className="text-sky-600">화성시 정책</span>을<br />
+                찾아드립니다
+              </h1>
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-9 font-normal break-keep">
+                복잡한 정책 목록을 하나하나 찾아보지 않아도 됩니다.<br className="hidden sm:block" />
+                정보를 입력하면 지금 바로 받을 수 있는 혜택을 정리해 드립니다.
+              </p>
+              <MotionLink
+                href="/analysis"
+                whileTap={{ scale: 0.95 }}
+                transition={tapSpring}
+                className="inline-flex items-center gap-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold px-7 py-3.5 rounded-xl transition-[background-color,box-shadow] duration-150 text-sm shadow-lg shadow-sky-200 hover:shadow-xl"
+              >
+                맞춤 분석 시작하기
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </MotionLink>
+              <div className="flex flex-wrap gap-6 mt-10 pt-8 border-t border-sky-200/70">
+                {[{ value: '120개+', label: '화성시 지원 정책' }, { value: '1분', label: '간편 분석' }, { value: '무료', label: '서비스 이용' }].map((s) => (
+                  <div key={s.label} className="flex items-baseline gap-1.5">
+                    <span className="text-xl font-bold text-slate-800">{s.value}</span>
+                    <span className="text-xs text-slate-500 font-normal">{s.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.06] [letter-spacing:-0.04em] mb-5 [font-optical-sizing:auto]">
-              내 상황에 딱 맞는<br />
-              <span className="text-primary-300">화성시 정책</span>을<br />
-              찾아드립니다
-            </h1>
-            <p className="text-base sm:text-lg text-white/60 leading-relaxed mb-9 max-w-lg font-normal">
-              복잡한 정책 목록을 하나하나 찾아보지 않아도 됩니다.<br className="hidden sm:block" />
-              정보를 입력하면 지금 바로 받을 수 있는 혜택을 정리해 드립니다.
-            </p>
-            <MotionLink
-              href="/analysis"
-              whileTap={{ scale: 0.95 }}
-              transition={tapSpring}
-              className="inline-flex items-center gap-2.5 bg-primary-500 hover:bg-primary-400 text-white font-semibold px-7 py-3.5 rounded-xl transition-[background-color,box-shadow] duration-150 text-sm shadow-lg shadow-black/20 hover:shadow-xl"
-            >
-              맞춤 분석 시작하기
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </MotionLink>
-            <div className="flex flex-wrap gap-6 mt-10 pt-8 border-t border-white/10">
-              {[{ value: '120개+', label: '화성시 지원 정책' }, { value: '1분', label: '간편 분석' }, { value: '무료', label: '서비스 이용' }].map((s) => (
-                <div key={s.label} className="flex items-baseline gap-1.5">
-                  <span className="text-xl font-bold text-white">{s.value}</span>
-                  <span className="text-xs text-white/40 font-normal">{s.label}</span>
-                </div>
-              ))}
+
+            {/* 우: 슬라이드 캐러셀 */}
+            <div className="mt-12 lg:mt-0 lg:translate-x-28">
+              <HeroCarousel />
             </div>
+
           </div>
         </div>
       </section>
@@ -181,37 +369,37 @@ export default function IntroPage() {
           </div>
           <p className="text-xs text-gray-400 mt-2.5 text-center font-normal">
             전체 정책 검색 기능 준비 중 ·{' '}
-            <Link href="/analysis" className="text-navy-600 font-medium hover:underline">내 맞춤 분석</Link>으로 바로 확인하세요
+            <Link href="/analysis" className="text-sky-600 font-medium hover:underline">내 맞춤 분석</Link>으로 바로 확인하세요
           </p>
         </div>
       </section>
 
       {/* ── 이용 방법 ─── */}
-      <section className="py-20 sm:py-24 bg-navy-950 relative overflow-hidden">
+      <section className="py-20 sm:py-24 bg-white relative overflow-hidden">
         {/* Dot grid overlay */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(14,116,144,0.06) 1px, transparent 1px)',
             backgroundSize: '28px 28px',
           }}
         />
-        {/* Top gradient fade (blends with search bar above) */}
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-navy-900/60 to-transparent pointer-events-none" />
+        {/* Top gradient fade */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#E1EEF6]/60 to-transparent pointer-events-none" />
         {/* Radial glow center */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(100,137,245,0.07) 0%, transparent 60%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(125,194,233,0.10) 0%, transparent 60%)' }} />
         {/* Bottom separator */}
-        <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+        <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-sky-200/60 to-transparent" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2.5 text-[0.6875rem] font-semibold tracking-[0.18em] text-navy-400/70 uppercase">
+            <span className="inline-flex items-center gap-2.5 text-[0.6875rem] font-semibold tracking-[0.18em] text-sky-600/80 uppercase">
               <span className="w-5 h-px bg-current opacity-60" />
               How it works
               <span className="w-5 h-px bg-current opacity-60" />
             </span>
-            <h2 className="text-2xl font-bold text-white mt-3 [letter-spacing:-0.02em]">단 3단계로 완성</h2>
-            <p className="text-sm text-navy-200/45 mt-2 font-normal max-w-xs mx-auto leading-relaxed">
+            <h2 className="text-2xl font-bold text-slate-800 mt-3 [letter-spacing:-0.02em]">단 3단계로 완성</h2>
+            <p className="text-sm text-slate-500 mt-2 font-normal max-w-xs mx-auto leading-relaxed">
               간단한 정보 입력만으로 내 맞춤 정책을 확인하세요
             </p>
           </div>
@@ -219,19 +407,19 @@ export default function IntroPage() {
             {STEPS.map((step) => (
               <motion.div
                 key={step.num}
-                whileHover={{ boxShadow: '0 0 0 1px rgba(100,137,245,0.3), 0 12px 48px rgba(12,19,64,0.8)', y: -2 }}
+                whileHover={{ boxShadow: '0 0 0 1.5px rgba(14,116,144,0.2), 0 12px 32px rgba(14,116,144,0.10)', y: -2 }}
                 transition={cardSpring}
-                className="bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-6 cursor-default"
+                className="bg-white border border-slate-100 shadow-[0_2px_10px_rgba(0,0,0,0.05)] rounded-2xl p-6 cursor-default"
               >
                 <div className="flex items-start justify-between mb-5">
-                  <div className={`w-12 h-12 rounded-2xl ${step.iconBg} ring-1 ring-white/[0.12] flex items-center justify-center flex-shrink-0`}>
+                  <div className={`w-12 h-12 rounded-2xl ${step.iconBg} ring-1 ring-black/[0.06] flex items-center justify-center flex-shrink-0`}>
                     <span className={step.iconColor}>{step.icon}</span>
                   </div>
                   <span className={`text-5xl font-bold leading-none select-none ${step.numColor}`}>{step.num}</span>
                 </div>
-                <p className="text-[0.625rem] font-semibold tracking-[0.15em] text-white/25 uppercase mb-2">Step {step.num}</p>
-                <h3 className="text-base font-semibold text-white mb-1.5 [letter-spacing:-0.01em]">{step.title}</h3>
-                <p className="text-[0.8125rem] text-navy-200/55 leading-relaxed font-normal">{step.desc}</p>
+                <p className="text-[0.625rem] font-semibold tracking-[0.15em] text-slate-400 uppercase mb-2">Step {step.num}</p>
+                <h3 className="text-base font-semibold text-slate-800 mb-1.5 [letter-spacing:-0.01em]">{step.title}</h3>
+                <p className="text-[0.8125rem] text-slate-500 leading-relaxed font-normal">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -239,12 +427,11 @@ export default function IntroPage() {
       </section>
 
       {/* ── 주요 기능 ─── */}
-      <section className="py-20 sm:py-24 bg-white relative">
-        {/* Thin gradient separator from dark navy above */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-navy-200/50 to-transparent" />
+      <section className="py-20 sm:py-24 bg-[#f0f7fc] relative">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-sky-200/60 to-transparent" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2.5 text-[0.6875rem] font-semibold tracking-[0.18em] text-navy-500/60 uppercase">
+            <span className="inline-flex items-center gap-2.5 text-[0.6875rem] font-semibold tracking-[0.18em] text-sky-700/60 uppercase">
               <span className="w-5 h-px bg-current" />
               Features
               <span className="w-5 h-px bg-current" />
@@ -273,16 +460,16 @@ export default function IntroPage() {
       </section>
 
       {/* ── 주요 정책 미리보기 ─── */}
-      <section className="bg-white/50 py-20 sm:py-24">
+      <section className="bg-[#E1EEF6]/50 py-20 sm:py-24">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-[0.6875rem] font-medium tracking-[0.14em] text-navy-500 uppercase">Hot Policies</span>
-              <h2 className="text-2xl font-bold text-gray-900 mt-1 [letter-spacing:-0.02em]">지금 주목할 정책</h2>
-              <p className="text-xs text-gray-400 mt-1 font-normal">기준일 2026-08-10 · 화성시 최신 정책</p>
+              <span className="text-[0.6875rem] font-medium tracking-[0.14em] text-sky-700 uppercase">Hot Policies</span>
+              <h2 className="text-2xl font-bold text-slate-800 mt-1 [letter-spacing:-0.02em]">지금 주목할 정책</h2>
+              <p className="text-xs text-slate-400 mt-1 font-normal">기준일 2026-08-10 · 화성시 최신 정책</p>
             </div>
             <Link href="/policies"
-              className="flex-shrink-0 text-xs font-medium text-navy-600 hover:text-navy-900 transition-colors flex items-center gap-1">
+              className="flex-shrink-0 text-xs font-medium text-sky-700 hover:text-sky-900 transition-colors flex items-center gap-1">
               전체 보기
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -318,7 +505,7 @@ export default function IntroPage() {
           </div>
           <p className="text-center mt-8">
             <Link href="/analysis"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 hover:text-navy-900 transition-colors">
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-sky-700 hover:text-sky-900 transition-colors">
               내 조건에 맞는 정책 전체 분석하기
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -329,22 +516,22 @@ export default function IntroPage() {
       </section>
 
       {/* ── 하단 CTA ─── */}
-      <section className="bg-navy-950 py-16 sm:py-20">
+      <section className="bg-[#c8dff0] py-16 sm:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 [letter-spacing:-0.03em]">지금 바로 내 정책을 확인하세요</h2>
-          <p className="text-white/50 text-sm mb-8 font-normal">화성시에 거주한다면 누구나 무료로 이용할 수 있습니다.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-3 [letter-spacing:-0.03em]">지금 바로 내 정책을 확인하세요</h2>
+          <p className="text-slate-500 text-sm mb-8 font-normal">화성시에 거주한다면 누구나 무료로 이용할 수 있습니다.</p>
           <MotionLink
             href="/analysis"
             whileTap={{ scale: 0.95 }}
             transition={tapSpring}
-            className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-[background-color,box-shadow] duration-150 text-sm shadow-lg"
+            className="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-semibold px-8 py-3.5 rounded-xl transition-[background-color,box-shadow] duration-150 text-sm shadow-lg shadow-sky-200"
           >
             맞춤 분석 시작하기
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </MotionLink>
-          <p className="text-white/25 text-xs mt-6 font-normal">실제 수급 자격은 화성시 담당 부서에 문의하시기 바랍니다.</p>
+          <p className="text-slate-400 text-xs mt-6 font-normal">실제 수급 자격은 화성시 담당 부서에 문의하시기 바랍니다.</p>
         </div>
       </section>
 
