@@ -8,7 +8,11 @@ import type { Profile as FormProfile } from '@/app/components/ProfileForm';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
 
-/* ── 응답 타입 (api-contract.md v1.1 기준) ──────────────────────────── */
+// 시연 재현 기준일 — 페르소나 A(3분류 동시 출력)가 검증된 날짜 (docs/demo-scenarios.md)
+// 청년 정책 2건이 8/14 마감이라 오늘 날짜로는 D-day 카드가 사라짐
+export const DEMO_AS_OF = '2026-06-01';
+
+/* ── 응답 타입 (api-contract.md v1.1.4 기준) ────────────────────────── */
 
 export type VerifyItem = { key: string | null; label: string; hint: string };
 
@@ -27,6 +31,8 @@ export type ApiPolicy = {
   required_docs: string[];
   source_url: string;
   contact: string | null;
+  first_seen: string | null;
+  is_new: boolean;
 };
 
 export type EligibleItem   = { for_member: string; policy: ApiPolicy; reasons: string[]; ai_summary: string | null };
@@ -49,16 +55,17 @@ export function isApiUnavailable() {
   return !API_BASE;
 }
 
-export async function evaluate(form: FormProfile): Promise<EvaluateResponse> {
+export async function evaluate(form: FormProfile, asOf: string = DEMO_AS_OF): Promise<EvaluateResponse> {
   if (!API_BASE) throw new Error('NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다');
 
-  // 폼 필드가 API 스키마와 직접 대응하므로 변환 없이 그대로 전송
   const body = {
     birth_date:     form.birth_date,
     move_in_date:   form.move_in_date,
-    region:         form.region || '화성시',
+    region:         form.region,
     household_type: form.household_type,
-    lifecycle:      form.lifecycle.length > 0 ? form.lifecycle : ['청년'],
+    lifecycle:      form.lifecycle,
+    members:        [{ relation: '본인', birth_date: form.birth_date }],
+    as_of:          asOf,
   };
 
   const res = await fetch(`${API_BASE}/evaluate`, {

@@ -38,3 +38,7 @@ Thumbs.db
 # ── 자동 생성 파일 ────────────────────────────
 AGENTS.md
 CLAUDE.md
+
+# Jupyter 자동 생성 체크포인트
+.ipynb_checkpoints/
+apps/web/.env.local
