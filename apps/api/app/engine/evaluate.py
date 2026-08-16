@@ -41,6 +41,11 @@ UPCOMING_WINDOW_DAYS = 90
 # 미성년 본인(조력자 모드 — 자녀가 부모 대신 입력)은 부/모를 세대주로 본다.
 ADULT_AGE = 19
 
+# NEW 배지 기준 — first_seen(크롤러가 처음 관측한 날)이 as_of 기준 이 일수 안이면 신규.
+# is_new는 저장하지 않고 서버가 계산한다 (#31·#47 논의). 첫 크롤 배치는 전부 최근이라
+# 배지가 한꺼번에 붙을 수 있다 — 창 크기는 시연 관점에서 조정 가능.
+NEW_WINDOW_DAYS = 7
+
 # 통과 사유가 하나도 안 나오는 정책의 대체 문장 — 분류마다 사실이 다르므로 문구도 다르다.
 #
 # eligible (#37): 확인 항목(verify)까지 비어 있다는 뜻이라 "요건이 없다"가 사실이다.
@@ -111,12 +116,15 @@ def normalize_verify(policy: dict) -> list[dict]:
     return items
 
 
-def to_api_policy(policy: dict) -> dict:
+def to_api_policy(policy: dict, as_of: date | None = None) -> dict:
     """저장 스키마(data/policies) → 계약 v1.1 정책 객체.
 
     /evaluate 내장 policy와 GET /policies/{id}가 완전히 동일한 스키마를 쓰기 위한 단일 변환점.
     review(내부 검수 기록)는 내보내지 않고, manual_conditions는 verify_required 객체로 흡수된다.
+    is_new는 저장값이 아니라 first_seen ↔ as_of로 여기서 계산한다 (v1.1.4) — as_of 기반이라
+    시연 재현성이 유지되고, What-if로 과거를 보면 미래 관측 정책은 신규가 아니게 된다.
     """
+    first_seen = _parse_date(policy.get("first_seen"))
     return {
         "policy_id": policy["policy_id"],
         "title": policy["title"],
@@ -132,6 +140,12 @@ def to_api_policy(policy: dict) -> dict:
         "required_docs": policy["required_docs"],
         "source_url": policy["source_url"],
         "contact": policy.get("contact"),
+        "first_seen": first_seen,
+        "is_new": (
+            first_seen is not None
+            and as_of is not None
+            and 0 <= (as_of - first_seen).days <= NEW_WINDOW_DAYS
+        ),
     }
 
 
@@ -306,7 +320,7 @@ def evaluate_all(profile: Profile, policies: Iterable[dict], as_of: date) -> dic
                 continue
             item: dict[str, Any] = {
                 "for_member": for_member,
-                "policy": to_api_policy(policy),
+                "policy": to_api_policy(policy, as_of),
                 "reasons": verdict["reasons"],
             }
             if status == "upcoming":
