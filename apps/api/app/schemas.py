@@ -113,6 +113,8 @@ class Policy(BaseModel):
     required_docs: list[str]
     source_url: str
     contact: str | None = None  # 담당부서 연락처 (required_docs 미표기 정책의 Plan B)
+    first_seen: date | None = None  # 크롤러가 처음 관측한 날 (A의 diff 산출) — 없으면 null
+    is_new: bool = False  # first_seen이 as_of 기준 NEW_WINDOW_DAYS 안이면 true (저장값 아님, 서버 계산)
 
 
 class EligibleItem(BaseModel):

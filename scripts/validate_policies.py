@@ -10,8 +10,9 @@ CI:    PR 이 열릴 때 자동 실행 (.github/workflows/validate-policies.yml)
   2. policy_id 중복 없음
   3. 파일명 == policy_id
   4. 논리 검증: age.min <= age.max
-  5. 검수 완료 여부: review.checklist 6항목 전부 true
-     (--allow-unreviewed 를 주면 5번은 경고로만 처리)
+  5. verify_required ⊆ conditions 키 (없는 키 참조는 판정·API 정규화에 무의미)
+  6. 검수 완료 여부: review.checklist 7항목 전부 true
+     (--allow-unreviewed 를 주면 6번은 경고로만 처리)
 """
 
 import argparse
@@ -90,7 +91,14 @@ def main() -> int:
         if "min" in age and "max" in age and age["min"] > age["max"]:
             errors.append(f"{name}: age.min({age['min']}) > age.max({age['max']})")
 
-        # 5. 검수 완료 여부
+        # 5. verify_required ⊆ conditions (없는 키 참조는 무의미)
+        declared = set(policy.get("verify_required", []))
+        available = set(policy.get("conditions", {}).keys())
+        if declared - available:
+            missing_keys = ", ".join(sorted(declared - available))
+            errors.append(f"{name}: verify_required 가 conditions 에 없는 키 참조 → {missing_keys}")
+
+        # 6. 검수 완료 여부
         review = policy.get("review")
         if not review:
             msg = f"{name}: review 블록 없음 (2인 교차 검수 미완료)"

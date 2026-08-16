@@ -1,6 +1,6 @@
 """화성 정책 내비게이션 API — 규칙 엔진 연결 (Phase 3-a).
 
-- 계약: packages/schema/api-contract.md v1.1.1 (필드 추가만 허용)
+- 계약: packages/schema/api-contract.md v1.1.4 (필드 추가만 허용)
 - 판정은 engine.evaluate (순수 함수·무 LLM). as_of 기본값(오늘) 결정은 여기서만 한다
 - 정책 소스는 store.load_policies — 검수 게이트 통과분만 (Supabase 전환 시 store만 교체)
 - /health 는 Phase 7 keep-warm 핑 대상 (DB 전환 시 가벼운 DB 조회 포함 — Render 슬립·Supabase 휴면 동시 방지)
@@ -129,4 +129,5 @@ def get_policy(policy_id: str):
             status_code=404,
             content={"error": {"code": "NOT_FOUND", "message": f"정책을 찾을 수 없습니다: {policy_id}"}},
         )
-    return to_api_policy(policy)
+    # 상세 조회에는 as_of 입력이 없다(계약) — is_new만 오늘 기준으로 계산된다
+    return to_api_policy(policy, date.today())
