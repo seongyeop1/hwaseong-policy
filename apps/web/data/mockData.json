@@ -1,0 +1,65 @@
+{
+  "as_of": "2026-08-08",
+  "results": {
+    "eligible": [
+      {
+        "for_member": "본인",
+        "policy": {
+          "policy_id": "hs-2026-0101",
+          "title": "화성시 청년 문화활동비 지원",
+          "benefit": "연 10만 원 문화포인트",
+          "apply_channel": "화성시청 누리집 온라인 신청",
+          "source_url": "https://www.hwaseong.go.kr",
+          "conditions": { "age": { "min": 19, "max": 34 } }
+        },
+        "reasons": ["나이 요건 충족", "가구 유형 충족"]
+      },
+      {
+        "for_member": "자녀",
+        "policy": {
+          "policy_id": "hs-2026-0101",
+          "title": "화성시 청년 문화활동비 지원",
+          "benefit": "연 10만 원 문화포인트",
+          "is_new": true,
+          "apply_channel": "화성시청 누리집 온라인 신청",
+          "source_url": "https://www.hwaseong.go.kr",
+          "conditions": { "age": { "min": 19, "max": 34 } }
+        },
+        "reasons": ["나이 요건 충족", "가구 유형 충족"]
+      }
+    ],
+    "docs_needed": [
+      {
+        "for_member": "본인",
+        "policy": {
+          "policy_id": "hs-2026-0087",
+          "title": "화성시 청년 이사비 지원",
+          "benefit": "이사비 최대 30만 원",
+          "is_new": true,
+          "apply_channel": "읍면동 주민센터 방문 신청",
+          "source_url": "https://www.hwaseong.go.kr"
+        },
+        "reasons": ["나이 요건 충족"],
+        "verify": [
+          { "label": "소득 기준 (중위소득 150% 이하)" },
+          { "label": "무주택자에 한함" }
+        ]
+      }
+    ],
+    "upcoming": [
+      {
+        "for_member": "본인",
+        "policy": {
+          "policy_id": "hs-2026-0042",
+          "title": "화성시 청년 월세 지원",
+          "benefit": "월 최대 20만 원",
+          "apply_channel": "화성시청 복지과 방문 또는 복지로",
+          "source_url": "https://www.bokjiro.go.kr"
+        },
+        "waiting_for": "거주 6개월 요건 충족까지",
+        "d_day": 39,
+        "expected_date": "2026-09-15"
+      }
+    ]
+  }
+}
