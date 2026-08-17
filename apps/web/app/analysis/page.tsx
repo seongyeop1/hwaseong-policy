@@ -27,30 +27,58 @@ type Overrides      = { timeShift: boolean; addChild: boolean };
 
 const DEFAULT_DOCS = ['신분증 사본', '주민등록등본 (최근 3개월)', '통장 사본'];
 
-const SIM_ELIGIBLE_TIMESHIFT: EligibleItem = {
-  for_member: '본인',
-  policy: { policy_id: 'hs-2026-0042', title: '화성시 청년 월세 지원', benefit: '월 최대 20만 원' },
-  reasons: ['나이 요건 충족', '거주 6개월 요건 충족'],
-};
-const SIM_DOCS_CHILD: DocsNeededItem = {
-  for_member: '본인',
-  policy: { policy_id: 'hs-2026-0155', title: '화성시 다자녀 양육비 지원', benefit: '자녀 1인당 월 10만 원' },
-  reasons: ['자녀 요건 충족'],
-  verify: [{ label: '가족관계증명서 (다자녀 증빙)' }, { label: '소득 기준 확인 서류' }],
-};
+/* ─── What-if: 실판정 재호출 ───────────────────────────────
+   토글은 화면 데이터를 손대지 않는다 — 입력을 바꿔 /evaluate 를
+   다시 부르고, 규칙 엔진의 응답으로 화면을 통째로 갱신한다.
+   계약(v1.1.4) 역할 분담: 시간 이동 = 최상위 as_of · '누구인가' = overrides */
 
-function computeResults(overrides: Overrides, apiData: EvaluateResponse | null) {
-  // API 데이터가 있으면 사용, 없으면 목업 fallback
-  const base = apiData ? apiData.results : (mockData.results as unknown as EvaluateResponse['results']);
-  const eligible: EligibleItem[]      = [...(base.eligible as EligibleItem[])];
-  const docs_needed: DocsNeededItem[] = [...(base.docs_needed as DocsNeededItem[])];
-  let   upcoming: UpcomingItem[]      = [...(base.upcoming as UpcomingItem[])];
-  if (overrides.timeShift) {
-    eligible.push(SIM_ELIGIBLE_TIMESHIFT);
-    upcoming = upcoming.filter((u) => u.policy.policy_id !== 'hs-2026-0042');
+// 촬영용 고정 기준일 (?as_of=YYYY-MM-DD). 없으면 미전송 → 서버가 오늘로 판정 (#65)
+function pinnedAsOf(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  const q = new URLSearchParams(window.location.search).get('as_of');
+  return q && /^\d{4}-\d{2}-\d{2}$/.test(q) ? q : undefined;
+}
+
+function todayIso(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function addMonthsIso(iso: string, months: number): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(y, m - 1 + months, d); // 말일 초과분은 Date 가 자동 이월
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+}
+
+function simRequest(p: Profile, o: Overrides): { asOf?: string; overrides?: Record<string, unknown> } {
+  const base = pinnedAsOf() ?? todayIso();
+  const asOf = o.timeShift ? addMonthsIso(base, 6) : pinnedAsOf();
+  let overrides: Record<string, unknown> | undefined;
+  if (o.addChild) {
+    overrides = {
+      // 얕은 병합 = 키 통째 교체 → members 는 본인 포함 전체를 보낸다
+      members: [
+        { relation: '본인', birth_date: p.birth_date },
+        { relation: '자녀', birth_date: base }, // 기준일 출생 신생아 가정
+      ],
+      household_type:
+        p.household_type === '1인가구' || p.household_type === '신혼부부'
+          ? '유자녀가구'
+          : p.household_type,
+      lifecycle: Array.from(new Set([...p.lifecycle, '출산·육아'])),
+    };
   }
-  if (overrides.addChild) docs_needed.push(SIM_DOCS_CHILD);
-  return { eligible, docs_needed, upcoming };
+  return { asOf, overrides };
+}
+
+function computeResults(apiData: EvaluateResponse | null) {
+  // API 응답을 그대로 쓴다 (What-if 결과도 서버 재판정으로 이 경로를 탄다). 없으면 목업 fallback
+  const base = apiData ? apiData.results : (mockData.results as unknown as EvaluateResponse['results']);
+  return {
+    eligible:    base.eligible as EligibleItem[],
+    docs_needed: base.docs_needed as DocsNeededItem[],
+    upcoming:    base.upcoming as UpcomingItem[],
+  };
 }
 
 /* ─── Spring presets ─────────────────────────────────────── */
@@ -197,11 +225,12 @@ export default function AnalysisPage() {
   const [overrides, setOverrides] = useState<Overrides>({ timeShift: false, addChild: false });
   const [apiData,   setApiData]   = useState<EvaluateResponse | null>(null);
   const [loading,   setLoading]   = useState(false);
+  const [simLoading, setSimLoading] = useState(false);
   const [apiError,  setApiError]  = useState<string | null>(null);
 
-  const { eligible, docs_needed, upcoming } = computeResults(overrides, apiData);
+  const { eligible, docs_needed, upcoming } = computeResults(apiData);
   const simActive   = overrides.timeShift || overrides.addChild;
-  const displayAsOf = overrides.timeShift ? '2027-02-08' : (apiData?.as_of ?? mockData.as_of);
+  const displayAsOf = apiData?.as_of ?? mockData.as_of; // 항상 서버가 실제 판정한 기준일
 
   async function handleAnalyze(p: Profile) {
     setProfile(p);
@@ -210,7 +239,7 @@ export default function AnalysisPage() {
 
     if (!isApiUnavailable()) {
       try {
-        const data = await evaluate(p);
+        const data = await evaluate(p, pinnedAsOf());
         setApiData(data);
       } catch (err) {
         setApiError(err instanceof Error ? err.message : '분석 중 오류가 발생했습니다');
@@ -227,6 +256,25 @@ export default function AnalysisPage() {
       const top = el.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top, behavior: 'smooth' });
     }, 320);
+  }
+
+  // What-if 토글 = 실판정 재호출. 실패하면 토글을 원복해 화면과 상태가 어긋나지 않게 한다
+  async function applySim(next: Overrides) {
+    if (!profile || simLoading) return;
+    if (isApiUnavailable()) return; // 목업 모드에선 시뮬레이션 비활성 (실판정만 신뢰)
+    const prev = overrides;
+    setOverrides(next);
+    setSimLoading(true);
+    try {
+      const { asOf, overrides: ov } = simRequest(profile, next);
+      setApiData(await evaluate(profile, asOf, ov));
+      setApiError(null);
+    } catch (err) {
+      setOverrides(prev);
+      setApiError(err instanceof Error ? err.message : '시뮬레이션 중 오류가 발생했습니다');
+    } finally {
+      setSimLoading(false);
+    }
   }
 
   function handleReset() {
@@ -384,9 +432,9 @@ export default function AnalysisPage() {
               <SimulatorPanel
                 timeShift={overrides.timeShift}
                 addChild={overrides.addChild}
-                isLoading={false}
-                onTimeShiftToggle={() => setOverrides((o) => ({ ...o, timeShift: !o.timeShift }))}
-                onAddChildToggle={() => setOverrides((o) => ({ ...o, addChild: !o.addChild }))}
+                isLoading={simLoading}
+                onTimeShiftToggle={() => applySim({ ...overrides, timeShift: !overrides.timeShift })}
+                onAddChildToggle={() => applySim({ ...overrides, addChild: !overrides.addChild })}
               />
 
               {/* 결과 헤더 */}

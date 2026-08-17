@@ -8,8 +8,8 @@ import type { Profile as FormProfile } from '@/app/components/ProfileForm';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
 
-// 시연 재현 기준일 — 페르소나 A(3분류 동시 출력)가 검증된 날짜 (docs/demo-scenarios.md)
-// 청년 정책 2건이 8/14 마감이라 오늘 날짜로는 D-day 카드가 사라짐
+// 페르소나 A 촬영용 고정 기준일 — /analysis?as_of=2026-06-01 쿼리로 전달 (docs/demo-scenarios.md)
+// 기본(쿼리 없음)은 as_of 미전송 → 서버가 오늘 기준으로 판정 (#65 페르소나 D 라이브 방침)
 export const DEMO_AS_OF = '2026-06-01';
 
 /* ── 응답 타입 (api-contract.md v1.1.4 기준) ────────────────────────── */
@@ -55,7 +55,11 @@ export function isApiUnavailable() {
   return !API_BASE;
 }
 
-export async function evaluate(form: FormProfile, asOf: string = DEMO_AS_OF): Promise<EvaluateResponse> {
+export async function evaluate(
+  form: FormProfile,
+  asOf?: string,
+  overrides?: Record<string, unknown>,
+): Promise<EvaluateResponse> {
   if (!API_BASE) throw new Error('NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다');
 
   const body = {
@@ -65,7 +69,8 @@ export async function evaluate(form: FormProfile, asOf: string = DEMO_AS_OF): Pr
     household_type: form.household_type,
     lifecycle:      form.lifecycle,
     members:        [{ relation: '본인', birth_date: form.birth_date }],
-    as_of:          asOf,
+    ...(asOf ? { as_of: asOf } : {}),
+    ...(overrides ? { overrides } : {}),
   };
 
   const res = await fetch(`${API_BASE}/evaluate`, {
