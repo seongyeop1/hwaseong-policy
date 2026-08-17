@@ -152,7 +152,6 @@ const LIFECYCLES: Lifecycle[] = [
     anchor: 'move-in',
     desc: '화성시 전입 신규 거주자 정착 지원',
     policies: [
-      { id: 'hs-2025-0009', title: '2025년 발달장애인 긴급돌봄서비스 사업 안내', benefit: '일상생활 및 사회참여 활동 지원, 식사지원, 야간돌봄 등 최대 30일 지원', category: '복지', deadline: null, channel: '전화신청: 경기도발달장애인지원센터 ☎031-895-6163', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250410104553782&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
       { id: 'hs-2026-0004', title: '2026년 지역사회서비스투자사업 대상자 및 재판정 모집', benefit: '지원 내용 공고 확인 필요', category: '복지', deadline: null, channel: '남양읍 행정복지센터 방문 신청', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260115104005538&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
       { id: 'hs-2026-0263', title: '2026년 화성시 청년 부동산 중개보수 및 이사비 지원사업', benefit: '가구당 최대 50만원 실비 지원 (중개보수 30만원 / 이사비 40만원, 생애 1회) — 200명', category: '주거', deadline: '2026-03-06', channel: '온라인 — 잡아바어플라이(apply.jobaba.net)', applyUrl: 'https://www.hscity.go.kr/dongtan/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260114165703844' },
       { id: 'hs-2026-1242', title: '화성특례시 사회서비스 종사자 휴식 지원사업 「힐링UP」', benefit: '문화활동비 및 국내여행비 1인 최대 250,000원 지원', category: '복지', deadline: '2026-03-25', channel: '화성시복지재단 홈페이지(www.hcare.kr) 온라인 접수', applyUrl: 'https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1242&menuLevel=2&menuNo=95' },
@@ -164,10 +163,6 @@ const LIFECYCLES: Lifecycle[] = [
     anchor: 'youth',
     desc: '만 19~39세 청년 대상 주거·취업·금융 지원',
     policies: [
-      { id: 'hs-2025-0004', title: '2025년 화성시 청년활동포인트제 사업 안내', benefit: '청년 활동 포인트 지원', category: '기타', deadline: null, channel: '공고 확인 필요', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250213151126906&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
-      { id: 'hs-2025-0005', title: '화성특례시 여성청소년 생리용품 보편지원', benefit: '생리용품 현물 지원', category: '복지', deadline: null, channel: '공고 확인 필요', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250311193023538&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
-      { id: 'hs-2025-0007', title: '2025년 경기도 청소년 생활장학금 지원사업', benefit: '생활장학금 지원', category: '복지', deadline: '2025-03-28', channel: '공고 확인 필요', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250311203422028&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
-      { id: 'hs-2025-0008', title: '경기도 장애인 누림통장 및 화성형 장애인 누림통장 모집', benefit: '저축 장려금 지원', category: '복지', deadline: null, channel: '공고 확인 필요', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250404160306677&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
       { id: 'hs-2026-1212', title: '고립·은둔 청년과 가족을 위한 안내서', benefit: '고립·은둔 청년과 가족을 위한 온라인 강의 지원', category: '교육', deadline: null, channel: '경기도 평생학습포털 지식(www.gseek.kr)', applyUrl: 'https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1212&menuLevel=2&menuNo=95' },
       { id: 'hs-2026-1215', title: '제5기 화성시 청년정책협의체 위원 모집', benefit: '청년정책 참여 기회 제공', category: '기타', deadline: null, channel: '공고 확인 필요', applyUrl: 'https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1215&menuLevel=2&menuNo=95' },
       { id: 'hs-2026-1217', title: 'AI올인원 취업지원 (수원대 대학일자리플러스센터)', benefit: 'AI모의면접, 경험분석, 직무추천, 자소서코칭 지원', category: '일자리', deadline: '2026-03-31', channel: '구글폼 신청', applyUrl: 'https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1217&menuLevel=2&menuNo=95' },
@@ -223,9 +218,6 @@ const LIFECYCLES: Lifecycle[] = [
     anchor: 'pregnancy',
     desc: '임신·출산·육아 가정 의료비·용품·교육 지원',
     policies: [
-      { id: 'hs-2025-0002', title: '화성시 저소득층 아동 치과주치의 사업', benefit: '1인당 최대 70만원 지원', category: '복지', deadline: null, channel: '신청접수', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250203174908861&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
-      { id: 'hs-2025-0003', title: '2025년 보육서비스 사전 신청 안내', benefit: '보육료, 양육수당, 유아학비 변경 및 신규신청', category: '보육', deadline: '2025-02-28', channel: '읍면동 행정복지센터 방문 또는 복지로(www.bokjiro.go.kr)', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250204175711686&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
-      { id: 'hs-2025-0006', title: '맘튼튼 축산물 꾸러미 지원사업', benefit: '산모 1인당 10만원 이내 축산물 꾸러미 공급·배송', category: '복지', deadline: '2026-02-28', channel: '경기민원24(gg24.gg.go.kr) 온라인 신청', applyUrl: 'https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250311195430105&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=' },
       { id: 'hs-2026-0002', title: '화성시 출산지원금', benefit: '첫째아 100만원 / 둘째·셋째아 각 200만원 / 넷째아 이상 300만원', category: '복지', deadline: null, channel: '행정복지센터 방문 (출생신고 시 원스톱 신청) 또는 정부24', applyUrl: 'https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare1/Welfare1_2.jsp' },
     ],
   },
