@@ -44,7 +44,7 @@ const STEPS = [
   { label: '기본 정보', title: '기본 정보를 알려주세요',   sub: '생년월일과 화성시 전입일이 필요합니다.' },
   { label: '거주지',    title: '어디 사세요?',             sub: '화성시 읍면동 단위로 선택해 주세요.' },
   { label: '가구',      title: '가구 유형을 알려주세요',    sub: '현재 가구 구성을 선택해 주세요.' },
-  { label: '생애주기',  title: '생애주기를 선택해 주세요', sub: '해당 항목을 모두 고르세요. 없으면 건너뛰어도 됩니다.' },
+  { label: '생애주기',  title: '생애주기를 선택해 주세요', sub: '해당하는 항목을 하나 이상 선택해 주세요.' },
 ];
 
 const tapSpring   = { type: 'spring', bounce: 0, duration: 0.2 } as const;
@@ -58,12 +58,41 @@ const variants = {
 
 type Props = { onAnalyze?: (profile: Profile) => void };
 
+const BIRTH_YEARS  = Array.from({ length: 2008 - 1930 + 1 }, (_, i) => 1930 + i).reverse();
+const MOVEIN_YEARS = Array.from({ length: 2026 - 1970 + 1 }, (_, i) => 1970 + i).reverse();
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const DAYS   = Array.from({ length: 31 }, (_, i) => i + 1);
+
 export default function ProfileForm({ onAnalyze }: Props) {
   const [step, setStep] = useState(0);
   const [dir,  setDir]  = useState(1);
   const [profile, setProfile] = useState<Profile>({
     birth_date: '', move_in_date: '', region: '', household_type: '', lifecycle: [],
   });
+  const [birthY, setBirthY] = useState('');
+  const [birthM, setBirthM] = useState('');
+  const [birthD, setBirthD] = useState('');
+  const [moveY, setMoveY] = useState('');
+  const [moveM, setMoveM] = useState('');
+  const [moveD, setMoveD] = useState('');
+
+  function updateBirth(y: string, m: string, d: string) {
+    setBirthY(y); setBirthM(m); setBirthD(d);
+    if (y && m && d) {
+      setProfile((prev) => ({ ...prev, birth_date: `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}` }));
+    } else {
+      setProfile((prev) => ({ ...prev, birth_date: '' }));
+    }
+  }
+
+  function updateMoveIn(y: string, m: string, d: string) {
+    setMoveY(y); setMoveM(m); setMoveD(d);
+    if (y && m && d) {
+      setProfile((prev) => ({ ...prev, move_in_date: `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}` }));
+    } else {
+      setProfile((prev) => ({ ...prev, move_in_date: '' }));
+    }
+  }
 
   function goNext() { setDir(1);  setStep((s) => s + 1); }
   function goPrev() { setDir(-1); setStep((s) => s - 1); }
@@ -81,7 +110,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
     profile.birth_date !== '' && profile.move_in_date !== '',
     profile.region !== '',
     profile.household_type !== '',
-    true,
+    profile.lifecycle.length > 0,
   ][step];
 
   return (
@@ -154,21 +183,61 @@ export default function ProfileForm({ onAnalyze }: Props) {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">생년월일</label>
-                    <input
-                      type="date"
-                      value={profile.birth_date}
-                      onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={birthY}
+                        onChange={(e) => updateBirth(e.target.value, birthM, birthD)}
+                        className={`flex-[2] border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthY ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">년도</option>
+                        {BIRTH_YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
+                      </select>
+                      <select
+                        value={birthM}
+                        onChange={(e) => updateBirth(birthY, e.target.value, birthD)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthM ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">월</option>
+                        {MONTHS.map((m) => <option key={m} value={String(m)}>{m}월</option>)}
+                      </select>
+                      <select
+                        value={birthD}
+                        onChange={(e) => updateBirth(birthY, birthM, e.target.value)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthD ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">일</option>
+                        {DAYS.map((d) => <option key={d} value={String(d)}>{d}일</option>)}
+                      </select>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">화성시 전입일</label>
-                    <input
-                      type="date"
-                      value={profile.move_in_date}
-                      onChange={(e) => setProfile({ ...profile, move_in_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={moveY}
+                        onChange={(e) => updateMoveIn(e.target.value, moveM, moveD)}
+                        className={`flex-[2] border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveY ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">년도</option>
+                        {MOVEIN_YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
+                      </select>
+                      <select
+                        value={moveM}
+                        onChange={(e) => updateMoveIn(moveY, e.target.value, moveD)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveM ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">월</option>
+                        {MONTHS.map((m) => <option key={m} value={String(m)}>{m}월</option>)}
+                      </select>
+                      <select
+                        value={moveD}
+                        onChange={(e) => updateMoveIn(moveY, moveM, e.target.value)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveD ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">일</option>
+                        {DAYS.map((d) => <option key={d} value={String(d)}>{d}일</option>)}
+                      </select>
+                    </div>
                     <p className="text-[0.6rem] text-zinc-300 mt-1.5">거주 기간 요건이 있는 정책의 신청 가능 시점을 계산합니다</p>
                   </div>
                 </div>
