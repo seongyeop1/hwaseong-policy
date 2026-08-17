@@ -15,9 +15,8 @@ LLM은 요청 경로에 없다 → LLM 환각이 판정에 개입하는 것은 �
 apps/web/          Next.js + Tailwind        (C: 프론트)
 apps/api/          FastAPI + 규칙 엔진        (B: 백엔드)
 packages/schema/   정책·프로필 표준 스키마     ← 팀의 계약서. 변경 시 전원 리뷰
-scripts/           크롤러 + LLM 파싱          (A: 데이터)
+scripts/           데이터 검증               (A: 데이터)
 data/policies/     검수 완료 정책 JSON        1건 = 1파일, PR 로 머지
-data/raw/          크롤링 원문 (gitignore)
 docs/              기획서·전제 검증 결과      (D: 기획·발표)
 ```
 
