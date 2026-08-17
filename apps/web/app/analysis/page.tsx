@@ -231,7 +231,9 @@ export default function AnalysisPage() {
 
   const { eligible, docs_needed, upcoming } = computeResults(apiData);
   const simActive   = overrides.timeShift || overrides.addChild;
-  const displayAsOf = apiData?.as_of ?? mockData.as_of; // 항상 서버가 실제 판정한 기준일
+  // 서버가 실제로 판정한 기준일만 쓴다. 판정 전에는 기준일이 존재하지 않으므로 null —
+  // 목업 날짜를 대신 보여주면 화면에 실제와 다른 날짜가 뜬다 (#91 후속)
+  const displayAsOf = apiData?.as_of ?? null;
 
   async function handleAnalyze(p: Profile) {
     setProfile(p);
@@ -304,7 +306,7 @@ export default function AnalysisPage() {
               {/* 왼쪽: 제목·설명 */}
               <div className="lg:pt-16 lg:pl-16">
                 <p className="text-[0.6rem] font-bold tracking-[0.22em] text-sky-700/80 uppercase mb-4">
-                  화성시 · 기준일 {displayAsOf}
+                  화성시 · 맞춤 정책 분석
                   {simActive && <span className="ml-2 text-amber-400">(시뮬레이션)</span>}
                 </p>
                 <h1 className="text-4xl sm:text-5xl font-bold text-slate-800 leading-tight mb-4" style={{ letterSpacing: '-0.04em' }}>
@@ -442,6 +444,7 @@ export default function AnalysisPage() {
               <div>
                 <p className="text-[0.5875rem] font-bold tracking-[0.22em] text-gray-400 uppercase mb-2">
                   분석 결과
+                  {displayAsOf && <span className="ml-2 normal-case tracking-normal">· 기준일 {displayAsOf}</span>}
                 </p>
                 <h2 className="text-2xl font-bold text-gray-900 [letter-spacing:-0.03em] flex items-baseline gap-2 flex-wrap">
                   {profile ? `${profile.region || ''}`.trim() : ''} 맞춤 정책
