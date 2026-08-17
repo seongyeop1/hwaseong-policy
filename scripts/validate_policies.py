@@ -18,6 +18,7 @@ CI:    PR 이 열릴 때 자동 실행 (.github/workflows/validate-policies.yml)
 import argparse
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 try:
@@ -98,7 +99,16 @@ def main() -> int:
             missing_keys = ", ".join(sorted(declared - available))
             errors.append(f"{name}: verify_required 가 conditions 에 없는 키 참조 → {missing_keys}")
 
-        # 6. 검수 완료 여부
+        # 6. 날짜 유효성 (실재하지 않는 날짜 차단 — 예: 2026-02-30)
+        for field in ("deadline", "first_seen"):
+            val = policy.get(field)
+            if val:
+                try:
+                    date.fromisoformat(val)
+                except ValueError:
+                    errors.append(f"{name}: {field} 이 실재하지 않는 날짜입니다 → {val}")
+
+        # 7. 검수 완료 여부
         review = policy.get("review")
         if not review:
             msg = f"{name}: review 블록 없음 (2인 교차 검수 미완료)"
