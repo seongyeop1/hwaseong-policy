@@ -60,7 +60,6 @@ const HERO_SLIDES = [
 function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
-  const [lightbox, setLightbox] = useState<number | null>(null);
   const total = HERO_SLIDES.length;
 
   const next = useCallback(() => setCurrent(i => (i + 1) % total), [total]);
@@ -75,19 +74,7 @@ function HeroCarousel() {
     return () => clearInterval(id);
   }, [next]);
 
-  useEffect(() => {
-    if (lightbox === null) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
-    window.addEventListener('keydown', handler);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      window.removeEventListener('keydown', handler);
-      document.body.style.overflow = '';
-    };
-  }, [lightbox]);
-
   return (
-    <>
     <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/40 select-none"
       style={{ aspectRatio: '16/9' }}>
 
@@ -104,8 +91,8 @@ function HeroCarousel() {
           return (
             <div
               key={i}
-              className={`min-w-full h-full relative bg-gradient-to-br ${slide.gradient} flex flex-col justify-end ${showImage ? 'cursor-zoom-in' : ''}`}
-              onClick={() => { if (showImage) setLightbox(i); }}
+              className={`min-w-full h-full relative bg-gradient-to-br ${slide.gradient} flex flex-col justify-end ${showImage ? 'cursor-pointer' : ''}`}
+              onClick={() => { if (showImage) window.open(slide.imageUrl, '_blank', 'noopener,noreferrer'); }}
             >
               {/* 실제 이미지 (imageUrl 있고 로드 성공 시) */}
               {showImage && (
@@ -192,29 +179,6 @@ function HeroCarousel() {
       </div>
     </div>
 
-    {/* ── 라이트박스 ── */}
-    {lightbox !== null && (
-      <div
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
-        onClick={() => setLightbox(null)}
-      >
-        <button
-          onClick={() => setLightbox(null)}
-          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-lg transition-colors"
-          aria-label="닫기"
-        >✕</button>
-        <img
-          src={HERO_SLIDES[lightbox].imageUrl}
-          alt={HERO_SLIDES[lightbox].tag}
-          className="max-w-full max-h-[90vh] w-auto h-auto rounded-xl shadow-2xl object-contain"
-          onClick={(e) => e.stopPropagation()}
-        />
-        <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/60 text-xs">
-          {HERO_SLIDES[lightbox].tag}
-        </p>
-      </div>
-    )}
-    </>
   );
 }
 
