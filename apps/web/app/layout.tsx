@@ -23,7 +23,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // h-full(height:100%)을 걸면 html 높이가 뷰포트로 고정돼 스크롤 컨테이너가
+      // html/body 사이에서 엇갈린다 — 탭 전환 시 스크롤이 0으로 초기화되는 원인.
+      // 푸터를 화면 아래로 붙이는 건 body 의 min-h-full + main 의 flex-1 이 담당한다.
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50">
         <LargeTextProvider>
