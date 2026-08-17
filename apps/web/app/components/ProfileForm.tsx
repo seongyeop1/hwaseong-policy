@@ -58,7 +58,8 @@ const variants = {
 
 type Props = { onAnalyze?: (profile: Profile) => void };
 
-const YEARS  = Array.from({ length: 2008 - 1930 + 1 }, (_, i) => 1930 + i).reverse();
+const BIRTH_YEARS  = Array.from({ length: 2008 - 1930 + 1 }, (_, i) => 1930 + i).reverse();
+const MOVEIN_YEARS = Array.from({ length: 2026 - 1970 + 1 }, (_, i) => 1970 + i).reverse();
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 const DAYS   = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -71,15 +72,25 @@ export default function ProfileForm({ onAnalyze }: Props) {
   const [birthY, setBirthY] = useState('');
   const [birthM, setBirthM] = useState('');
   const [birthD, setBirthD] = useState('');
+  const [moveY, setMoveY] = useState('');
+  const [moveM, setMoveM] = useState('');
+  const [moveD, setMoveD] = useState('');
 
   function updateBirth(y: string, m: string, d: string) {
     setBirthY(y); setBirthM(m); setBirthD(d);
     if (y && m && d) {
-      const mm = m.padStart(2, '0');
-      const dd = d.padStart(2, '0');
-      setProfile((prev) => ({ ...prev, birth_date: `${y}-${mm}-${dd}` }));
+      setProfile((prev) => ({ ...prev, birth_date: `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}` }));
     } else {
       setProfile((prev) => ({ ...prev, birth_date: '' }));
+    }
+  }
+
+  function updateMoveIn(y: string, m: string, d: string) {
+    setMoveY(y); setMoveM(m); setMoveD(d);
+    if (y && m && d) {
+      setProfile((prev) => ({ ...prev, move_in_date: `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}` }));
+    } else {
+      setProfile((prev) => ({ ...prev, move_in_date: '' }));
     }
   }
 
@@ -179,7 +190,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
                         className={`flex-[2] border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthY ? 'text-gray-900' : 'text-zinc-400'}`}
                       >
                         <option value="">년도</option>
-                        {YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
+                        {BIRTH_YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
                       </select>
                       <select
                         value={birthM}
@@ -201,12 +212,32 @@ export default function ProfileForm({ onAnalyze }: Props) {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">화성시 전입일</label>
-                    <input
-                      type="date"
-                      value={profile.move_in_date}
-                      onChange={(e) => setProfile({ ...profile, move_in_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={moveY}
+                        onChange={(e) => updateMoveIn(e.target.value, moveM, moveD)}
+                        className={`flex-[2] border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveY ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">년도</option>
+                        {MOVEIN_YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
+                      </select>
+                      <select
+                        value={moveM}
+                        onChange={(e) => updateMoveIn(moveY, e.target.value, moveD)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveM ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">월</option>
+                        {MONTHS.map((m) => <option key={m} value={String(m)}>{m}월</option>)}
+                      </select>
+                      <select
+                        value={moveD}
+                        onChange={(e) => updateMoveIn(moveY, moveM, e.target.value)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${moveD ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">일</option>
+                        {DAYS.map((d) => <option key={d} value={String(d)}>{d}일</option>)}
+                      </select>
+                    </div>
                     <p className="text-[0.6rem] text-zinc-300 mt-1.5">거주 기간 요건이 있는 정책의 신청 가능 시점을 계산합니다</p>
                   </div>
                 </div>
