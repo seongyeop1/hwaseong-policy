@@ -41,6 +41,15 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
+    # rootDir 이 apps/api 라서, 기본 상태로는 그 아래 변경만 자동 배포된다.
+    # 정책·요약(data/)은 rootDir 밖이라 머지해도 배포가 안 돌아, 레포는 48건인데
+    # 서버는 56건을 서빙하는 일이 실제로 있었다 (2026-08-17, #83 머지 후 수동 배포로 복구).
+    # buildFilter 로 data/ 를 트리거에 포함한다 — paths 는 **레포 루트 기준**이다.
+    buildFilter:
+      paths:
+        - apps/api/**
+        - data/**
+        - render.yaml
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
