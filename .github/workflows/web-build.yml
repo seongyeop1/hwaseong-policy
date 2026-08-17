@@ -31,6 +31,35 @@ jobs:
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
 
+      # /policies 는 API 를 쓰지 않고 정책 56→48건을 소스에 하드코딩한다.
+      # data/policies/*.json 을 고쳐도 따라오지 않아 조용히 어긋난다 — 실제로 두 번 발생했다
+      #   #76  HEY 링크에서 menuLevel·menuNo 가 빠져 본문이 안 뜸
+      #   #90  구청 경로가 /byeongjeom 등에 머물러 CSS 없는 조각 페이지로 뜸
+      # 링크는 화면에 그대로 노출되므로 어긋나면 시민이 잘못된 주소로 간다. 여기서 막는다.
+      - name: 정책 링크 동기화 검사 (applyUrl ↔ source_url)
+        working-directory: .
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re, json, glob, sys
+          real = {}
+          for p in glob.glob('data/policies/*.json'):
+              d = json.load(open(p, encoding='utf-8'))
+              real[d['policy_id']] = d['source_url']
+          src = open('apps/web/app/policies/page.tsx', encoding='utf-8').read()
+          rows = re.findall(r"id: '((?:hs|kr)-[^']+)'[^}]*?applyUrl: '([^']+)'", src, re.S)
+          bad = [(pid, u, real.get(pid)) for pid, u in rows if real.get(pid) != u]
+          missing = [pid for pid, _ in rows if pid not in real]
+          print(f'하드코딩 {len(rows)}건 / 정책 {len(real)}건')
+          for pid, got, want in bad:
+              print(f'  불일치 {pid}\n    page.tsx : {got}\n    정책 JSON: {want}')
+          for pid in missing:
+              print(f'  삭제된 정책 참조: {pid}')
+          if bad or missing:
+              sys.exit('❌ /policies 의 링크가 data/policies 와 어긋납니다 — page.tsx 를 정책 JSON 에 맞추세요')
+          print('✅ 링크 동기화 정상')
+          PY
+
       - name: 의존성 설치
         run: npm ci
 
