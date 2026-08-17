@@ -36,7 +36,7 @@
     }
   ],
   "exclusions": [],
-  "source_url": "https://www.hscity.go.kr/byeongjeom/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250404160306677&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=",
+  "source_url": "https://www.hscity.go.kr/town/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20250404160306677&q_deptCode=57400150000&q_searchWhereTy=&q_searchVal=",
   "first_seen": "2026-08-13",
   "review": {
     "parsed_by": "A",
