@@ -295,6 +295,7 @@ function PolicyListItem({ policy }: { policy: Policy }) {
 export default function PoliciesPage() {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const allActive = LIFECYCLES.filter((lc) => lc.policies.length > 0);
   const totalPolicies = allActive.reduce((sum, lc) => sum + lc.policies.length, 0);
@@ -447,24 +448,37 @@ export default function PoliciesPage() {
               </section>
 
               {/* ── 생애주기별 정책 리스트 ── */}
-              {allActive.map((lc) => (
-                <section key={lc.id} id={lc.anchor}>
-                  <div className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
-                    <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 border-b border-blue-100">
-                      <CategoryIcon id={lc.id} className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm font-bold text-gray-800">{lc.id}</span>
-                      <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">
-                        {lc.policies.length}건
-                      </span>
+              {allActive.map((lc) => {
+                const isExpanded = !!expanded[lc.id];
+                const visible = isExpanded ? lc.policies : lc.policies.slice(0, 5);
+                const hidden = lc.policies.length - 5;
+                return (
+                  <section key={lc.id} id={lc.anchor}>
+                    <div className="rounded-2xl ring-1 ring-blue-100 overflow-hidden bg-white">
+                      <div className="flex items-center gap-3 px-5 py-3.5 bg-blue-50 border-b border-blue-100">
+                        <CategoryIcon id={lc.id} className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm font-bold text-gray-800">{lc.id}</span>
+                        <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">
+                          {lc.policies.length}건
+                        </span>
+                      </div>
+                      <div>
+                        {visible.map((p) => (
+                          <PolicyListItem key={`${lc.anchor}-${p.id}`} policy={p} />
+                        ))}
+                      </div>
+                      {lc.policies.length > 5 && (
+                        <button
+                          onClick={() => setExpanded((prev) => ({ ...prev, [lc.id]: !prev[lc.id] }))}
+                          className="w-full py-3 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors border-t border-blue-100"
+                        >
+                          {isExpanded ? '접기 ▲' : `${hidden}건 더 보기 ▼`}
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      {lc.policies.map((p) => (
-                        <PolicyListItem key={`${lc.anchor}-${p.id}`} policy={p} />
-                      ))}
-                    </div>
-                  </div>
-                </section>
-              ))}
+                  </section>
+                );
+              })}
             </>
           )}
 
