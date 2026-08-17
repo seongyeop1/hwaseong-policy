@@ -445,7 +445,7 @@ export default function IntroPage() {
             <div>
               <span className="text-[0.6875rem] font-medium tracking-[0.14em] text-sky-700 uppercase">Hot Policies</span>
               <h2 className="text-2xl font-bold text-slate-800 mt-1 [letter-spacing:-0.02em]">지금 주목할 정책</h2>
-              <p className="text-xs text-slate-400 mt-1 font-normal">기준일 2026-08-10 · 화성시 최신 정책</p>
+              <p className="text-xs text-slate-400 mt-1 font-normal">화성시 최신 정책</p>
             </div>
             <Link href="/policies"
               className="flex-shrink-0 text-xs font-medium text-sky-700 hover:text-sky-900 transition-colors flex items-center gap-1">
