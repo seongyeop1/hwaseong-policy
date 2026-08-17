@@ -1,0 +1,42 @@
+name: 프론트 빌드
+
+# 프론트가 apps/web 으로 옮겨졌는데(#18) 두 워크플로 어디에도 트리거가 없어
+# 타입체크·빌드가 자동 검증되지 않았다. next.config 의 typescript.ignoreBuildErrors 가
+# 켜져 있어 타입 오류가 빌드를 막지도 않는다 → tsc 를 따로 돌려 실제 타입 상태를 본다.
+#
+# 타입 검사는 실패해도 워크플로를 막지 않는다(continue-on-error). 지금 코드에 오류가
+# 몇 건인지 모르는 상태에서 강제하면 제출 직전에 머지가 잠긴다. 로그로만 남겨
+# 사람이 판단하고, 빌드 실패만 확실히 잡는다.
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - ".github/workflows/web-build.yml"
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 타입 검사 (참고용 — 실패해도 진행)
+        continue-on-error: true
+        run: npx tsc --noEmit
+
+      - name: 빌드
+        run: npm run build
