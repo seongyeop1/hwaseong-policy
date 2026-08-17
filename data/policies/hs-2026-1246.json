@@ -1,0 +1,44 @@
+{
+  "policy_id": "hs-2026-1246",
+  "title": "[청년재단] 2026 고립청년 지원조직 '임팩트 커뮤니티' 멤버 모집",
+  "category": "기타",
+  "lifecycle": [
+    "청년"
+  ],
+  "beneficiary": "본인",
+  "benefit": "지원 내용 공고 확인 필요",
+  "deadline": "2026-03-23",
+  "required_docs": [
+    "공고 확인 필요"
+  ],
+  "contact": "청년재단 이음사업팀 02-6731-2610 / imdh@kyf.or.kr",
+  "exclusions": [],
+  "apply_channel": "온라인 설문신청 접수(https://bit.ly/2026_impact_apply)",
+  "conditions": {
+    "household": [
+      "제한없음"
+    ]
+  },
+  "manual_conditions": [
+    {
+      "label": "고립청년을 위한 사업을 수행 중이거나 올해 추진할 계획을 가진 조직의 종사자",
+      "hint": "사업 계획서 또는 사업 수행 관련 서류로 확인"
+    }
+  ],
+  "source_url": "https://hey.hscity.go.kr/base/board/read?boardManagementNo=8&boardNo=1246&menuLevel=2&menuNo=95",
+  "first_seen": "2026-08-14",
+  "review": {
+    "parsed_by": "A",
+    "reviewed_by": "D",
+    "reviewed_at": "2026-08-16",
+    "checklist": {
+      "conditions": true,
+      "deadline": true,
+      "benefit": true,
+      "required_docs": true,
+      "apply_channel": true,
+      "source_url": true,
+      "conditions_complete": true
+    }
+  }
+}
