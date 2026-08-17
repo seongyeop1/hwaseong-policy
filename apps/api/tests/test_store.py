@@ -1,7 +1,7 @@
-"""정책 스토어 검수 게이트 테스트 — "검수 통과분만 반영"의 기계적 강제."""
+"""정책 스토어 게이트 테스트 — "검수 통과분만 반영"의 기계적 강제 + 판정 예외 격리."""
 import json
 
-from app.store import load_policies, review_gate_reason
+from app.store import load_policies, parse_gate_reason, review_gate_reason
 
 GOOD_REVIEW = {
     "parsed_by": "A",
@@ -69,3 +69,27 @@ def test_load_serves_only_gate_passing_policies(tmp_path):
 
     loaded = load_policies(tmp_path)
     assert set(loaded) == {"hs-2026-9001"}
+
+
+# ── 판정 예외 격리: CI 를 통과한 잘못된 날짜가 전체 요청을 500 으로 만들지 않게 ──
+
+
+def test_parse_gate_catches_impossible_dates():
+    # 스키마 정규식(^\d{4}-\d{2}-\d{2}$)은 자릿수만 보므로 아래 값들이 CI 를 통과한다
+    assert parse_gate_reason(minimal_policy("hs-2026-9101")) is None
+    assert parse_gate_reason(minimal_policy("hs-2026-9102", deadline="2026-09-30")) is None
+    assert parse_gate_reason(minimal_policy("hs-2026-9103", deadline=None)) is None
+
+    assert "deadline" in parse_gate_reason(minimal_policy("hs-2026-9104", deadline="2026-02-30"))
+    assert "deadline" in parse_gate_reason(minimal_policy("hs-2026-9105", deadline="2026-13-01"))
+    assert "first_seen" in parse_gate_reason(minimal_policy("hs-2026-9106", first_seen="2026-04-31"))
+
+
+def test_bad_date_policy_is_isolated_not_fatal(tmp_path):
+    """불량 1건이 있어도 나머지는 정상 서빙된다 (예전에는 요청 전체가 500)."""
+    write(tmp_path, minimal_policy("hs-2026-9001"))
+    write(tmp_path, minimal_policy("hs-2026-9002", deadline="2026-11-30"))
+    write(tmp_path, minimal_policy("hs-2026-9107", deadline="2026-02-30"))   # 실재하지 않는 날짜
+
+    loaded = load_policies(tmp_path)
+    assert set(loaded) == {"hs-2026-9001", "hs-2026-9002"}

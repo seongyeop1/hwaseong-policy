@@ -9,9 +9,14 @@ Supabase 전환(Phase 2 잔여) 전까지의 서빙 소스. 전환 시 load_poli
 import json
 import logging
 import os
+from datetime import date
 from pathlib import Path
 
 log = logging.getLogger("app.store")
+
+# 판정 경로가 date.fromisoformat 으로 읽는 필드 (evaluate._parse_date · to_api_policy).
+# 여기서 예외가 나면 evaluate_all 순회가 통째로 중단돼 정상 정책까지 500 이 된다.
+DATE_FIELDS = ("deadline", "first_seen")
 
 # scripts/validate_policies.py 와 동일 — 검수 7항목 (⑦ conditions_complete 포함)
 REQUIRED_CHECKS = [
@@ -41,6 +46,25 @@ def review_gate_reason(policy: dict) -> str | None:
     return None
 
 
+def parse_gate_reason(policy: dict) -> str | None:
+    """판정 경로에서 예외를 일으킬 값이 있는지. 통과면 None.
+
+    CI(scripts/validate_policies.py)가 입구에서 막지만, 스키마의 날짜 검사는 자릿수만 보는
+    정규식이라 `2026-02-30`·`2026-13-01` 같은 **실재하지 않는 날짜**가 통과한다. 그런 값 하나가
+    판정 중 예외를 일으키면 요청 전체가 500이 되어 정상 정책까지 화면에서 사라진다 — 검수
+    게이트와 같은 방식으로 그 정책만 제외해 나머지를 지킨다.
+    """
+    for field in DATE_FIELDS:
+        value = policy.get(field)
+        if value is None or isinstance(value, date):
+            continue
+        try:
+            date.fromisoformat(value)
+        except (ValueError, TypeError):
+            return f"{field}가 날짜로 해석되지 않습니다: {value!r}"
+    return None
+
+
 def load_policies(policies_dir: str | os.PathLike | None = None) -> dict[str, dict]:
     """정책 파일 전체를 읽어 {policy_id: 저장 스키마 dict}로 반환. 게이트 탈락분은 제외+로그."""
     base = Path(policies_dir or os.getenv("POLICIES_DIR") or _DEFAULT_DIR)
@@ -54,9 +78,9 @@ def load_policies(policies_dir: str | os.PathLike | None = None) -> dict[str, di
             rejected += 1
             continue
         pid = policy.get("policy_id", path.stem)
-        reason = review_gate_reason(policy)
+        reason = review_gate_reason(policy) or parse_gate_reason(policy)
         if reason:
-            log.warning("검수 게이트 탈락 — 서빙 제외: %s (%s)", pid, reason)
+            log.warning("게이트 탈락 — 서빙 제외: %s (%s)", pid, reason)
             rejected += 1
             continue
         loaded[pid] = policy
