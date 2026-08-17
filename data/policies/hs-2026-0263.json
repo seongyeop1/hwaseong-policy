@@ -87,7 +87,7 @@
   ],
   "verify_required": ["income_percentile"],
   "contact": "화성시 청년청소년정책과 청년지원팀 031-5189-6217",
-  "source_url": "https://www.hscity.go.kr/dongtan/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260114165703844",
+  "source_url": "https://www.hscity.go.kr/town/user/bbs/BD_selectBbs.do?q_bbsCode=1048&q_bbscttSn=20260114165703844",
   "review": {
     "parsed_by": "D",
     "reviewed_by": "A",
