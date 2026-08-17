@@ -26,9 +26,9 @@ from app.engine.evaluate import normalize_verify  # noqa: E402
 from app.store import load_policies  # noqa: E402
 from app.summary import policy_hash, summary_key  # noqa: E402
 
-MODEL = "claude-opus-5"
-PRICE_IN_PER_MTOK = 5.00   # USD, 2026-08 기준
-PRICE_OUT_PER_MTOK = 25.00
+MODEL = "claude-sonnet-5"
+PRICE_IN_PER_MTOK = 3.00   # USD, 2026-08 기준 정가 (8/31까지 인트로 $2/$10 적용 시 실비용은 더 낮음)
+PRICE_OUT_PER_MTOK = 15.00
 
 PROMPT_PATH = Path(__file__).resolve().parent.parent / "prompts" / "summary.md"
 OUT_PATH = REPO / "data" / "summaries.json"
