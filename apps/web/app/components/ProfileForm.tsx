@@ -44,7 +44,7 @@ const STEPS = [
   { label: '기본 정보', title: '기본 정보를 알려주세요',   sub: '생년월일과 화성시 전입일이 필요합니다.' },
   { label: '거주지',    title: '어디 사세요?',             sub: '화성시 읍면동 단위로 선택해 주세요.' },
   { label: '가구',      title: '가구 유형을 알려주세요',    sub: '현재 가구 구성을 선택해 주세요.' },
-  { label: '생애주기',  title: '생애주기를 선택해 주세요', sub: '해당 항목을 모두 고르세요. 없으면 건너뛰어도 됩니다.' },
+  { label: '생애주기',  title: '생애주기를 선택해 주세요', sub: '해당하는 항목을 하나 이상 선택해 주세요.' },
 ];
 
 const tapSpring   = { type: 'spring', bounce: 0, duration: 0.2 } as const;
@@ -81,7 +81,7 @@ export default function ProfileForm({ onAnalyze }: Props) {
     profile.birth_date !== '' && profile.move_in_date !== '',
     profile.region !== '',
     profile.household_type !== '',
-    true,
+    profile.lifecycle.length > 0,
   ][step];
 
   return (

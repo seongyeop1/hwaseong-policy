@@ -195,6 +195,7 @@ export default function AnalysisPage() {
   const [profile,   setProfile]   = useState<Profile | null>(null);
   const [modalItem, setModalItem] = useState<ModalPolicy | null>(null);
   const [overrides, setOverrides] = useState<Overrides>({ timeShift: false, addChild: false });
+  const [docsExpanded, setDocsExpanded] = useState(false);
   const [apiData,   setApiData]   = useState<EvaluateResponse | null>(null);
   const [loading,   setLoading]   = useState(false);
   const [apiError,  setApiError]  = useState<string | null>(null);
@@ -495,7 +496,7 @@ export default function AnalysisPage() {
                         <span className="ml-auto text-[0.625rem] font-bold text-blue-600 bg-white border border-blue-200 px-2.5 py-0.5 rounded-full tracking-wide">{docs_needed.length}건</span>
                       </div>
                       <div>
-                        {docs_needed.map((item) => (
+                        {(docsExpanded ? docs_needed : docs_needed.slice(0, 5)).map((item) => (
                           <DocsNeededCard
                             key={item.policy.policy_id}
                             item={item}
@@ -511,6 +512,14 @@ export default function AnalysisPage() {
                           />
                         ))}
                       </div>
+                      {docs_needed.length > 5 && (
+                        <button
+                          onClick={() => setDocsExpanded((v) => !v)}
+                          className="w-full py-3 text-xs font-semibold text-blue-600 hover:bg-blue-50 transition-colors border-t border-blue-100"
+                        >
+                          {docsExpanded ? '접기 ▲' : `${docs_needed.length - 5}건 더 보기 ▼`}
+                        </button>
+                      )}
                     </section>
                   )}
 
