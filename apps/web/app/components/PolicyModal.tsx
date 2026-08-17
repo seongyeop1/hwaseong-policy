@@ -14,13 +14,13 @@ export type ModalPolicy = {
     source_url?: string;
   };
   checklistItems: string[];
-  /** API에서 미리 생성된 요약. null = 배치 미완, undefined = 목업 모드 */
+  /**
+   * API가 미리 생성해 둔 요약 (배치 산출물 — data/summaries.json).
+   * 값이 없으면(null·undefined) "준비 중"을 표시한다. 대신 채워 넣지 않는다 —
+   * 원문에 없는 안내가 "AI 요약" 라벨 아래 나가면 사실과 다른 정보가 된다.
+   */
   ai_summary?: string | null;
 };
-
-function getMockSummary(title: string, benefit: string): string {
-  return `「${title}」은(는) 화성시 거주 시민을 위한 지원 사업입니다. ${benefit} 혜택이 제공되며, 신청 기간 내 온라인 또는 읍면동 주민센터를 통해 신청할 수 있습니다. 소득 및 거주 요건 충족 여부를 미리 확인하신 후 구비 서류를 준비해 주세요.`;
-}
 
 function CheckItem({ label }: { label: string }) {
   const [checked, setChecked] = useState(false);
@@ -120,11 +120,11 @@ export default function PolicyModal({ item, onClose }: Props) {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">AI 요약</span>
-                {item.ai_summary === null && (
+                {!item.ai_summary && (
                   <span className="text-xs text-primary-600 animate-pulse">준비 중…</span>
                 )}
               </div>
-              {item.ai_summary === null ? (
+              {!item.ai_summary ? (
                 <div className="space-y-3">
                   <div className="h-3 bg-gray-100 rounded-full animate-pulse w-full" />
                   <div className="h-3 bg-gray-100 rounded-full animate-pulse w-11/12" />
@@ -132,7 +132,7 @@ export default function PolicyModal({ item, onClose }: Props) {
                 </div>
               ) : (
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  {item.ai_summary ?? getMockSummary(item.policy.title, item.policy.benefit)}
+                  {item.ai_summary}
                 </p>
               )}
             </div>
