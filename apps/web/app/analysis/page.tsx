@@ -575,7 +575,18 @@ export default function AnalysisPage() {
                           <UpcomingCard
                             key={item.policy.policy_id}
                             item={item}
-                            onClick={() => setModalItem({ type: 'upcoming', policy: item.policy, checklistItems: [item.waiting_for, ...DEFAULT_DOCS], ai_summary: item.ai_summary })}
+                            onClick={() => setModalItem({
+                              type: 'upcoming',
+                              policy: item.policy,
+                              // eligible·docs_needed 와 같은 규칙: 정책의 required_docs 를 쓰고,
+                              // 없을 때만 DEFAULT_DOCS 로 떨어진다. 앞에 waiting_for(충족 대기 조건)를 얹는다.
+                              checklistItems: [
+                                item.waiting_for,
+                                ...(item.verify?.map((v) => v.label) ?? []),
+                                ...(item.policy.required_docs?.length ? item.policy.required_docs : DEFAULT_DOCS),
+                              ],
+                              ai_summary: item.ai_summary,
+                            })}
                           />
                         ))}
                       </div>
