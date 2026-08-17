@@ -438,7 +438,12 @@ export default function PoliciesPage() {
               {/* ── 생애주기별 정책 리스트 ── */}
               {allActive.map((lc) => {
                 const isExpanded = !!expanded[lc.id];
-                const visible = isExpanded ? lc.policies : lc.policies.slice(0, 5);
+                const sorted = [...lc.policies].sort((a, b) => {
+                  const aExp = a.deadline !== null && a.deadline < TODAY;
+                  const bExp = b.deadline !== null && b.deadline < TODAY;
+                  return aExp === bExp ? 0 : aExp ? 1 : -1;
+                });
+                const visible = isExpanded ? sorted : sorted.slice(0, 5);
                 const hidden = lc.policies.length - 5;
                 return (
                   <section key={lc.id} id={lc.anchor}>
