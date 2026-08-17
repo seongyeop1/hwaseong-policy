@@ -58,12 +58,30 @@ const variants = {
 
 type Props = { onAnalyze?: (profile: Profile) => void };
 
+const YEARS  = Array.from({ length: 2008 - 1930 + 1 }, (_, i) => 1930 + i).reverse();
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const DAYS   = Array.from({ length: 31 }, (_, i) => i + 1);
+
 export default function ProfileForm({ onAnalyze }: Props) {
   const [step, setStep] = useState(0);
   const [dir,  setDir]  = useState(1);
   const [profile, setProfile] = useState<Profile>({
     birth_date: '', move_in_date: '', region: '', household_type: '', lifecycle: [],
   });
+  const [birthY, setBirthY] = useState('');
+  const [birthM, setBirthM] = useState('');
+  const [birthD, setBirthD] = useState('');
+
+  function updateBirth(y: string, m: string, d: string) {
+    setBirthY(y); setBirthM(m); setBirthD(d);
+    if (y && m && d) {
+      const mm = m.padStart(2, '0');
+      const dd = d.padStart(2, '0');
+      setProfile((prev) => ({ ...prev, birth_date: `${y}-${mm}-${dd}` }));
+    } else {
+      setProfile((prev) => ({ ...prev, birth_date: '' }));
+    }
+  }
 
   function goNext() { setDir(1);  setStep((s) => s + 1); }
   function goPrev() { setDir(-1); setStep((s) => s - 1); }
@@ -154,12 +172,32 @@ export default function ProfileForm({ onAnalyze }: Props) {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">생년월일</label>
-                    <input
-                      type="date"
-                      value={profile.birth_date}
-                      onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
-                      className="w-full border-b-2 border-zinc-100 focus:border-sky-500 py-1.5 text-base font-medium text-gray-900 focus:outline-none bg-transparent transition-colors"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={birthY}
+                        onChange={(e) => updateBirth(e.target.value, birthM, birthD)}
+                        className={`flex-[2] border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthY ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">년도</option>
+                        {YEARS.map((y) => <option key={y} value={String(y)}>{y}년</option>)}
+                      </select>
+                      <select
+                        value={birthM}
+                        onChange={(e) => updateBirth(birthY, e.target.value, birthD)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthM ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">월</option>
+                        {MONTHS.map((m) => <option key={m} value={String(m)}>{m}월</option>)}
+                      </select>
+                      <select
+                        value={birthD}
+                        onChange={(e) => updateBirth(birthY, birthM, e.target.value)}
+                        className={`flex-1 border-b-2 border-zinc-100 focus:border-sky-500 py-2 text-base font-medium focus:outline-none bg-transparent transition-colors cursor-pointer ${birthD ? 'text-gray-900' : 'text-zinc-400'}`}
+                      >
+                        <option value="">일</option>
+                        {DAYS.map((d) => <option key={d} value={String(d)}>{d}일</option>)}
+                      </select>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-zinc-500 mb-1.5 uppercase tracking-wide">화성시 전입일</label>

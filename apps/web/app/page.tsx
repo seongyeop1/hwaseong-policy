@@ -293,9 +293,9 @@ const FEATURES = [
 ];
 
 const PREVIEW_POLICIES = [
-  { id: 'hs-2026-0042', title: '화성시 청년 월세 지원', benefit: '월 최대 20만 원', category: '청년', deadline: '2026-09-30' },
-  { id: 'hs-2026-0101', title: '화성시 신혼부부 전세자금 이자 지원', benefit: '연 최대 240만 원', category: '신혼부부', deadline: '2026-08-31' },
-  { id: 'hs-2026-0155', title: '화성시 다자녀 양육비 지원', benefit: '자녀 1인당 월 10만 원', category: '다자녀', deadline: '2026-08-13' },
+  { id: 'hs-2026-0002', title: '화성시 출산지원금', benefit: '첫째 100만 원 / 둘째·셋째 각 200만 원 / 넷째 이상 300만 원', category: '복지', deadline: '상시' },
+  { id: 'hs-2026-1268', title: '2026 미래내일 일경험사업 참여자 모집', benefit: '8주 완료 시 최대 300만 원 지급', category: '일자리', deadline: '상시' },
+  { id: 'hs-2026-1360', title: '2026년 경기청년 일자리 매치업 플러스', benefit: '참여수당 25만 원 + 정규직 전환 지원', category: '일자리', deadline: '상시' },
 ];
 
 export default function IntroPage() {
