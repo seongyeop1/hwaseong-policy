@@ -54,7 +54,7 @@
 ```json
 {
   "birth_date": "1999-03-02",
-  "region": "화성시 동탄5동",
+  "region": "동탄5·6동",
   "move_in_date": "2026-02-01",
   "lifecycle": ["전입", "청년"],
   "household_type": "1인가구",
@@ -86,7 +86,7 @@
 ```json
 {
   "birth_date": "1955-05-05",
-  "region": "화성시 봉담읍",
+  "region": "봉담읍",
   "move_in_date": "2025-09-01",
   "lifecycle": ["노후"],
   "household_type": "1인가구",
@@ -117,7 +117,7 @@
 ```json
 {
   "birth_date": "1992-04-10",
-  "region": "화성시 향남읍",
+  "region": "향남읍",
   "move_in_date": "2026-05-01",
   "lifecycle": ["출산·육아"],
   "household_type": "유자녀가구",
@@ -147,7 +147,7 @@
 ```json
 {
   "birth_date": "2007-09-20",
-  "region": "화성시 동탄5동",
+  "region": "동탄5·6동",
   "move_in_date": "2020-01-01",
   "lifecycle": ["청년"],
   "household_type": "1인가구"
@@ -263,7 +263,7 @@ from app.engine.evaluate import evaluate_all
 
 P = load_policies()
 prof = Profile(
-    birth_date=date(1999, 3, 2), region="화성시 동탄5동",
+    birth_date=date(1999, 3, 2), region="동탄5·6동",
     move_in_date=date(2026, 2, 1), lifecycle=["전입", "청년"],
     household_type="1인가구",
 )
