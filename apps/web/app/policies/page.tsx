@@ -238,10 +238,6 @@ const LIFECYCLES: Lifecycle[] = [
       { id: 'hs-2026-0001', title: '화성시 성인용 보행기 지원', benefit: '1인당 최대 20만원 보행기 실구입비 지원 (기초생활수급자·차상위계층, 5년 주기 1회)', category: '건강', deadline: null, channel: '읍면동 행정복지센터 복지팀 방문', applyUrl: 'https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare5/Welfare5_9.jsp' },
     ],
   },
-  { id: '영유아', anchor: 'infant', desc: '만 0~6세 영유아 보육·양육 지원', policies: [] },
-  { id: '다자녀', anchor: 'multi-child', desc: '자녀 2인 이상 가구 양육·교육비 지원', policies: [] },
-  { id: '중장년', anchor: 'middle-age', desc: '만 40~64세 재취업·건강관리 지원', policies: [] },
-  { id: '장애인', anchor: 'disabled', desc: '등록 장애인 생활·이동·취업 지원', policies: [] },
 ];
 
 function deadlineLabel(deadline: string | null): { text: string; cls: string } | null {
