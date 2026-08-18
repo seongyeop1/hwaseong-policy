@@ -100,8 +100,13 @@ def main() -> int:
             errors.append(f"{name}: verify_required 가 conditions 에 없는 키 참조 → {missing_keys}")
 
         # 6. 날짜 유효성 (실재하지 않는 날짜 차단 — 예: 2026-02-30)
-        for field in ("deadline", "first_seen"):
-            val = policy.get(field)
+        #    스키마의 날짜 패턴은 형식만 본다. 달력상 실재 여부는 여기서 막는다.
+        #    review.reviewed_at 은 중첩 필드라 따로 꺼낸다.
+        date_fields = [(f, policy.get(f)) for f in ("deadline", "first_seen")]
+        date_fields.append(
+            ("review.reviewed_at", (policy.get("review") or {}).get("reviewed_at"))
+        )
+        for field, val in date_fields:
             if val:
                 try:
                     date.fromisoformat(val)
